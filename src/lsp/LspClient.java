@@ -1,6 +1,15 @@
 package lsp;
 
+
 public class LspClient {
+	public LspClient(String host, int port, LspParams params) {
+
+	}
+
+	public LspClient(LspConnection conn) {
+
+	}
+
 	/**
 	 * Devolve o Id da conexão
 	 */
