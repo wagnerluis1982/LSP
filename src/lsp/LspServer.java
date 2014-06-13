@@ -34,4 +34,12 @@ public class LspServer {
 	public void closeAll() {
 
 	}
+
+	public class LspConnection {
+		private int id;
+
+		public LspConnection(int id) {
+			this.id = id;
+		}
+	}
 }
