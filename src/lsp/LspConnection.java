@@ -1,29 +1,42 @@
 package lsp;
 
-public class LspConnection {
+class LspConnection {
 	private final int id;
 
-	public LspConnection(int id, LspParams params, Delegate delegate) {
+	LspConnection(int id, LspParams params, Actions actions) {
 		this.id = id;
 
 		// Inicia thread que verifica status da conexão
-		new Thread(new StatusChecker(params, delegate)).start();
+		new Thread(new StatusChecker(params, actions)).start();
 	}
 
-	public int getId() {
+	int getId() {
 		return this.id;
 	}
 
+	interface Actions {
+		/**
+		 * Callback para obter o momento da última mensagem recebida. O momento
+		 * deve ser calculado com System.currentTimeMillis()
+		 */
+		long lastReceiptTime();
+
+		/**
+		 * Callback para fechar a conexão
+		 */
+		void closeConnection();
+	}
+
 	/**
-	 * Verifica e fecha a conexão LSP, ambos através de {@link Delegate}.
+	 * Verifica e fecha a conexão LSP, ambos através de {@link Actions}.
 	 *
 	 * @author Wagner Macedo
 	 */
 	private class StatusChecker implements Runnable {
-		private final Delegate delegate;
+		private final Actions delegate;
 		private final LspParams params;
 
-		public StatusChecker(LspParams params, Delegate delegate) {
+		public StatusChecker(LspParams params, Actions delegate) {
 			this.params = params;
 			this.delegate = delegate;
 		}
