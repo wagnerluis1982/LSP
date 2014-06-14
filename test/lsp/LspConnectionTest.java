@@ -30,7 +30,7 @@ public class LspConnectionTest {
 		// alterar closed para true no final.
 		time = 0;
 		closed = false;
-		new LspConnection(1, new LspParams(2, 3), new Actions() {
+		new LspConnection((short) 1, new LspParams(2, 3), new Actions() {
 			public long lastReceiptTime() {
 				return 1 / ++time;
 			}

@@ -1,16 +1,19 @@
 package lsp;
 
 class LspConnection {
-	private final int id;
+	private final short id;
 
-	LspConnection(int id, LspParams params, Actions actions) {
+	LspConnection(short id, LspParams params, Actions actions) {
 		this.id = id;
 
-		// Inicia thread que verifica status da conexão
-		new Thread(new StatusChecker(params, actions)).start();
+		if (params == null || actions == null)
+			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
+
+		// Aciona o verificador de status da conexão
+		statusChecker(params, actions);
 	}
 
-	int getId() {
+	short getId() {
 		return this.id;
 	}
 
@@ -28,38 +31,33 @@ class LspConnection {
 	}
 
 	/**
-	 * Verifica e fecha a conexão LSP, ambos através de {@link Actions}.
+	 * Aciona uma thread que verifica se a conexão LSP ainda está ativa. Isto é
+	 * feito através de callbacks definidos em uma instância de {@link Actions}.
 	 *
-	 * @author Wagner Macedo
+	 * @param params Parâmetros de temporização da conexão
+	 * @param actions Callbacks usados na verificação da conexão.
 	 */
-	private class StatusChecker implements Runnable {
-		private final Actions actions;
-		private final LspParams params;
+	private void statusChecker(final LspParams params, final Actions actions) {
+		new Thread() {
+			public void run() {
+				long lastTime = actions.lastReceiptTime();
+				int limit = params.getEpochLimit();
+				final int epoch = params.getEpoch();
 
-		public StatusChecker(LspParams params, Actions actions) {
-			this.params = params;
-			this.actions = actions;
-		}
-
-		@Override
-		public void run() {
-			long lastTime = actions.lastReceiptTime();
-			int limit = params.getEpochLimit();
-			final int epoch = params.getEpoch();
-
-			while (limit-- > 0) {
-				try {
-					Thread.sleep(epoch);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				while (limit-- > 0) {
+					try {
+						Thread.sleep(epoch);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					final long time = actions.lastReceiptTime();
+					if (time != lastTime) {
+						lastTime = time;
+						limit = params.getEpochLimit();
+					}
 				}
-				final long time = actions.lastReceiptTime();
-				if (time != lastTime) {
-					lastTime = time;
-					limit = params.getEpochLimit();
-				}
-			}
-			actions.closeConnection();
-		}
+				actions.closeConnection();
+			};
+		}.start();
 	}
 }
