@@ -3,21 +3,11 @@ package lsp;
 import static lsp.LspConnection.Actions;
 
 import static org.junit.Assert.*;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class LspConnectionTest {
 	int time;
 	boolean closed;
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
 
 	/*
 	 * Este teste confirma se a thread de verificação de status está disparando
@@ -34,6 +24,9 @@ public class LspConnectionTest {
 			public long lastReceiptTime() {
 				return 1 / ++time;
 			}
+			public void epochTriggers() {
+				// Irrelevante para esse teste
+			}
 			public void closeConnection() {
 				closed = true;
 			}
@@ -44,7 +37,7 @@ public class LspConnectionTest {
 		assertFalse(closed);
 
 		// Ao finalizar
-		Thread.sleep(10);
+		Thread.sleep(11);
 		assertEquals(5, time);	// garante que não houve mais incrementos
 		assertTrue(closed);		// garante que a "conexão" foi fechada
 	}

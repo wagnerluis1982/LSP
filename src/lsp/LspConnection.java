@@ -25,6 +25,11 @@ class LspConnection {
 		long lastReceiptTime();
 
 		/**
+		 * Callback representando as ações a serem disparadas a cada época
+		 */
+		void epochTriggers();
+
+		/**
 		 * Callback para fechar a conexão
 		 */
 		void closeConnection();
@@ -38,26 +43,44 @@ class LspConnection {
 	 * @param actions Callbacks usados na verificação da conexão.
 	 */
 	private void statusChecker(final LspParams params, final Actions actions) {
-		new Thread() {
+		// Configura execução da checagem
+		Runnable checker = new Runnable() {
+			@Override
 			public void run() {
 				long lastTime = actions.lastReceiptTime();
 				int limit = params.getEpochLimit();
 				final int epoch = params.getEpoch();
 
 				while (limit-- > 0) {
-					try {
-						Thread.sleep(epoch);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+					sleep(epoch);
+
+					// Dispara as ações da época
+					actions.epochTriggers();
+
+					// Reinicia contagem de épocas se houve mensagens recebidas
+					// desde a última época
 					final long time = actions.lastReceiptTime();
 					if (time != lastTime) {
 						lastTime = time;
 						limit = params.getEpochLimit();
 					}
 				}
+
+				// O limite de épocas foi atingido, então encerra a conexão
 				actions.closeConnection();
-			};
-		}.start();
+			}
+
+			/* Sleep sem lançamento de exceção */
+			private void sleep(long millis) {
+				try {
+					Thread.sleep(millis);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
+		// Executa a thread para checagem da conexão
+		new Thread(checker).start();
 	}
 }
