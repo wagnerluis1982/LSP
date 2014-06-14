@@ -33,17 +33,17 @@ class LspConnection {
 	 * @author Wagner Macedo
 	 */
 	private class StatusChecker implements Runnable {
-		private final Actions delegate;
+		private final Actions actions;
 		private final LspParams params;
 
-		public StatusChecker(LspParams params, Actions delegate) {
+		public StatusChecker(LspParams params, Actions actions) {
 			this.params = params;
-			this.delegate = delegate;
+			this.actions = actions;
 		}
 
 		@Override
 		public void run() {
-			long lastTime = delegate.lastReceiptTime();
+			long lastTime = actions.lastReceiptTime();
 			int limit = params.getEpochLimit();
 			final int epoch = params.getEpoch();
 
@@ -53,13 +53,13 @@ class LspConnection {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				final long time = delegate.lastReceiptTime();
+				final long time = actions.lastReceiptTime();
 				if (time != lastTime) {
 					lastTime = time;
 					limit = params.getEpochLimit();
 				}
 			}
-			delegate.closeConnection();
+			actions.closeConnection();
 		}
 	}
 }
