@@ -7,6 +7,7 @@ package lsp;
  */
 class LspConnection {
 	private final short id;
+	volatile long lastMessageTime;
 
 	/**
 	 * Constrói um objeto {@link LspConnection}
@@ -17,6 +18,7 @@ class LspConnection {
 	 */
 	LspConnection(short id, LspParams params, Actions actions) {
 		this.id = id;
+		this.lastMessageTime = System.currentTimeMillis();
 
 		if (params == null || actions == null)
 			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
@@ -32,12 +34,6 @@ class LspConnection {
 
 	interface Actions {
 		/**
-		 * Callback para obter o momento da última mensagem recebida. O momento
-		 * deve ser calculado com System.currentTimeMillis()
-		 */
-		long lastReceiptTime();
-
-		/**
 		 * Callback representando as ações a serem disparadas a cada época
 		 */
 		void epochTriggers();
@@ -52,7 +48,7 @@ class LspConnection {
 	 * Monitoramento da conexão LSP. Verifica se está ativa. Este processo é
 	 * feito através de callbacks definidos em uma instância de {@link Actions}.
 	 */
-	private static final class StatusChecker implements Runnable {
+	private final class StatusChecker implements Runnable {
 		private final LspParams params;
 		private final Actions actions;
 
@@ -63,7 +59,7 @@ class LspConnection {
 
 		@Override
 		public void run() {
-			long lastTime = actions.lastReceiptTime();
+			long lastTime = lastMessageTime;
 			int limit = params.getEpochLimit();
 			final int epoch = params.getEpoch();
 
@@ -75,7 +71,7 @@ class LspConnection {
 
 				// Reinicia contagem de épocas se houve mensagens recebidas
 				// desde a última época
-				final long time = actions.lastReceiptTime();
+				final long time = lastMessageTime;
 				if (time != lastTime) {
 					lastTime = time;
 					limit = params.getEpochLimit();

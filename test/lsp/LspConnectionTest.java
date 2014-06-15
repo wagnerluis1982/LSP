@@ -6,7 +6,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class LspConnectionTest {
-	int time;
 	int epoch;
 	boolean closed;
 
@@ -16,33 +15,31 @@ public class LspConnectionTest {
 	 */
 	@Test
 	public void testStatusChecker() throws InterruptedException {
-		// LspConnection com epoch = 2 msec e epochLimit = 3, portanto a thread
-		// durará 8 msec e deve incrementar o valor de time e decrementar o
-		// valor de epoch a cada 2 msec e
-		// alterar closed para true no final.
-		time = 0;
+        // LspConnection com epoch = 2 msec e epochLimit = 3, portanto a thread
+        // durará 8 msec e deve decrementar o valor de epoch a cada 2 msec e
+        // alterar closed para true no final.
 		epoch = 4;
 		closed = false;
-		new LspConnection((short) 1, new LspParams(2, 3), new Actions() {
-			public long lastReceiptTime() {
-				return 1 / ++time;
-			}
-			public void epochTriggers() {
-				epoch--;
-			}
-			public void closeConnection() {
-				closed = true;
-			}
-		});
+		LspConnection conn = new LspConnection((short) 1, new LspParams(2, 3),
+				new Actions() {
+					public void epochTriggers() {
+						epoch--;
+					}
+					public void closeConnection() {
+						closed = true;
+					}
+				});
 
-		// Ainda não houve incremento
-		assertEquals(0, time);
+		// Ao iniciar... ainda não houve alterações
 		assertEquals(4, epoch);
 		assertFalse(closed);
 
+		// Manipulando o atributo lastMessageTime para propósitos do teste
+		Thread.sleep(2);
+		conn.lastMessageTime = System.currentTimeMillis();
+
 		// Ao finalizar...
-		Thread.sleep(11);
-		assertEquals(5, time);	// garante não haver mais incrementos
+		Thread.sleep(8);
 		assertEquals(0, epoch);	// garante não haver mais decrementos
 		assertTrue(closed);		// garante que a "conexão" foi fechada
 	}
