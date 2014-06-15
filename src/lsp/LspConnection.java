@@ -1,16 +1,29 @@
 package lsp;
 
+/**
+ * Representa uma conexão LSP.
+ *
+ * @author Wagner Macedo
+ */
 class LspConnection {
 	private final short id;
 
+	/**
+	 * Constrói um objeto {@link LspConnection}
+	 *
+	 * @param id Identificador da conexão
+	 * @param params Parâmetros de temporização da conexão
+	 * @param actions Callbacks usados na verificação da conexão.
+	 */
 	LspConnection(short id, LspParams params, Actions actions) {
 		this.id = id;
 
 		if (params == null || actions == null)
 			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
 
-		// Aciona o verificador de status da conexão
-		statusChecker(params, actions);
+		// Inicia a thread para monitorar o status da conexão
+		Runnable checker = new StatusChecker(params, actions);
+		new Thread(checker).start();
 	}
 
 	short getId() {
@@ -36,51 +49,50 @@ class LspConnection {
 	}
 
 	/**
-	 * Aciona uma thread que verifica se a conexão LSP ainda está ativa. Isto é
+	 * Monitoramento da conexão LSP. Verifica se está ativa. Este processo é
 	 * feito através de callbacks definidos em uma instância de {@link Actions}.
-	 *
-	 * @param params Parâmetros de temporização da conexão
-	 * @param actions Callbacks usados na verificação da conexão.
 	 */
-	private void statusChecker(final LspParams params, final Actions actions) {
-		// Configura execução da checagem
-		Runnable checker = new Runnable() {
-			@Override
-			public void run() {
-				long lastTime = actions.lastReceiptTime();
-				int limit = params.getEpochLimit();
-				final int epoch = params.getEpoch();
+	private static final class StatusChecker implements Runnable {
+		private final LspParams params;
+		private final Actions actions;
 
-				while (limit-- > 0) {
-					sleep(epoch);
+		private StatusChecker(LspParams params, Actions actions) {
+			this.params = params;
+			this.actions = actions;
+		}
 
-					// Dispara as ações da época
-					actions.epochTriggers();
+		@Override
+		public void run() {
+			long lastTime = actions.lastReceiptTime();
+			int limit = params.getEpochLimit();
+			final int epoch = params.getEpoch();
 
-					// Reinicia contagem de épocas se houve mensagens recebidas
-					// desde a última época
-					final long time = actions.lastReceiptTime();
-					if (time != lastTime) {
-						lastTime = time;
-						limit = params.getEpochLimit();
-					}
-				}
+			while (limit-- > 0) {
+				sleep(epoch);
 
-				// O limite de épocas foi atingido, então encerra a conexão
-				actions.closeConnection();
-			}
+				// Dispara as ações da época
+				actions.epochTriggers();
 
-			/* Sleep sem lançamento de exceção */
-			private void sleep(long millis) {
-				try {
-					Thread.sleep(millis);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				// Reinicia contagem de épocas se houve mensagens recebidas
+				// desde a última época
+				final long time = actions.lastReceiptTime();
+				if (time != lastTime) {
+					lastTime = time;
+					limit = params.getEpochLimit();
 				}
 			}
-		};
 
-		// Executa a thread para checagem da conexão
-		new Thread(checker).start();
+			// O limite de épocas foi atingido, então encerra a conexão
+			actions.closeConnection();
+		}
+
+		/* Sleep sem lançamento de exceção */
+		private void sleep(long millis) {
+			try {
+				Thread.sleep(millis);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
