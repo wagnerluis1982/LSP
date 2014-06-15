@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static lsp.LspConnection.Actions;
+import lsp.LspConnection.Actions;
 
 /**
  * Servidor LSP.
@@ -46,8 +46,8 @@ public class LspServer {
 		this.active = true;
 
 		// Inicia o processador de entradas do servidor
-		InputProcessor inputProc = new InputProcessor();
-		new Thread(inputProc).start();
+		InputService inputSvc = new InputService();
+		new Thread(inputSvc).start();
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class LspServer {
 	/**
 	 * Processador de entradas do servidor.
 	 */
-	private final class InputProcessor implements Runnable {
+	private final class InputService implements Runnable {
 		private static final char CONNECT = 0;
 		private static final char DATA = 1;
 		private static final char ACK = 2;
@@ -128,9 +128,11 @@ public class LspServer {
 				e.printStackTrace();
 			}
 
+			byte[] bs = new byte[1000];
+			DatagramPacket packet = new DatagramPacket(bs, bs.length);
+
 			while (active) {
 				try {
-					DatagramPacket packet = new DatagramPacket(new byte[1000], 1000);
 					socket.receive(packet);
 					processPacket(packet);
 				} catch (IOException e) {
@@ -139,34 +141,48 @@ public class LspServer {
 			}
 		}
 
-		private void processPacket(DatagramPacket p) {
-			ByteBuffer buf = ByteBuffer.wrap(p.getData());
-			short msgType = buf.getShort();
+		private void processPacket(final DatagramPacket pack) {
+			final ByteBuffer buf = ByteBuffer.wrap(pack.getData(), 0, pack.getLength());
+			final short msgType = buf.getShort();
 
 			switch (msgType) {
 			case CONNECT:
-				if (buf.getShort() == 0 && buf.getShort() == 0) {
-					int host = p.getAddress().hashCode();
-					if (!remoteHosts.contains(host)) {
-						final short newId = (short) idCounter.incrementAndGet();
-						final ServerActions actions = new ServerActions(newId);
-						connections.put(newId, new LspConnection(newId, host, params, actions));
-						remoteHosts.add(host);
-					}
-				}
+				doConnect(pack, buf);
 				break;
 			case DATA:
+				doData(pack, buf);
 				break;
 			case ACK:
+				doAck(pack, buf);
 				break;
 			}
 		}
+
+		private void doConnect(final DatagramPacket pack, final ByteBuffer buf) {
+			if (buf.getShort() == 0 && buf.getShort() == 0) {
+				final int host = pack.getAddress().hashCode();
+				if (!remoteHosts.contains(host)) {
+					final short newId = (short) idCounter.incrementAndGet();
+					final Actions actions = new ConnectionActions(newId);
+					connections.put(newId, new LspConnection(newId, host, params, actions));
+					remoteHosts.add(host);
+				}
+			}
+		}
+
+		private void doData(final DatagramPacket pack, final ByteBuffer buf) {
+
+		}
+
+		private void doAck(final DatagramPacket pack, final ByteBuffer buf) {
+
+		}
 	}
 
-	private final class ServerActions implements Actions {
+	private final class ConnectionActions implements Actions {
 		private final short newId;
 
-		ServerActions(short newId) {
+		private ConnectionActions(short newId) {
 			this.newId = newId;
 		}
 
