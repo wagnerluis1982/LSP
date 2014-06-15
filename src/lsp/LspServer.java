@@ -83,11 +83,11 @@ public class LspServer {
 	 */
 	public void closeConn(int connId) {
 		// Encerra a conexão formalmente e remove da lista de conexões.
-		LspConnection conn = connections.remove(connId);
+		LspConnection conn = this.connections.remove(connId);
 		conn.close();
 
 		// Remove o IP da lista de conexões
-		remoteHosts.remove(conn.getHost());
+		this.remoteHosts.remove(conn.getHost());
 	}
 
 	/**
@@ -95,8 +95,21 @@ public class LspServer {
 	 * encerramento do processador de entradas.
 	 */
 	public void closeAll() {
-		connections.clear();
+		// Marca servidor como desligado
 		this.active = false;
+
+		// Fecha todas as conexões (em paralelo)
+		for (final LspConnection conn : this.connections.values()) {
+			new Thread() {
+				public void run() {
+					conn.close();
+				};
+			}.start();
+		}
+
+		// Limpeza de memória
+		this.connections.clear();
+		this.remoteHosts.clear();
 	}
 
 	/**
