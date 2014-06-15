@@ -87,7 +87,7 @@ public class LspServer {
 		conn.close();
 
 		// Remove o IP da lista de conexões
-		remoteHosts.remove(conn.host);
+		remoteHosts.remove(conn.getHost());
 	}
 
 	/**

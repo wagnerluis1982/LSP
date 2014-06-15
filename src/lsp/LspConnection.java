@@ -7,10 +7,10 @@ package lsp;
  */
 class LspConnection {
 	private final short id;
-	final int host;
+	private final int host;
 
 	private volatile boolean closed;
-	volatile long lastMessageTime;
+	private volatile long lastMsgTime;
 
 	/**
 	 * Constrói um objeto {@link LspConnection}
@@ -27,8 +27,7 @@ class LspConnection {
 		this.id = id;
 		this.host = host;
 		this.closed = false;
-		this.lastMessageTime = System.currentTimeMillis();
-
+		this.lastMsgTime = System.currentTimeMillis();
 
 		// Inicia a thread para monitorar o status da conexão
 		Runnable checker = new StatusChecker(params, actions);
@@ -37,6 +36,18 @@ class LspConnection {
 
 	short getId() {
 		return this.id;
+	}
+
+	int getHost() {
+		return host;
+	}
+
+	public long getLastMsgTime() {
+		return lastMsgTime;
+	}
+
+	public void setLastMsgTime(long lastMsgTime) {
+		this.lastMsgTime = lastMsgTime;
 	}
 
 	void close() {
@@ -70,7 +81,7 @@ class LspConnection {
 
 		@Override
 		public void run() {
-			long lastTime = lastMessageTime;
+			long lastTime = lastMsgTime;
 			int limit = params.getEpochLimit();
 			final int epoch = params.getEpoch();
 
@@ -82,7 +93,7 @@ class LspConnection {
 
 				// Reinicia contagem de épocas se houve mensagens recebidas
 				// desde a última época
-				final long time = lastMessageTime;
+				final long time = lastMsgTime;
 				if (time != lastTime) {
 					lastTime = time;
 					limit = params.getEpochLimit();

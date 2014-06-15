@@ -34,9 +34,9 @@ public class LspConnectionTest {
 		assertEquals(4, epoch);
 		assertFalse(closed);
 
-		// Manipulando o atributo lastMessageTime para propósitos do teste
+		// Manipulando o atributo lastMsgTime para propósitos do teste
 		Thread.sleep(2);
-		conn.lastMessageTime = System.currentTimeMillis();
+		conn.setLastMsgTime(System.currentTimeMillis());
 
 		// Ao finalizar...
 		Thread.sleep(8);
