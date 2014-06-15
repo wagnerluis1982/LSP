@@ -7,6 +7,8 @@ package lsp;
  */
 class LspConnection {
 	private final short id;
+	final int host;
+
 	private volatile boolean closed;
 	volatile long lastMessageTime;
 
@@ -14,14 +16,16 @@ class LspConnection {
 	 * Constrói um objeto {@link LspConnection}
 	 *
 	 * @param id Identificador da conexão
+	 * @param host Número IP associado à conexão
 	 * @param params Parâmetros de temporização da conexão
 	 * @param actions Callbacks usados na verificação da conexão.
 	 */
-	LspConnection(short id, LspParams params, Actions actions) {
+	LspConnection(short id, int host, LspParams params, Actions actions) {
 		if (params == null || actions == null)
 			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
 
 		this.id = id;
+		this.host = host;
 		this.closed = false;
 		this.lastMessageTime = System.currentTimeMillis();
 

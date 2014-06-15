@@ -7,6 +7,7 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static lsp.LspConnection.Actions;
@@ -20,8 +21,11 @@ public class LspServer {
 	private final int port;
 	private final LspParams params;
 
-	// Pool de conexões
+	/** Pool de conexões */
 	private final ConcurrentMap<Short, LspConnection> connections;
+
+	/** Conjunto de hosts conectados. Garante haver apenas uma conexão por host */
+	private final ConcurrentSkipListSet<Integer> remoteHosts;
 
 	// Variáveis de controle do servidor
 	private AtomicInteger idCounter;
@@ -33,6 +37,9 @@ public class LspServer {
 
 		// Cria o pool de conexões, inicialmente com capacidade para 16 conexões
 		this.connections = new ConcurrentHashMap<>(16);
+
+		// Inicialização dos conjuntos de hosts
+		this.remoteHosts = new ConcurrentSkipListSet<>();
 
 		// Inicialização das variáveis de controle
 		this.idCounter = new AtomicInteger();
@@ -75,9 +82,12 @@ public class LspServer {
 	 *             se a conexão estiver encerrada.
 	 */
 	public void closeConn(int connId) {
-		// Encerra a conexão formalmente e remove da lista de conexões
+		// Encerra a conexão formalmente e remove da lista de conexões.
 		LspConnection conn = connections.remove(connId);
 		conn.close();
+
+		// Remove o IP da lista de conexões
+		remoteHosts.remove(conn.host);
 	}
 
 	/**
@@ -117,14 +127,20 @@ public class LspServer {
 		}
 
 		private void processPacket(DatagramPacket p) {
-			ByteBuffer buffer = ByteBuffer.wrap(p.getData());
-			short msgType = buffer.getShort();
+			ByteBuffer buf = ByteBuffer.wrap(p.getData());
+			short msgType = buf.getShort();
 
 			switch (msgType) {
 			case CONNECT:
-				final short newId = (short) idCounter.incrementAndGet();
-				final ServerActions actions = new ServerActions(newId);
-				connections.put(newId, new LspConnection(newId, params, actions));
+				if (buf.getShort() == 0 && buf.getShort() == 0) {
+					int host = p.getAddress().hashCode();
+					if (!remoteHosts.contains(host)) {
+						final short newId = (short) idCounter.incrementAndGet();
+						final ServerActions actions = new ServerActions(newId);
+						connections.put(newId, new LspConnection(newId, host, params, actions));
+						remoteHosts.add(host);
+					}
+				}
 				break;
 			case DATA:
 				break;
