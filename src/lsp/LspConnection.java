@@ -7,6 +7,7 @@ package lsp;
  */
 class LspConnection {
 	private final short id;
+	private volatile boolean closed;
 	volatile long lastMessageTime;
 
 	/**
@@ -17,11 +18,13 @@ class LspConnection {
 	 * @param actions Callbacks usados na verificação da conexão.
 	 */
 	LspConnection(short id, LspParams params, Actions actions) {
-		this.id = id;
-		this.lastMessageTime = System.currentTimeMillis();
-
 		if (params == null || actions == null)
 			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
+
+		this.id = id;
+		this.closed = false;
+		this.lastMessageTime = System.currentTimeMillis();
+
 
 		// Inicia a thread para monitorar o status da conexão
 		Runnable checker = new StatusChecker(params, actions);
@@ -30,6 +33,10 @@ class LspConnection {
 
 	short getId() {
 		return this.id;
+	}
+
+	void close() {
+		this.closed = true;
 	}
 
 	interface Actions {
@@ -63,7 +70,7 @@ class LspConnection {
 			int limit = params.getEpochLimit();
 			final int epoch = params.getEpoch();
 
-			while (limit-- > 0) {
+			while (!closed && limit-- > 0) {
 				sleep(epoch);
 
 				// Dispara as ações da época
@@ -91,4 +98,5 @@ class LspConnection {
 			}
 		}
 	}
+
 }

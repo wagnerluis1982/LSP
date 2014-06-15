@@ -75,7 +75,9 @@ public class LspServer {
 	 *             se a conexão estiver encerrada.
 	 */
 	public void closeConn(int connId) {
-		connections.remove(connId);
+		// Encerra a conexão formalmente e remove da lista de conexões
+		LspConnection conn = connections.remove(connId);
+		conn.close();
 	}
 
 	/**
