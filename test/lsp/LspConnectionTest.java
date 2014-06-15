@@ -15,9 +15,9 @@ public class LspConnectionTest {
 	 */
 	@Test
 	public void testStatusChecker() throws InterruptedException {
-        // LspConnection com epoch = 2 msec e epochLimit = 3, portanto a thread
-        // durará 8 msec e deve decrementar o valor de epoch a cada 2 msec e
-        // alterar closed para true no final.
+		// LspConnection com epoch = 2 msec e epochLimit = 3, portanto a thread
+		// durará 8 msec e deve decrementar o valor de epoch a cada 2 msec e
+		// alterar closed para true no final.
 		epoch = 4;
 		closed = false;
 		LspConnection conn = new LspConnection((short) 1, new LspParams(2, 3),

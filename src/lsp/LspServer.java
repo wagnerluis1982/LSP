@@ -125,10 +125,10 @@ public class LspServer {
 				connections.put(newId, new LspConnection(newId, params, actions));
 				break;
 			case DATA:
-            	break;
+				break;
 			case ACK:
 				break;
-            }
+			}
 		}
 	}
 
@@ -141,12 +141,26 @@ public class LspServer {
 
 		@Override
 		public void epochTriggers() {
-
+			resendData();
+			resendAckConnect();
+			resendAckData();
 		}
 
 		@Override
 		public void closeConnection() {
 			closeConn(newId);
+		}
+
+		private void resendData() {
+			// TODO Auto-generated method stub
+		}
+
+		private void resendAckConnect() {
+			// TODO Auto-generated method stub
+		}
+
+		private void resendAckData() {
+			// TODO Auto-generated method stub
 		}
 	}
 }
