@@ -86,7 +86,7 @@ public class LspServer {
 		LspConnection conn = this.connections.remove(connId);
 		conn.close();
 
-		// Remove o IP da lista de conexões
+		// Remove o IP do conjunto de hosts
 		this.remoteHosts.remove(conn.getHost());
 	}
 
@@ -121,6 +121,7 @@ public class LspServer {
 		private static final char ACK = 2;
 
 		public void run() {
+			// Abre um socket UDP vinculado à porta solicitada
 			DatagramSocket socket = null;
 			try {
 				socket = new DatagramSocket(port);
@@ -128,9 +129,11 @@ public class LspServer {
 				e.printStackTrace();
 			}
 
+			// Configuração do pacote de entrada
 			byte[] bs = new byte[1000];
 			DatagramPacket packet = new DatagramPacket(bs, bs.length);
 
+			// Recebe pacotes até o servidor ser encerrado
 			while (active) {
 				try {
 					socket.receive(packet);
@@ -159,8 +162,14 @@ public class LspServer {
 		}
 
 		private void doConnect(final DatagramPacket pack, final ByteBuffer buf) {
-			if (buf.getShort() == 0 && buf.getShort() == 0) {
+			// Somente serão aceitos pedidos de conexão válidos, isto é, aqueles
+			// em que Connection ID e Sequence Number são iguais a zero
+			if (buf.getShort() == 0 && buf.getShort() == 0){
+				// Número IP em formato decimal
 				final int host = pack.getAddress().hashCode();
+
+				// A abertura de novas conexões é feita a seguir. A condição
+				// garante não abrir mais de uma conexão para o mesmo host.
 				if (!remoteHosts.contains(host)) {
 					final short newId = (short) idCounter.incrementAndGet();
 					final Actions actions = new ConnectionActions(newId);

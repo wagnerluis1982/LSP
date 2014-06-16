@@ -61,7 +61,7 @@ class LspConnection {
 		void epochTriggers();
 
 		/**
-		 * Callback para fechar a conexão
+		 * Callback representando as ações de fechamento da conexão
 		 */
 		void closeConnection();
 	}
@@ -81,10 +81,15 @@ class LspConnection {
 
 		@Override
 		public void run() {
+			// Obtém o horário da última mensagem recebida em milisegundos
 			long lastTime = lastMsgTime;
+
+			// Obtém parâmetros da conexão
 			int limit = params.getEpochLimit();
 			final int epoch = params.getEpoch();
 
+			// Monitora a conexão continuamente até que o limite de épocas seja
+			// atingido ou a conexão seja fechada
 			while (!closed && limit-- > 0) {
 				sleep(epoch);
 
@@ -100,7 +105,7 @@ class LspConnection {
 				}
 			}
 
-			// O limite de épocas foi atingido, então encerra a conexão
+			// Encerra formalmente a conexão
 			actions.closeConnection();
 		}
 
