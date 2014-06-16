@@ -153,7 +153,7 @@ public class LspServer {
 		private void doConnect(final DatagramPacket pack, final ByteBuffer buf) {
 			// Somente serão aceitos pedidos de conexão válidos, isto é, aqueles
 			// em que Connection ID e Sequence Number são iguais a zero
-			if (buf.getShort() == 0 && buf.getShort() == 0){
+			if (buf.getInt() == 0) {
 				// ID único formado pelo número IP e porta do socket remoto
 				final int rHost = pack.getAddress().hashCode();
 				final int rPort = pack.getPort();
