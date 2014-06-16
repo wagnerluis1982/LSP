@@ -1,9 +1,6 @@
 package lsp;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -49,8 +46,8 @@ public class LspServer {
 		this.active = true;
 
 		// Inicia o processador de entradas do servidor
-		InputService inputSvc = new InputService();
-		new Thread(inputSvc).start();
+		InputService inputSvc = new InputServiceImpl(this.port);
+		inputSvc.start();
 	}
 
 	/**
@@ -125,36 +122,18 @@ public class LspServer {
 	/**
 	 * Processador de entradas do servidor.
 	 */
-	private final class InputService implements Runnable {
-		private static final byte CONNECT = 0;
-		private static final byte DATA = 1;
-		private static final byte ACK = 2;
-
-		public void run() {
-			// Abre um socket UDP vinculado à porta solicitada
-			DatagramSocket socket = null;
-			try {
-				socket = new DatagramSocket(port);
-			} catch (SocketException e) {
-				e.printStackTrace();
-			}
-
-			// Configuração do pacote de entrada
-			byte[] bs = new byte[1000];
-			DatagramPacket packet = new DatagramPacket(bs, bs.length);
-
-			// Recebe pacotes até o servidor ser encerrado
-			while (active) {
-				try {
-					socket.receive(packet);
-					processPacket(packet);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+	private final class InputServiceImpl extends InputService {
+		InputServiceImpl(int port) {
+			super(port);
 		}
 
-		private void processPacket(final DatagramPacket pack) {
+		@Override
+		boolean isActive() {
+			return active;
+		}
+
+		@Override
+		void processPacket(DatagramPacket pack) {
 			final ByteBuffer buf = ByteBuffer.wrap(pack.getData(), 0, pack.getLength());
 			final short msgType = buf.getShort();
 
