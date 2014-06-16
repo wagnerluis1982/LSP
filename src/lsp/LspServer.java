@@ -24,8 +24,11 @@ public class LspServer {
 	/** Pool de conexões */
 	private final ConcurrentMap<Short, LspConnection> connections;
 
-	/** Conjunto de hosts conectados. Garante haver apenas uma conexão por host */
-	private final ConcurrentSkipListSet<Integer> remoteHosts;
+	/**
+	 * Conjunto de sockets conectados. Garante que haja apenas uma conexão por
+	 * socket remoto
+	 */
+	private final ConcurrentSkipListSet<Long> connectedSockets;
 
 	// Variáveis de controle do servidor
 	private AtomicInteger idCounter;
@@ -38,8 +41,8 @@ public class LspServer {
 		// Cria o pool de conexões, inicialmente com capacidade para 16 conexões
 		this.connections = new ConcurrentHashMap<>(16);
 
-		// Inicialização dos conjuntos de hosts
-		this.remoteHosts = new ConcurrentSkipListSet<>();
+		// Inicialização do conjunto de sockets
+		this.connectedSockets = new ConcurrentSkipListSet<>();
 
 		// Inicialização das variáveis de controle
 		this.idCounter = new AtomicInteger();
@@ -86,8 +89,8 @@ public class LspServer {
 		LspConnection conn = this.connections.remove(connId);
 		conn.close();
 
-		// Remove o IP do conjunto de hosts
-		this.remoteHosts.remove(conn.getHost());
+		// Remove a conexão do conjunto de sockets
+		this.connectedSockets.remove(conn.getSockId());
 	}
 
 	/**
@@ -109,16 +112,23 @@ public class LspServer {
 
 		// Limpeza de memória
 		this.connections.clear();
-		this.remoteHosts.clear();
+		this.connectedSockets.clear();
+	}
+
+	/**
+	 * Número único gerado a partir de um endereço IP e uma porta
+	 */
+	private long uniqueSockId(int host, int port) {
+		return host & (-1L >>> 32) << 16 | (short) port;
 	}
 
 	/**
 	 * Processador de entradas do servidor.
 	 */
 	private final class InputService implements Runnable {
-		private static final char CONNECT = 0;
-		private static final char DATA = 1;
-		private static final char ACK = 2;
+		private static final byte CONNECT = 0;
+		private static final byte DATA = 1;
+		private static final byte ACK = 2;
 
 		public void run() {
 			// Abre um socket UDP vinculado à porta solicitada
@@ -165,16 +175,18 @@ public class LspServer {
 			// Somente serão aceitos pedidos de conexão válidos, isto é, aqueles
 			// em que Connection ID e Sequence Number são iguais a zero
 			if (buf.getShort() == 0 && buf.getShort() == 0){
-				// Número IP em formato decimal
-				final int host = pack.getAddress().hashCode();
+				// ID único formado pelo número IP e porta do socket remoto
+				final int rHost = pack.getAddress().hashCode();
+				final int rPort = pack.getPort();
+				final long sockId = uniqueSockId(rHost, rPort);
 
 				// A abertura de novas conexões é feita a seguir. A condição
-				// garante não abrir mais de uma conexão para o mesmo host.
-				if (!remoteHosts.contains(host)) {
+				// garante não abrir nova conexão se esta já está aberta
+				if (!connectedSockets.contains(sockId)) {
 					final short newId = (short) idCounter.incrementAndGet();
 					final Actions actions = new ConnectionActions(newId);
-					connections.put(newId, new LspConnection(newId, host, params, actions));
-					remoteHosts.add(host);
+					connections.put(newId, new LspConnection(newId, sockId, params, actions));
+					connectedSockets.add(sockId);
 				}
 			}
 		}
