@@ -6,6 +6,8 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 /**
+ * Serviço de entrada de pacotes. Classe abstrata.
+ *
  * @author Wagner Macedo
  */
 public abstract class InputService {
@@ -14,20 +16,34 @@ public abstract class InputService {
 	protected static final byte ACK = 2;
 
 	private final int port;
+	private final Thread thread;
 
 	protected InputService(int port) {
 		this.port = port;
+		this.thread = new Thread(new SvcThread());
 	}
 
+	/**
+	 * Indica até quando o serviço de entrada será executado. Esse método deve
+	 * ser implementado em uma subclasse.
+	 *
+	 * @return false para parar o serviço
+	 */
 	protected abstract boolean isActive();
 
+	/**
+	 * Processamento de cada pacote UDP recebido.
+	 *
+	 * @param pack Pacote enviado pelo serviço
+	 */
 	protected abstract void processPacket(DatagramPacket pack);
 
 	public final void start() {
-		new Thread(new SvcThread()).start();
+		thread.start();
 	}
 
 	private final class SvcThread implements Runnable {
+		@Override
 		public void run() {
 			// Abre um socket UDP vinculado à porta solicitada
 			DatagramSocket socket = null;
