@@ -1,4 +1,4 @@
-package lsp;
+package lsp.helpers;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -8,22 +8,22 @@ import java.net.SocketException;
 /**
  * @author Wagner Macedo
  */
-abstract class InputService {
-	static final byte CONNECT = 0;
-	static final byte DATA = 1;
-	static final byte ACK = 2;
+public abstract class InputService {
+	protected static final byte CONNECT = 0;
+	protected static final byte DATA = 1;
+	protected static final byte ACK = 2;
 
 	private final int port;
 
-	InputService(int port) {
+	protected InputService(int port) {
 		this.port = port;
 	}
 
-	abstract boolean isActive();
+	protected abstract boolean isActive();
 
-	abstract void processPacket(DatagramPacket pack);
+	protected abstract void processPacket(DatagramPacket pack);
 
-	final void start() {
+	public final void start() {
 		new Thread(new SvcThread()).start();
 	}
 

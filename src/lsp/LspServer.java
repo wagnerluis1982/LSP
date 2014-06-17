@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import lsp.LspConnection.Actions;
+import lsp.helpers.InputService;
 
 /**
  * Servidor LSP.
@@ -128,12 +129,12 @@ public class LspServer {
 		}
 
 		@Override
-		boolean isActive() {
+		protected boolean isActive() {
 			return active;
 		}
 
 		@Override
-		void processPacket(DatagramPacket pack) {
+		protected void processPacket(DatagramPacket pack) {
 			final ByteBuffer buf = ByteBuffer.wrap(pack.getData(), 0, pack.getLength());
 			final short msgType = buf.getShort();
 
