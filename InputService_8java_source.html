@@ -94,63 +94,74 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">import</span> java.net.DatagramPacket;</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">import</span> java.net.DatagramSocket;</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">import</span> java.net.SocketException;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html">   13</a></span>&#160;<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class </span><a class="code" href="classlsp_1_1helpers_1_1InputService.html">InputService</a> {</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#ab562cb40f48f3dc54eee45917c771a4d">   14</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> byte <a class="code" href="classlsp_1_1helpers_1_1InputService.html#ab562cb40f48f3dc54eee45917c771a4d">CONNECT</a> = 0;</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#ad00cfb475cf7c2f7411f4b53f38830ae">   15</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> byte <a class="code" href="classlsp_1_1helpers_1_1InputService.html#ad00cfb475cf7c2f7411f4b53f38830ae">DATA</a> = 1;</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#a8e0b776720bec30dd6eecdb68ce60398">   16</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> byte <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a8e0b776720bec30dd6eecdb68ce60398">ACK</a> = 2;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keywordtype">int</span> port;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> Thread thread;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#a2bc046518cbadf70a81dc053a9d13a51">   21</a></span>&#160;    <span class="keyword">protected</span> <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a2bc046518cbadf70a81dc053a9d13a51">InputService</a>(<span class="keywordtype">int</span> port) {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        this.port = port;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        this.thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> SvcTask());</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keywordtype">boolean</span> <a class="code" href="classlsp_1_1helpers_1_1InputService.html#ad6e7d1a1ce11e9c8bb2d41aca0a31063">isActive</a>();</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a130cfa0572c27bf8c132c53d89993a62">processPacket</a>(DatagramPacket pack);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#a3c2817d96abae96f600438e2086cf8de">   41</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a3c2817d96abae96f600438e2086cf8de">start</a>() {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        thread.start();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">class </span>SvcTask <span class="keyword">implements</span> Runnable {</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        @Override</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keyword">public</span> <span class="keywordtype">void</span> run() {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            <span class="comment">// Abre um socket UDP vinculado à porta solicitada</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            DatagramSocket socket = null;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                socket = <span class="keyword">new</span> DatagramSocket(port);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            } <span class="keywordflow">catch</span> (SocketException e) {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                e.printStackTrace();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            <span class="comment">// Configuração do pacote de entrada</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            byte[] bs = <span class="keyword">new</span> byte[1000];</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            DatagramPacket packet = <span class="keyword">new</span> DatagramPacket(bs, bs.length);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            <span class="comment">// Recebe pacotes até o servidor ser encerrado</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <span class="keywordflow">while</span> (<a class="code" href="classlsp_1_1helpers_1_1InputService.html#ad6e7d1a1ce11e9c8bb2d41aca0a31063">isActive</a>()) {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                    socket.receive(packet);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                    <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a130cfa0572c27bf8c132c53d89993a62">processPacket</a>(packet);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                } <span class="keywordflow">catch</span> (IOException e) {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                    e.printStackTrace();</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                }</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            }</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        }</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
-<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_a3c2817d96abae96f600438e2086cf8de"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#a3c2817d96abae96f600438e2086cf8de">lsp.helpers.InputService.start</a></div><div class="ttdeci">final void start()</div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00041">InputService.java:41</a></div></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">import</span> java.nio.ByteBuffer;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html">   14</a></span>&#160;<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class </span><a class="code" href="classlsp_1_1helpers_1_1InputService.html">InputService</a> {</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#ab562cb40f48f3dc54eee45917c771a4d">   15</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> byte <a class="code" href="classlsp_1_1helpers_1_1InputService.html#ab562cb40f48f3dc54eee45917c771a4d">CONNECT</a> = 0;</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#ad00cfb475cf7c2f7411f4b53f38830ae">   16</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> byte <a class="code" href="classlsp_1_1helpers_1_1InputService.html#ad00cfb475cf7c2f7411f4b53f38830ae">DATA</a> = 1;</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#a8e0b776720bec30dd6eecdb68ce60398">   17</a></span>&#160;    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> byte <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a8e0b776720bec30dd6eecdb68ce60398">ACK</a> = 2;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keywordtype">int</span> port;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> Thread thread;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#a2bc046518cbadf70a81dc053a9d13a51">   22</a></span>&#160;    <span class="keyword">protected</span> <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a2bc046518cbadf70a81dc053a9d13a51">InputService</a>(<span class="keywordtype">int</span> port) {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        this.port = port;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        this.thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> SvcTask());</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    }</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keywordtype">boolean</span> <a class="code" href="classlsp_1_1helpers_1_1InputService.html#ad6e7d1a1ce11e9c8bb2d41aca0a31063">isActive</a>();</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a130cfa0572c27bf8c132c53d89993a62">processPacket</a>(DatagramPacket pack);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#a3c2817d96abae96f600438e2086cf8de">   42</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a3c2817d96abae96f600438e2086cf8de">start</a>() {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        thread.start();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">class </span>SvcTask <span class="keyword">implements</span> Runnable {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        @Override</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">public</span> <span class="keywordtype">void</span> run() {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            <span class="comment">// Abre um socket UDP vinculado à porta solicitada</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            DatagramSocket socket = null;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                socket = <span class="keyword">new</span> DatagramSocket(port);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            } <span class="keywordflow">catch</span> (SocketException e) {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                e.printStackTrace();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            }</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="comment">// Configuração do pacote de entrada</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            byte[] bs = <span class="keyword">new</span> byte[1024];</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            DatagramPacket packet = <span class="keyword">new</span> DatagramPacket(bs, bs.length);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <span class="comment">// Recebe pacotes até o servidor ser encerrado</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordflow">while</span> (<a class="code" href="classlsp_1_1helpers_1_1InputService.html#ad6e7d1a1ce11e9c8bb2d41aca0a31063">isActive</a>()) {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                    socket.receive(packet);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                    <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a130cfa0572c27bf8c132c53d89993a62">processPacket</a>(packet);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                } <span class="keywordflow">catch</span> (IOException e) {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                    e.printStackTrace();</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                }</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            }</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        }</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#a5acb2594c1e738d4b5fe6fb1d0271549">   74</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> byte[] <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a5acb2594c1e738d4b5fe6fb1d0271549">getPayload</a>(<span class="keyword">final</span> ByteBuffer buf) {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        byte[] bs = <span class="keyword">new</span> byte[buf.remaining()];</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; bs.length; i++) {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            bs[i] = buf.get();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        }</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordflow">return</span> bs;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
+<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_a3c2817d96abae96f600438e2086cf8de"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#a3c2817d96abae96f600438e2086cf8de">lsp.helpers.InputService.start</a></div><div class="ttdeci">final void start()</div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00042">InputService.java:42</a></div></div>
 <div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_a130cfa0572c27bf8c132c53d89993a62"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#a130cfa0572c27bf8c132c53d89993a62">lsp.helpers.InputService.processPacket</a></div><div class="ttdeci">abstract void processPacket(DatagramPacket pack)</div><div class="ttdoc">Processamento de cada pacote UDP recebido. </div></div>
-<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_a2bc046518cbadf70a81dc053a9d13a51"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#a2bc046518cbadf70a81dc053a9d13a51">lsp.helpers.InputService.InputService</a></div><div class="ttdeci">InputService(int port)</div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00021">InputService.java:21</a></div></div>
-<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_a8e0b776720bec30dd6eecdb68ce60398"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#a8e0b776720bec30dd6eecdb68ce60398">lsp.helpers.InputService.ACK</a></div><div class="ttdeci">static final byte ACK</div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00016">InputService.java:16</a></div></div>
+<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_a2bc046518cbadf70a81dc053a9d13a51"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#a2bc046518cbadf70a81dc053a9d13a51">lsp.helpers.InputService.InputService</a></div><div class="ttdeci">InputService(int port)</div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00022">InputService.java:22</a></div></div>
+<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_a8e0b776720bec30dd6eecdb68ce60398"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#a8e0b776720bec30dd6eecdb68ce60398">lsp.helpers.InputService.ACK</a></div><div class="ttdeci">static final byte ACK</div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00017">InputService.java:17</a></div></div>
 <div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_ad6e7d1a1ce11e9c8bb2d41aca0a31063"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#ad6e7d1a1ce11e9c8bb2d41aca0a31063">lsp.helpers.InputService.isActive</a></div><div class="ttdeci">abstract boolean isActive()</div><div class="ttdoc">Indica até quando o serviço de entrada será executado. </div></div>
-<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_ad00cfb475cf7c2f7411f4b53f38830ae"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#ad00cfb475cf7c2f7411f4b53f38830ae">lsp.helpers.InputService.DATA</a></div><div class="ttdeci">static final byte DATA</div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00015">InputService.java:15</a></div></div>
-<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html">lsp.helpers.InputService</a></div><div class="ttdoc">Serviço de entrada de pacotes. </div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00013">InputService.java:13</a></div></div>
-<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_ab562cb40f48f3dc54eee45917c771a4d"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#ab562cb40f48f3dc54eee45917c771a4d">lsp.helpers.InputService.CONNECT</a></div><div class="ttdeci">static final byte CONNECT</div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00014">InputService.java:14</a></div></div>
+<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_ad00cfb475cf7c2f7411f4b53f38830ae"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#ad00cfb475cf7c2f7411f4b53f38830ae">lsp.helpers.InputService.DATA</a></div><div class="ttdeci">static final byte DATA</div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00016">InputService.java:16</a></div></div>
+<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_a5acb2594c1e738d4b5fe6fb1d0271549"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#a5acb2594c1e738d4b5fe6fb1d0271549">lsp.helpers.InputService.getPayload</a></div><div class="ttdeci">static byte[] getPayload(final ByteBuffer buf)</div><div class="ttdoc">Helper para obter um array de bytes com o resto do ByteBuffer. </div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00074">InputService.java:74</a></div></div>
+<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html">lsp.helpers.InputService</a></div><div class="ttdoc">Serviço de entrada de pacotes. </div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00014">InputService.java:14</a></div></div>
+<div class="ttc" id="classlsp_1_1helpers_1_1InputService_html_ab562cb40f48f3dc54eee45917c771a4d"><div class="ttname"><a href="classlsp_1_1helpers_1_1InputService.html#ab562cb40f48f3dc54eee45917c771a4d">lsp.helpers.InputService.CONNECT</a></div><div class="ttdeci">static final byte CONNECT</div><div class="ttdef"><b>Definition:</b> <a href="InputService_8java_source.html#l00015">InputService.java:15</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['epochtriggers',['epochTriggers',['../interfacelsp_1_1LspConnection_1_1Actions.html#a3b0f95a24836ca180d1dcba18313ad87',1,'lsp::LspConnection::Actions']]]
+  ['epochtriggers',['epochTriggers',['../interfacelsp_1_1ConnectionActions.html#aad0ee9ecb92166753d0b8bac99d280c2',1,'lsp::ConnectionActions']]]
 ];

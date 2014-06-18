@@ -90,6 +90,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="classlsp_1_1helpers_1_1InputService-members.html">List of all members</a>  </div>
@@ -112,6 +113,12 @@ Inheritance diagram for lsp.helpers.InputService:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a3c2817d96abae96f600438e2086cf8de"><td class="memItemLeft" align="right" valign="top">final void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1helpers_1_1InputService.html#a3c2817d96abae96f600438e2086cf8de">start</a> ()</td></tr>
 <tr class="separator:a3c2817d96abae96f600438e2086cf8de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a5acb2594c1e738d4b5fe6fb1d0271549"><td class="memItemLeft" align="right" valign="top">static byte[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1helpers_1_1InputService.html#a5acb2594c1e738d4b5fe6fb1d0271549">getPayload</a> (final ByteBuffer buf)</td></tr>
+<tr class="memdesc:a5acb2594c1e738d4b5fe6fb1d0271549"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper para obter um array de bytes com o resto do <a class="el" href="">ByteBuffer</a>.  <a href="#a5acb2594c1e738d4b5fe6fb1d0271549">More...</a><br/></td></tr>
+<tr class="separator:a5acb2594c1e738d4b5fe6fb1d0271549"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -138,7 +145,7 @@ Static Protected Attributes</h2></td></tr>
 <p>Classe abstrata.</p>
 <dl class="section author"><dt>Author</dt><dd>Wagner Macedo </dd></dl>
 
-<p>Definition at line <a class="el" href="InputService_8java_source.html#l00013">13</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
+<p>Definition at line <a class="el" href="InputService_8java_source.html#l00014">14</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a2bc046518cbadf70a81dc053a9d13a51"></a>
 <div class="memitem">
@@ -162,15 +169,51 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="InputService_8java_source.html#l00021">21</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;                                     {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        this.port = port;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        this.thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> SvcTask());</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="InputService_8java_source.html#l00022">22</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;                                     {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        this.port = port;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        this.thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> SvcTask());</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a5acb2594c1e738d4b5fe6fb1d0271549"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static byte [] lsp.helpers.InputService.getPayload </td>
+          <td>(</td>
+          <td class="paramtype">final ByteBuffer&#160;</td>
+          <td class="paramname"><em>buf</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Helper para obter um array de bytes com o resto do <a class="el" href="">ByteBuffer</a>. </p>
+
+<p>Definition at line <a class="el" href="InputService_8java_source.html#l00074">74</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                                                          {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        byte[] bs = <span class="keyword">new</span> byte[buf.remaining()];</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; bs.length; i++) {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            bs[i] = buf.get();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        }</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordflow">return</span> bs;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a class="anchor" id="ad6e7d1a1ce11e9c8bb2d41aca0a31063"></a>
 <div class="memitem">
 <div class="memproto">
@@ -243,10 +286,10 @@ Static Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="InputService_8java_source.html#l00041">41</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                              {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        thread.start();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="InputService_8java_source.html#l00042">42</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                              {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        thread.start();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -269,7 +312,7 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="InputService_8java_source.html#l00016">16</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
+<p>Definition at line <a class="el" href="InputService_8java_source.html#l00017">17</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
 
 </div>
 </div>
@@ -291,7 +334,7 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="InputService_8java_source.html#l00014">14</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
+<p>Definition at line <a class="el" href="InputService_8java_source.html#l00015">15</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
 
 </div>
 </div>
@@ -313,7 +356,7 @@ Static Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="InputService_8java_source.html#l00015">15</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
+<p>Definition at line <a class="el" href="InputService_8java_source.html#l00016">16</a> of file <a class="el" href="InputService_8java_source.html">InputService.java</a>.</p>
 
 </div>
 </div>

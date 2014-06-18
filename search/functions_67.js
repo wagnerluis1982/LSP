@@ -5,6 +5,7 @@ var searchData=
   ['getepochlimit',['getEpochLimit',['../classlsp_1_1LspParams.html#a03a814849b3599a918b171ca97aba3fe',1,'lsp::LspParams']]],
   ['getid',['getId',['../classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236',1,'lsp::LspConnection']]],
   ['getlastmsgtime',['getLastMsgTime',['../classlsp_1_1LspConnection.html#a40ab0989d24ddb4a6a744ae6bf3a1c35',1,'lsp::LspConnection']]],
-  ['getpayload',['getPayload',['../classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568',1,'lsp::Pack']]],
+  ['getpayload',['getPayload',['../classlsp_1_1helpers_1_1InputService.html#a5acb2594c1e738d4b5fe6fb1d0271549',1,'lsp.helpers.InputService.getPayload()'],['../classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568',1,'lsp.Pack.getPayload()']]],
+  ['getseqnum',['getSeqNum',['../classlsp_1_1InternalPack.html#a168af8de0bf028e718017fc3af550bc8',1,'lsp::InternalPack']]],
   ['getsockid',['getSockId',['../classlsp_1_1LspConnection.html#a49e437af427f0aac30786f4473387535',1,'lsp::LspConnection']]]
 ];
