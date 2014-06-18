@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import lsp.LspConnection.Actions;
 import lsp.helpers.InputService;
 
 /**
@@ -152,7 +151,7 @@ public class LspServer {
 				// garante não abrir nova conexão se esta já está aberta
 				if (!connectedSockets.contains(pack.getSocketAddress())) {
 					final short newId = (short) idCounter.incrementAndGet();
-					final Actions actions = new ConnectionActions(newId);
+					final ConnectionActions actions = new ConnectionActionsImpl(newId);
 
 					LspConnection conn = new LspConnection(newId,
 							pack.getSocketAddress(), params, actions);
@@ -171,10 +170,10 @@ public class LspServer {
 		}
 	}
 
-	private final class ConnectionActions implements Actions {
+	private final class ConnectionActionsImpl implements ConnectionActions {
 		private final short newId;
 
-		private ConnectionActions(short newId) {
+		private ConnectionActionsImpl(short newId) {
 			this.newId = newId;
 		}
 

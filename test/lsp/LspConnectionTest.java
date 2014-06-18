@@ -1,6 +1,5 @@
 package lsp;
 
-import static lsp.LspConnection.Actions;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -21,7 +20,7 @@ public class LspConnectionTest {
 		epoch = 4;
 		closed = false;
 		LspConnection conn = new LspConnection((short) 1, new LspParams(2, 3),
-				new Actions() {
+				new ConnectionActions() {
 					public void epochTriggers() {
 						epoch--;
 					}

@@ -28,7 +28,7 @@ class LspConnection {
 	 * @param actions
 	 *            Callbacks usados na verificação da conexão.
 	 */
-	LspConnection(short id, SocketAddress sockAddr, LspParams params, Actions actions) {
+	LspConnection(short id, SocketAddress sockAddr, LspParams params, ConnectionActions actions) {
 		if (params == null || actions == null)
 			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
 
@@ -52,7 +52,7 @@ class LspConnection {
 	 * @param actions
 	 *            Callbacks usados na verificação da conexão.
 	 */
-	LspConnection(short id, LspParams params, Actions actions) {
+	LspConnection(short id, LspParams params, ConnectionActions actions) {
 		this(id, null, params, actions);
 	}
 
@@ -91,27 +91,15 @@ class LspConnection {
 		this.closed = true;
 	}
 
-	interface Actions {
-		/**
-		 * Callback representando as ações a serem disparadas a cada época
-		 */
-		void epochTriggers();
-
-		/**
-		 * Callback representando as ações de fechamento da conexão
-		 */
-		void closeConnection();
-	}
-
 	/**
 	 * Monitoramento da conexão LSP. Verifica se está ativa. Este processo é
-	 * feito através de callbacks definidos em uma instância de {@link Actions}.
+	 * feito através de callbacks definidos em uma instância de {@link ConnectionActions}.
 	 */
 	private final class StatusChecker implements Runnable {
 		private final LspParams params;
-		private final Actions actions;
+		private final ConnectionActions actions;
 
-		private StatusChecker(LspParams params, Actions actions) {
+		private StatusChecker(LspParams params, ConnectionActions actions) {
 			this.params = params;
 			this.actions = actions;
 		}
