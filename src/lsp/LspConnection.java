@@ -1,5 +1,8 @@
 package lsp;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+
 /**
  * Representa uma conexão LSP.
  *
@@ -15,17 +18,22 @@ class LspConnection {
 	/**
 	 * Constrói um objeto {@link LspConnection}
 	 *
-	 * @param id Identificador da conexão
-	 * @param sockId Número IP associado à conexão
-	 * @param params Parâmetros de temporização da conexão
-	 * @param actions Callbacks usados na verificação da conexão.
+	 * @param id
+	 *            Identificador da conexão
+	 * @param sockAddr
+	 *            Número IP e porta associados à conexão. Útil somente quando
+	 *            {@link LspConnection} é instanciado pelo servidor.
+	 * @param params
+	 *            Parâmetros de temporização da conexão
+	 * @param actions
+	 *            Callbacks usados na verificação da conexão.
 	 */
-	LspConnection(short id, long sockId, LspParams params, Actions actions) {
+	LspConnection(short id, SocketAddress sockAddr, LspParams params, Actions actions) {
 		if (params == null || actions == null)
 			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
 
 		this.id = id;
-		this.sockId = sockId;
+		this.sockId = uniqueSockId(sockAddr);
 		this.closed = false;
 		this.lastMsgTime = System.currentTimeMillis();
 
@@ -34,12 +42,39 @@ class LspConnection {
 		new Thread(checker).start();
 	}
 
+	/**
+	 * Constrói um objeto {@link LspConnection}
+	 *
+	 * @param id
+	 *            Identificador da conexão
+	 * @param params
+	 *            Parâmetros de temporização da conexão
+	 * @param actions
+	 *            Callbacks usados na verificação da conexão.
+	 */
+	LspConnection(short id, LspParams params, Actions actions) {
+		this(id, null, params, actions);
+	}
+
 	short getId() {
 		return this.id;
 	}
 
+	/**
+	 * Número único gerado a partir de um endereço IP e uma porta
+	 */
 	long getSockId() {
-		return sockId;
+		return this.sockId;
+	}
+
+	private long uniqueSockId(SocketAddress sockAddr) {
+		if (sockAddr == null)
+			return -1;
+
+		final InetSocketAddress addr = (InetSocketAddress) sockAddr;
+		final int ip = addr.getAddress().hashCode();
+		final int port = addr.getPort();
+		return (ip & 0xffff_ffffL) << 16 | (short) port;
 	}
 
 	public long getLastMsgTime() {
@@ -118,5 +153,4 @@ class LspConnection {
 			}
 		}
 	}
-
 }

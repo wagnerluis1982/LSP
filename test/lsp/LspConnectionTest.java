@@ -20,7 +20,7 @@ public class LspConnectionTest {
 		// alterar closed para true no final.
 		epoch = 4;
 		closed = false;
-		LspConnection conn = new LspConnection((short) 1, 0, new LspParams(2, 3),
+		LspConnection conn = new LspConnection((short) 1, new LspParams(2, 3),
 				new Actions() {
 					public void epochTriggers() {
 						epoch--;

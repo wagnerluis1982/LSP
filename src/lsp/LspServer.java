@@ -114,17 +114,10 @@ public class LspServer {
 	}
 
 	/**
-	 * Número único gerado a partir de um endereço IP e uma porta
-	 */
-	private long uniqueSockId(int host, int port) {
-		return host & (-1L >>> 32) << 16 | (short) port;
-	}
-
-	/**
 	 * Processador de entradas do servidor.
 	 */
 	private final class InputServiceImpl extends InputService {
-		InputServiceImpl(int port) {
+		InputServiceImpl(final int port) {
 			super(port);
 		}
 
@@ -134,7 +127,7 @@ public class LspServer {
 		}
 
 		@Override
-		protected void processPacket(DatagramPacket pack) {
+		protected void processPacket(final DatagramPacket pack) {
 			final ByteBuffer buf = ByteBuffer.wrap(pack.getData(), 0, pack.getLength());
 			final short msgType = buf.getShort();
 
@@ -155,28 +148,26 @@ public class LspServer {
 			// Somente serão aceitos pedidos de conexão válidos, isto é, aqueles
 			// em que Connection ID e Sequence Number são iguais a zero
 			if (buf.getInt() == 0) {
-				// ID único formado pelo número IP e porta do socket remoto
-				final int rHost = pack.getAddress().hashCode();
-				final int rPort = pack.getPort();
-				final long sockId = uniqueSockId(rHost, rPort);
-
 				// A abertura de novas conexões é feita a seguir. A condição
 				// garante não abrir nova conexão se esta já está aberta
-				if (!connectedSockets.contains(sockId)) {
+				if (!connectedSockets.contains(pack.getSocketAddress())) {
 					final short newId = (short) idCounter.incrementAndGet();
 					final Actions actions = new ConnectionActions(newId);
-					connections.put(newId, new LspConnection(newId, sockId, params, actions));
-					connectedSockets.add(sockId);
+
+					LspConnection conn = new LspConnection(newId,
+							pack.getSocketAddress(), params, actions);
+					connections.put(newId, conn);
+					connectedSockets.add(conn.getSockId());
 				}
 			}
 		}
 
 		private void doData(final DatagramPacket pack, final ByteBuffer buf) {
-
+			// TODO Auto-generated method stub
 		}
 
 		private void doAck(final DatagramPacket pack, final ByteBuffer buf) {
-
+			// TODO Auto-generated method stub
 		}
 	}
 
