@@ -105,7 +105,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
 <div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classlsp_1_1helpers_1_1InputService.html#a2bc046518cbadf70a81dc053a9d13a51">   21</a></span>&#160;    <span class="keyword">protected</span> <a class="code" href="classlsp_1_1helpers_1_1InputService.html#a2bc046518cbadf70a81dc053a9d13a51">InputService</a>(<span class="keywordtype">int</span> port) {</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        this.port = port;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        this.thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> SvcThread());</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        this.thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> SvcTask());</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keywordtype">boolean</span> <a class="code" href="classlsp_1_1helpers_1_1InputService.html#ad6e7d1a1ce11e9c8bb2d41aca0a31063">isActive</a>();</div>
@@ -116,7 +116,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        thread.start();</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">class </span>SvcThread <span class="keyword">implements</span> Runnable {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">class </span>SvcTask <span class="keyword">implements</span> Runnable {</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        @Override</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keyword">public</span> <span class="keywordtype">void</span> run() {</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            <span class="comment">// Abre um socket UDP vinculado à porta solicitada</span></div>

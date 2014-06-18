@@ -109,9 +109,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a34e57e92093b9cc450c3b58a186ef9e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspServer.html#a34e57e92093b9cc450c3b58a186ef9e5">write</a> (<a class="el" href="classlsp_1_1Pack.html">Pack</a> pack)</td></tr>
 <tr class="memdesc:a34e57e92093b9cc450c3b58a186ef9e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Envia dados para um determinado cliente.  <a href="#a34e57e92093b9cc450c3b58a186ef9e5">More...</a><br/></td></tr>
 <tr class="separator:a34e57e92093b9cc450c3b58a186ef9e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab246ff0ed14948fcd34a4ef75e860b6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspServer.html#ab246ff0ed14948fcd34a4ef75e860b6f">closeConn</a> (int connId)</td></tr>
-<tr class="memdesc:ab246ff0ed14948fcd34a4ef75e860b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encerra uma conexão com o identificador connId.  <a href="#ab246ff0ed14948fcd34a4ef75e860b6f">More...</a><br/></td></tr>
-<tr class="separator:ab246ff0ed14948fcd34a4ef75e860b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80163b395c48f3ac974c9c5b7d5ab755"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspServer.html#a80163b395c48f3ac974c9c5b7d5ab755">closeConn</a> (short connId)</td></tr>
+<tr class="memdesc:a80163b395c48f3ac974c9c5b7d5ab755"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encerra uma conexão com o identificador connId.  <a href="#a80163b395c48f3ac974c9c5b7d5ab755">More...</a><br/></td></tr>
+<tr class="separator:a80163b395c48f3ac974c9c5b7d5ab755"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb72c92867caa14f2c46ae29e2408e09"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspServer.html#adb72c92867caa14f2c46ae29e2408e09">closeAll</a> ()</td></tr>
 <tr class="memdesc:adb72c92867caa14f2c46ae29e2408e09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encerra todas as conexões ativas e a atividade do servidor.  <a href="#adb72c92867caa14f2c46ae29e2408e09">More...</a><br/></td></tr>
 <tr class="separator:adb72c92867caa14f2c46ae29e2408e09"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,7 +120,7 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Servidor LSP. </p>
 <dl class="section author"><dt>Author</dt><dd>Wagner Macedo </dd></dl>
 
-<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00018">18</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
+<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00020">20</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ab773daef8d2aeb4128d21ae945422116"></a>
 <div class="memitem">
@@ -146,25 +146,29 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00035">35</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                                                 {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        this.port = port;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        this.params = params;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="comment">// Cria o pool de conexões, inicialmente com capacidade para 16 conexões</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        this.connections = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;(16);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="comment">// Inicialização do conjunto de sockets</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        this.connectedSockets = <span class="keyword">new</span> ConcurrentSkipListSet&lt;&gt;();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="comment">// Inicialização das variáveis de controle</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        this.idCounter = <span class="keyword">new</span> AtomicInteger();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        this.active = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="comment">// Inicia o processador de entradas do servidor</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        InputService inputSvc = <span class="keyword">new</span> InputServiceImpl(this.port);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        inputSvc.start();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00044">44</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                                                 {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        this.port = port;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        this.params = params;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="comment">// Cria o pool de conexões, inicialmente com capacidade para 16 conexões</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        this.connections = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;(16);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="comment">// Inicialização do conjunto de sockets</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        this.connectedSockets = <span class="keyword">new</span> ConcurrentSkipListSet&lt;&gt;();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="comment">// Cria filas de entrada e saída</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        this.inputQueue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;(QUEUE_ZISE, <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        this.outputQueue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;(QUEUE_ZISE, <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="comment">// Inicialização das variáveis de controle</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        this.idCounter = <span class="keyword">new</span> AtomicInteger();</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        this.active = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="comment">// Inicia o processador de entradas do servidor</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        InputService inputSvc = <span class="keyword">new</span> InputServiceImpl(this.port);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        inputSvc.start();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -185,35 +189,35 @@ Public Member Functions</h2></td></tr>
 <p>Encerra todas as conexões ativas e a atividade do servidor. </p>
 <p>Isso inclui o encerramento do processador de entradas. </p>
 
-<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00098">98</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                           {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">// Marca servidor como desligado</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        this.active = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="comment">// Fecha todas as conexões (em paralelo)</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">final</span> LspConnection conn : this.connections.values()) {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="keyword">new</span> Thread() {</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                <span class="keyword">public</span> <span class="keywordtype">void</span> run() {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                    conn.close();</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                };</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            }.start();</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        }</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="comment">// Limpeza de memória</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        this.connections.clear();</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        this.connectedSockets.clear();</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00111">111</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                           {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="comment">// Marca servidor como desligado</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        this.active = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="comment">// Fecha todas as conexões (em paralelo)</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">final</span> LspConnection conn : this.connections.values()) {</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <span class="keyword">new</span> Thread() {</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                <span class="keyword">public</span> <span class="keywordtype">void</span> run() {</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                    conn.close();</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                };</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            }.start();</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="comment">// Limpeza de memória</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        this.connections.clear();</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        this.connectedSockets.clear();</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a class="anchor" id="ab246ff0ed14948fcd34a4ef75e860b6f"></a>
+<a class="anchor" id="a80163b395c48f3ac974c9c5b7d5ab755"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void lsp.LspServer.closeConn </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">short&#160;</td>
           <td class="paramname"><em>connId</em></td><td>)</td>
           <td></td>
         </tr>
@@ -229,15 +233,15 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00085">85</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                                      {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="comment">// Encerra a conexão formalmente e remove da lista de conexões.</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        LspConnection conn = this.connections.remove(connId);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        conn.close();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="comment">// Remove a conexão do conjunto de sockets</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        this.connectedSockets.remove(conn.getSockId());</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00098">98</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                                        {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="comment">// Encerra a conexão formalmente e remove da lista de conexões.</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        LspConnection conn = this.connections.remove(connId);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        conn.close();</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="comment">// Remove a conexão do conjunto de sockets</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        this.connectedSockets.remove(conn.getSockId());</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -263,10 +267,10 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00062">62</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                       {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordflow">return</span> null;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00075">75</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                       {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordflow">return</span> null;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -292,10 +296,10 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00072">72</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                                 {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00085">85</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                                 {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
