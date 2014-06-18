@@ -62,6 +62,8 @@ class LspConnection {
 
 	/**
 	 * Número único gerado a partir de um endereço IP e uma porta
+	 *
+	 * Esse atributo só é usado pelo servidor
 	 */
 	long getSockId() {
 		return this.sockId;

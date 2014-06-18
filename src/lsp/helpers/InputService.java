@@ -20,7 +20,7 @@ public abstract class InputService {
 
 	protected InputService(int port) {
 		this.port = port;
-		this.thread = new Thread(new SvcThread());
+		this.thread = new Thread(new SvcTask());
 	}
 
 	/**
@@ -42,7 +42,7 @@ public abstract class InputService {
 		thread.start();
 	}
 
-	private final class SvcThread implements Runnable {
+	private final class SvcTask implements Runnable {
 		@Override
 		public void run() {
 			// Abre um socket UDP vinculado à porta solicitada

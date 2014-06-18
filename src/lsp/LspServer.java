@@ -82,7 +82,7 @@ public class LspServer {
 	 * @throws ClosedConnectionException
 	 *             se a conexão estiver encerrada.
 	 */
-	public void closeConn(int connId) {
+	public void closeConn(short connId) {
 		// Encerra a conexão formalmente e remove da lista de conexões.
 		LspConnection conn = this.connections.remove(connId);
 		conn.close();

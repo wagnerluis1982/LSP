@@ -13,7 +13,7 @@ public class LspClient {
 	/**
 	 * Devolve o Id da conexão
 	 */
-	public int getConnId() {
+	public short getConnId() {
 		return -1;
 	}
 
