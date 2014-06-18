@@ -2,6 +2,8 @@ package lsp;
 
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -27,6 +29,13 @@ public class LspServer {
 	 */
 	private final ConcurrentSkipListSet<Long> connectedSockets;
 
+	/** Capacidade das filas de entrada e saída em termos de pacotes de 1KB */
+	private static final byte QUEUE_ZISE = 50;
+
+	/* Filas de entrada e de saída */
+	private final BlockingQueue<InternalPack> inputQueue;
+	private final BlockingQueue<InternalPack> outputQueue;
+
 	// Variáveis de controle do servidor
 	private AtomicInteger idCounter;
 	private volatile boolean active;
@@ -40,6 +49,10 @@ public class LspServer {
 
 		// Inicialização do conjunto de sockets
 		this.connectedSockets = new ConcurrentSkipListSet<>();
+
+		// Cria filas de entrada e saída
+		this.inputQueue = new ArrayBlockingQueue<>(QUEUE_ZISE, true);
+		this.outputQueue = new ArrayBlockingQueue<>(QUEUE_ZISE, true);
 
 		// Inicialização das variáveis de controle
 		this.idCounter = new AtomicInteger();
@@ -56,20 +69,36 @@ public class LspServer {
 	 * encapsulados pela classe Pack.
 	 *
 	 * @throws ClosedConnectionException
-	 *             se a conexão estiver encerrada.
+	 *             se o servidor não estiver ativo
 	 */
 	public Pack read() {
-		return null;
+		checkActive();
+		try {
+			return inputQueue.take();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
 	 * Envia dados para um determinado cliente.
 	 *
 	 * @throws ClosedConnectionException
-	 *             se a conexão estiver encerrada.
+	 *             se a conexão estiver encerrada
 	 */
 	public void write(Pack pack) {
-
+		checkActive();
+		LspConnection conn = connections.get(pack.getConnId());
+		if (conn != null) {
+			short seqNum = conn.nextSeqNumber();
+			try {
+				outputQueue.put(new InternalPack(pack, seqNum));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		throw new ClosedConnectionException(pack.getConnId());
 	}
 
 	/**
@@ -82,12 +111,15 @@ public class LspServer {
 	 *             se a conexão estiver encerrada.
 	 */
 	public void closeConn(short connId) {
-		// Encerra a conexão formalmente e remove da lista de conexões.
-		LspConnection conn = this.connections.remove(connId);
-		conn.close();
-
-		// Remove a conexão do conjunto de sockets
-		this.connectedSockets.remove(conn.getSockId());
+		checkActive();
+		// Encerra a conexão formalmente e remove da lista de conexões e do
+		// conjunto de sockets.
+		LspConnection conn = connections.remove(connId);
+		if (conn != null) {
+			conn.close();
+			connectedSockets.remove(conn.getSockId());
+		}
+		throw new ClosedConnectionException(connId);
 	}
 
 	/**
@@ -112,6 +144,11 @@ public class LspServer {
 		this.connectedSockets.clear();
 	}
 
+	private void checkActive() {
+		if (!active)
+			throw new ClosedConnectionException();
+	}
+
 	/**
 	 * Processador de entradas do servidor.
 	 */
@@ -127,7 +164,8 @@ public class LspServer {
 
 		@Override
 		protected void processPacket(final DatagramPacket pack) {
-			final ByteBuffer buf = ByteBuffer.wrap(pack.getData(), 0, pack.getLength());
+			final ByteBuffer buf = ByteBuffer.wrap(pack.getData(), 0,
+					pack.getLength()).asReadOnlyBuffer();
 			final short msgType = buf.getShort();
 
 			switch (msgType) {
@@ -162,7 +200,16 @@ public class LspServer {
 		}
 
 		private void doData(final DatagramPacket pack, final ByteBuffer buf) {
-			// TODO Auto-generated method stub
+			LspConnection conn = connections.get(buf.getShort());
+			if (conn != null) {
+				short seqNum = buf.getShort();
+				byte[] payload = getPayload(buf);
+				try {
+					inputQueue.put(new InternalPack(conn.getId(), seqNum, payload));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		private void doAck(final DatagramPacket pack, final ByteBuffer buf) {

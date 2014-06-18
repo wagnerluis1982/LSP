@@ -2,6 +2,7 @@ package lsp;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Representa uma conexão LSP.
@@ -13,6 +14,7 @@ class LspConnection {
 	private final long sockId;
 
 	private volatile boolean closed;
+	private final AtomicInteger seqNumber;
 	private volatile long lastMsgTime;
 
 	/**
@@ -35,6 +37,7 @@ class LspConnection {
 		this.id = id;
 		this.sockId = uniqueSockId(sockAddr);
 		this.closed = false;
+		this.seqNumber = new AtomicInteger();
 		this.lastMsgTime = System.currentTimeMillis();
 
 		// Inicia a thread para monitorar o status da conexão
@@ -69,14 +72,14 @@ class LspConnection {
 		return this.sockId;
 	}
 
-	private long uniqueSockId(SocketAddress sockAddr) {
-		if (sockAddr == null)
-			return -1;
-
-		final InetSocketAddress addr = (InetSocketAddress) sockAddr;
-		final int ip = addr.getAddress().hashCode();
-		final int port = addr.getPort();
-		return (ip & 0xffff_ffffL) << 16 | (short) port;
+	/** Número de sequência para a próxima mensagem dessa conexão */
+	public short nextSeqNumber() {
+		synchronized (seqNumber) {
+			if (seqNumber.incrementAndGet() == 0) {
+				seqNumber.incrementAndGet();
+			}
+			return seqNumber.shortValue();
+		}
 	}
 
 	public long getLastMsgTime() {
@@ -89,6 +92,16 @@ class LspConnection {
 
 	void close() {
 		this.closed = true;
+	}
+
+	private long uniqueSockId(SocketAddress sockAddr) {
+		if (sockAddr == null)
+			return -1;
+
+		final InetSocketAddress addr = (InetSocketAddress) sockAddr;
+		final int ip = addr.getAddress().hashCode();
+		final int port = addr.getPort();
+		return (ip & 0xffff_ffffL) << 16 | (short) port;
 	}
 
 	/**

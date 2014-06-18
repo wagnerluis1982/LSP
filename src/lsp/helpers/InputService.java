@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
 
 /**
  * Serviço de entrada de pacotes. Classe abstrata.
@@ -54,7 +55,7 @@ public abstract class InputService {
 			}
 
 			// Configuração do pacote de entrada
-			byte[] bs = new byte[1000];
+			byte[] bs = new byte[1024];
 			DatagramPacket packet = new DatagramPacket(bs, bs.length);
 
 			// Recebe pacotes até o servidor ser encerrado
@@ -67,5 +68,15 @@ public abstract class InputService {
 				}
 			}
 		}
+	}
+
+	/** Helper para obter um array de bytes com o resto do {@link ByteBuffer} */
+	public static byte[] getPayload(final ByteBuffer buf) {
+		byte[] bs = new byte[buf.remaining()];
+		for (int i = 0; i < bs.length; i++) {
+			bs[i] = buf.get();
+		}
+
+		return bs;
 	}
 }
