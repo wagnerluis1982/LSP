@@ -9,6 +9,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import lsp.helpers.InputService;
@@ -72,6 +73,8 @@ public class LspServer {
 	 *
 	 * @throws ClosedConnectionException
 	 *             se o servidor não estiver ativo
+	 * @throws IllegalStateException
+	 *             se a fila de saída estiver cheia
 	 */
 	public Pack read() {
 		checkActive();
@@ -95,7 +98,11 @@ public class LspServer {
 		if (conn != null) {
 			short seqNum = conn.nextSeqNumber();
 			try {
-				outputQueue.put(new InternalPack(pack, seqNum));
+				boolean success = outputQueue.offer(new InternalPack(pack, seqNum), 500,
+						TimeUnit.MILLISECONDS);
+				if (!success) {
+					throw new IllegalStateException("Fila de saída cheia");
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -196,8 +203,8 @@ public class LspServer {
 		}
 
 		private void doConnect(final DatagramPacket pack, final ByteBuffer buf) {
-			// Somente serão aceitos pedidos de conexão válidos, isto é, aqueles
-			// em que Connection ID e Sequence Number são iguais a zero
+			// Somente serão aceitos pedidos de conexão bem formados, isto é,
+			// aqueles em que Connection ID e Sequence Number são iguais a zero
 			if (buf.getInt() == 0) {
 				// A abertura de novas conexões é feita a seguir. A condição
 				// garante não abrir nova conexão se esta já está aberta
@@ -215,14 +222,20 @@ public class LspServer {
 		}
 
 		private void doData(final DatagramPacket pack, final ByteBuffer buf) {
-			LspConnection conn = connections.get(buf.getShort());
-			if (conn != null) {
-				short seqNum = buf.getShort();
-				byte[] payload = getPayload(buf);
-				try {
-					inputQueue.put(new InternalPack(conn.getId(), seqNum, payload));
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			// Descarta o pacote se não há uma conexão aberta com o remetente
+			final long sockId = uniqueSockId(pack.getSocketAddress());
+			if (connectedSockets.contains(sockId)) {
+				// Descarta o pacote se não há esse id de conexão
+				final LspConnection conn = connections.get(buf.getShort());
+				if (conn != null) {
+					short seqNum = buf.getShort();
+					byte[] payload = getPayload(buf);
+					try {
+						inputQueue.offer(new InternalPack(conn.getId(), seqNum,
+								payload), 500, TimeUnit.MILLISECONDS);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

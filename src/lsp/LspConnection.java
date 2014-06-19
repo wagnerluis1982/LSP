@@ -71,7 +71,7 @@ class LspConnection {
 	}
 
 	/** Número de sequência para a próxima mensagem dessa conexão */
-	public short nextSeqNumber() {
+	short nextSeqNumber() {
 		synchronized (seqNumber) {
 			if (seqNumber.incrementAndGet() == 0) {
 				seqNumber.incrementAndGet();
@@ -80,11 +80,11 @@ class LspConnection {
 		}
 	}
 
-	public long getLastMsgTime() {
+	long getLastMsgTime() {
 		return lastMsgTime;
 	}
 
-	public void setLastMsgTime(long lastMsgTime) {
+	void setLastMsgTime(long lastMsgTime) {
 		this.lastMsgTime = lastMsgTime;
 	}
 
