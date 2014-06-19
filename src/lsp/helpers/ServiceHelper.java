@@ -6,12 +6,14 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
+import lsp.InternalPack;
+
 /**
- * Serviço de entrada de pacotes. Classe abstrata.
+ * Serviço de entrada e saída de pacotes. Classe abstrata.
  *
  * @author Wagner Macedo
  */
-public abstract class InOutService {
+public abstract class ServiceHelper {
 	protected static final byte CONNECT = 0;
 	protected static final byte DATA = 1;
 	protected static final byte ACK = 2;
@@ -23,7 +25,7 @@ public abstract class InOutService {
 
 	private DatagramSocket socket;
 
-	protected InOutService(int port) {
+	protected ServiceHelper(int port) {
 		this.port = port;
 		this.thread = new Thread(new SvcTask());
 	}
@@ -80,15 +82,19 @@ public abstract class InOutService {
 		}
 	}
 
-	protected final void sendConnect(final short connId, final short seqNum) {
+	public final void sendConnect(final short connId, final short seqNum) {
 		send(CONNECT, connId, seqNum, PAYLOAD_NIL);
 	}
 
-	protected final void sendData(final short connId, final short seqNum, final byte[] payload) {
+	public final void sendData(final short connId, final short seqNum, final byte[] payload) {
 		send(DATA, connId, seqNum, payload);
 	}
 
-	protected final void sendAck(final short connId, final short seqNum) {
+	public final void sendData(final InternalPack p) {
+		sendData(p.getConnId(), p.getSeqNum(), p.getPayload());
+	}
+
+	public final void sendAck(final short connId, final short seqNum) {
 		send(ACK, connId, seqNum, PAYLOAD_NIL);
 	}
 

@@ -14,7 +14,7 @@ class LspConnection {
 
 	private volatile boolean closed;
 	private volatile short seqNumber;
-	private volatile long lastReceiptTime;
+	private volatile long receivedTime;
 	private final Lock lock;
 
 	private volatile InternalPack message;
@@ -40,7 +40,7 @@ class LspConnection {
 		this.sockId = sockId;
 		this.closed = false;
 		this.seqNumber = 0;
-		this.lastReceiptTime = -1;
+		this.receivedTime = -1;
 		this.lock = new ReentrantLock();
 
 		// Inicia a thread para monitorar o status da conexão
@@ -95,12 +95,17 @@ class LspConnection {
 		}
 	}
 
-	long getLastReceiptTime() {
-		return lastReceiptTime;
+	/**
+	 * Última vez que essa conexão recebeu uma mensagem. Note que esse tempo é
+	 * gerenciado externamente através do método messageReceived. Se receber -1,
+	 * quer dizer que não chegou nenhuma mensagem depois da conexão.
+	 */
+	long lastReceivedTime() {
+		return receivedTime;
 	}
 
-	void setLastReceiptTime(long lastReceiptTime) {
-		this.lastReceiptTime = lastReceiptTime;
+	void messageReceived() {
+		this.receivedTime = System.currentTimeMillis();
 	}
 
 	void close() {
@@ -123,7 +128,7 @@ class LspConnection {
 		@Override
 		public void run() {
 			// Obtém o horário da última mensagem recebida em milisegundos
-			long lastTime = lastReceiptTime;
+			long lastTime = receivedTime;
 
 			// Obtém parâmetros da conexão
 			int limit = params.getEpochLimit();
@@ -139,7 +144,7 @@ class LspConnection {
 
 				// Reinicia contagem de épocas se houve mensagens recebidas
 				// desde a última época
-				final long time = lastReceiptTime;
+				final long time = receivedTime;
 				if (time != lastTime) {
 					lastTime = time;
 					limit = params.getEpochLimit();

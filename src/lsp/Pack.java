@@ -1,8 +1,8 @@
 package lsp;
 
 public class Pack {
-	protected short connId;
-	protected byte[] payload;
+	private short connId;
+	private byte[] payload;
 
 	public Pack(short connId, byte[] payload) {
 		this.connId = connId;

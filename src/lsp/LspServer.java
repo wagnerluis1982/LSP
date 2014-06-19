@@ -8,11 +8,10 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import lsp.helpers.InOutService;
+import lsp.helpers.ServiceHelper;
 
 /**
  * Servidor LSP.
@@ -30,7 +29,7 @@ public class LspServer {
 	 * Conjunto de sockets conectados. Garante que haja apenas uma conexão por
 	 * socket remoto
 	 */
-	private final ConcurrentSkipListSet<Long> connectedSockets;
+	private final ConcurrentMap<Long, LspConnection> connectedSockets;
 
 	/** Capacidade das filas de entrada e saída em termos de pacotes de 1KB */
 	private static final byte QUEUE_ZISE = 50;
@@ -38,6 +37,7 @@ public class LspServer {
 	/* Filas de entrada e de saída */
 	private final BlockingQueue<InternalPack> inputQueue;
 	private final BlockingQueue<Pack> outputQueue;
+	private final ServiceHelper service;
 
 	// Variáveis de controle do servidor
 	private AtomicInteger idCounter;
@@ -51,7 +51,7 @@ public class LspServer {
 		this.connections = new ConcurrentHashMap<>(16);
 
 		// Inicialização do conjunto de sockets
-		this.connectedSockets = new ConcurrentSkipListSet<>();
+		this.connectedSockets = new ConcurrentHashMap<>(16);
 
 		// Cria filas de entrada e saída
 		this.inputQueue = new ArrayBlockingQueue<>(QUEUE_ZISE, true);
@@ -61,9 +61,9 @@ public class LspServer {
 		this.idCounter = new AtomicInteger();
 		this.active = true;
 
-		// Inicia o processador de entradas do servidor
-		InOutService inputSvc = new InOutServiceImpl(this.port);
-		inputSvc.start();
+		// Inicia o serviço de entradas e saídas do servidor
+		service = new Service(this.port);
+		service.start();
 	}
 
 	/**
@@ -175,10 +175,10 @@ public class LspServer {
 	}
 
 	/**
-	 * Processador de entradas do servidor.
+	 * Serviço de entrada e saída do servidor.
 	 */
-	private final class InOutServiceImpl extends InOutService {
-		InOutServiceImpl(final int port) {
+	private final class Service extends ServiceHelper {
+		Service(final int port) {
 			super(port);
 		}
 
@@ -196,16 +196,21 @@ public class LspServer {
 
 				// A abertura de novas conexões é feita a seguir. A condição
 				// garante não abrir nova conexão se esta já está aberta
-				if (!connectedSockets.contains(sockId)) {
+				LspConnection conn = connectedSockets.get(sockId);
+				if (conn == null) {
 					final short newId = (short) idCounter.incrementAndGet();
-					final ConnectionActions actions = new ConnectionActionsImpl(newId);
+					final ConnectionActionsImpl actions = new ConnectionActionsImpl();
 
 					// Adicionando a conexão ao pool de conexão
-					final LspConnection conn = new LspConnection(newId, sockId,
-							params, actions);
+					conn = new LspConnection(newId, sockId, params, actions);
 					connections.put(newId, conn);
-					connectedSockets.add(sockId);
+					connectedSockets.put(sockId, conn);
 					sendAck(newId, (short) 0);
+
+					// Anexando conexão ao objeto actions
+					actions.setConnection(conn);
+				} else {
+					conn.messageReceived();
 				}
 			}
 		}
@@ -214,6 +219,7 @@ public class LspServer {
 		protected void receiveData(final DatagramPacket pack, final ByteBuffer buf) {
 			LspConnection conn = getConnection(pack, buf);
 			if (conn != null) {
+				conn.messageReceived();
 				short seqNum = buf.getShort();
 				byte[] payload = getPayload(buf);
 				try {
@@ -230,6 +236,7 @@ public class LspServer {
 		protected void receiveAck(final DatagramPacket pack, final ByteBuffer buf) {
 			final LspConnection conn = getConnection(pack, buf);
 			if (conn != null) {
+				conn.messageReceived();
 				// Se o número de sequência passado for a da mensagem aguardando
 				// então remove-o da fila de espera
 				final short seqNum = buf.getShort();
@@ -238,25 +245,22 @@ public class LspServer {
 		}
 
 		private LspConnection getConnection(final DatagramPacket pack, final ByteBuffer buf) {
-			// Descarta o pacote se não há uma conexão aberta com o remetente
 			final long sockId = uniqueSockId(pack.getSocketAddress());
-			if (connectedSockets.contains(sockId)) {
-				// Descarta o pacote se não há esse id de conexão
-				final LspConnection conn = connections.get(buf.getShort());
-				if (conn != null && conn.getSockId() == sockId) {
-					return conn;
-				}
+			final LspConnection conn = connectedSockets.get(sockId);
+
+			// Descarta o pacote se não há conexão aberta com o remetente ou se
+			// o id recebido não corresponde ao id registrado com esse socket.
+			if (conn != null && conn.getId() != buf.getShort()) {
+				return conn;
 			}
+
 			return null;
 		}
+
 	}
 
 	private final class ConnectionActionsImpl implements ConnectionActions {
-		private final short connId;
-
-		private ConnectionActionsImpl(short connId) {
-			this.connId = connId;
-		}
+		private LspConnection conn;
 
 		@Override
 		public void epochTriggers() {
@@ -267,19 +271,28 @@ public class LspServer {
 
 		@Override
 		public void closeConnection() {
-			closeConn(connId);
+			closeConn(conn.getId());
 		}
 
 		private void resendData() {
-			// TODO Auto-generated method stub
+			InternalPack message = conn.getSentMessage();
+			if (message != null) {
+				service.sendData(message);
+			}
 		}
 
 		private void resendAckConnect() {
-			// TODO Auto-generated method stub
+			if (conn.lastReceivedTime() == -1) {
+				service.sendAck(conn.getId(), (short) 0);
+			}
 		}
 
 		private void resendAckData() {
 			// TODO Auto-generated method stub
+		}
+
+		private void setConnection(LspConnection conn) {
+			this.conn = conn;
 		}
 	}
 }
