@@ -37,7 +37,7 @@ public class LspServer {
 
 	/* Filas de entrada e de saída */
 	private final BlockingQueue<InternalPack> inputQueue;
-	private final BlockingQueue<InternalPack> outputQueue;
+	private final BlockingQueue<Pack> outputQueue;
 
 	// Variáveis de controle do servidor
 	private AtomicInteger idCounter;
@@ -97,19 +97,14 @@ public class LspServer {
 		final short connId = pack.getConnId();
 		final LspConnection conn = connections.get(connId);
 		if (conn != null) {
-			synchronized (conn) {
-				short seqNum = conn.nextSeqNumber();
-				boolean success = false;
-				try {
-					success = outputQueue.offer(new InternalPack(pack, seqNum),
-							500, TimeUnit.MILLISECONDS);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				if (!success) {
-					conn.decrementSeqNumber();
-					throw new IllegalStateException("Fila de saída cheia");
-				}
+			boolean success = false;
+			try {
+				success = outputQueue.offer(pack, 500, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			if (!success) {
+				throw new IllegalStateException("Fila de saída cheia");
 			}
 		}
 		throw new ClosedConnectionException(connId);
@@ -169,6 +164,8 @@ public class LspServer {
 
 	/**
 	 * Número único gerado a partir de um endereço IP e uma porta
+	 *
+	 * Esse atributo só é usado pelo servidor
 	 */
 	private static long uniqueSockId(SocketAddress sockAddr) {
 		final InetSocketAddress addr = (InetSocketAddress) sockAddr;
@@ -233,9 +230,10 @@ public class LspServer {
 		protected void receiveAck(final DatagramPacket pack, final ByteBuffer buf) {
 			final LspConnection conn = getConnection(pack, buf);
 			if (conn != null) {
-				// TODO Se o número de sequência passado for a da mensagem aguardando
+				// Se o número de sequência passado for a da mensagem aguardando
 				// então remove-o da fila de espera
 				final short seqNum = buf.getShort();
+				conn.ackSentMessage(seqNum);
 			}
 		}
 

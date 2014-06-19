@@ -1,6 +1,7 @@
 package lsp;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Representa uma conexão LSP.
@@ -12,8 +13,11 @@ class LspConnection {
 	private final long sockId;
 
 	private volatile boolean closed;
-	private final AtomicInteger seqNumber;
-	private volatile long lastMsgTime;
+	private volatile short seqNumber;
+	private volatile long lastReceiptTime;
+	private final Lock lock;
+
+	private volatile InternalPack message;
 
 	/**
 	 * Constrói um objeto {@link LspConnection}
@@ -35,8 +39,9 @@ class LspConnection {
 		this.id = id;
 		this.sockId = sockId;
 		this.closed = false;
-		this.seqNumber = new AtomicInteger();
-		this.lastMsgTime = System.currentTimeMillis();
+		this.seqNumber = 0;
+		this.lastReceiptTime = -1;
+		this.lock = new ReentrantLock();
 
 		// Inicia a thread para monitorar o status da conexão
 		Runnable checker = new StatusChecker(params, actions);
@@ -70,31 +75,32 @@ class LspConnection {
 		return this.sockId;
 	}
 
-	/** Número de sequência para a próxima mensagem dessa conexão */
-	short nextSeqNumber() {
-		synchronized (seqNumber) {
-			if (seqNumber.incrementAndGet() == 0) {
-				seqNumber.incrementAndGet();
-			}
-			return seqNumber.shortValue();
+	InternalPack getSentMessage() {
+		return this.message;
+	}
+
+	boolean setSentMessage(byte[] payload) {
+		if (lock.tryLock()) {
+			this.message = new InternalPack(id, ++seqNumber, payload);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
-	/**
-	 * Decrementa o número de sequência. Esse método é útil para não perder um
-	 * número em que houve falhas no processo. Para evitar números duplicados,
-	 * ao usar, coloque o objeto {@link LspConnection} em um bloco synchronized.
-	 */
-	void decrementSeqNumber() {
-		seqNumber.decrementAndGet();
+	void ackSentMessage(short seqNumber) {
+		if (this.seqNumber == seqNumber) {
+			this.message = null;
+			lock.unlock();
+		}
 	}
 
-	long getLastMsgTime() {
-		return lastMsgTime;
+	long getLastReceiptTime() {
+		return lastReceiptTime;
 	}
 
-	void setLastMsgTime(long lastMsgTime) {
-		this.lastMsgTime = lastMsgTime;
+	void setLastReceiptTime(long lastReceiptTime) {
+		this.lastReceiptTime = lastReceiptTime;
 	}
 
 	void close() {
@@ -117,7 +123,7 @@ class LspConnection {
 		@Override
 		public void run() {
 			// Obtém o horário da última mensagem recebida em milisegundos
-			long lastTime = lastMsgTime;
+			long lastTime = lastReceiptTime;
 
 			// Obtém parâmetros da conexão
 			int limit = params.getEpochLimit();
@@ -133,7 +139,7 @@ class LspConnection {
 
 				// Reinicia contagem de épocas se houve mensagens recebidas
 				// desde a última época
-				final long time = lastMsgTime;
+				final long time = lastReceiptTime;
 				if (time != lastTime) {
 					lastTime = time;
 					limit = params.getEpochLimit();

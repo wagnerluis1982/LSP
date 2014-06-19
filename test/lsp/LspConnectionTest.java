@@ -1,6 +1,5 @@
 package lsp;
 
-
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -35,7 +34,7 @@ public class LspConnectionTest {
 
 		// Manipulando o atributo lastMsgTime para propósitos do teste
 		Thread.sleep(2);
-		conn.setLastMsgTime(System.currentTimeMillis());
+		conn.setLastReceiptTime(System.currentTimeMillis());
 
 		// Ao finalizar...
 		Thread.sleep(8);
