@@ -226,6 +226,7 @@ public class LspServer {
 					inputQueue.offer(new InternalPack(conn.getId(), seqNum,
 							payload), 500, TimeUnit.MILLISECONDS);
 					sendAck(conn.getId(), seqNum);
+					conn.dataReceived(seqNum);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -256,7 +257,6 @@ public class LspServer {
 
 			return null;
 		}
-
 	}
 
 	private final class ConnectionActionsImpl implements ConnectionActions {
@@ -288,7 +288,9 @@ public class LspServer {
 		}
 
 		private void resendAckData() {
-			// TODO Auto-generated method stub
+			if (conn.lastReceivedSequence() != -1) {
+				service.sendAck(conn.getId(), conn.lastReceivedSequence());
+			}
 		}
 
 		private void setConnection(LspConnection conn) {

@@ -15,6 +15,7 @@ class LspConnection {
 	private volatile boolean closed;
 	private volatile short seqNumber;
 	private volatile long receivedTime;
+	private volatile short receivedSequence;
 	private final Lock lock;
 
 	private volatile InternalPack message;
@@ -41,6 +42,7 @@ class LspConnection {
 		this.closed = false;
 		this.seqNumber = 0;
 		this.receivedTime = -1;
+		this.receivedSequence = -1;
 		this.lock = new ReentrantLock();
 
 		// Inicia a thread para monitorar o status da conexão
@@ -106,6 +108,14 @@ class LspConnection {
 
 	void messageReceived() {
 		this.receivedTime = System.currentTimeMillis();
+	}
+
+	short lastReceivedSequence() {
+		return this.receivedSequence;
+	}
+
+	void dataReceived(short seqNumber) {
+		this.receivedSequence = seqNumber;
 	}
 
 	void close() {
