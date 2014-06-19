@@ -125,8 +125,8 @@ Package Functions</h2></td></tr>
 <tr class="separator:a1a0b19eec54ccb243919e5d31b5ad512"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83a52d061d85e7a820c37400a4bc7b83"><td class="memItemLeft" align="right" valign="top">short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#a83a52d061d85e7a820c37400a4bc7b83">lastReceivedSequence</a> ()</td></tr>
 <tr class="separator:a83a52d061d85e7a820c37400a4bc7b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3edfd9b58e45a3aab7e4eae362c969e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#a3edfd9b58e45a3aab7e4eae362c969e7">receivedSequence</a> (short number)</td></tr>
-<tr class="separator:a3edfd9b58e45a3aab7e4eae362c969e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af19fe74676246fca6be4abb3e8f82b86"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#af19fe74676246fca6be4abb3e8f82b86">dataReceived</a> (short seqNumber)</td></tr>
+<tr class="separator:af19fe74676246fca6be4abb3e8f82b86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43ad1c065f552c879a3b8b2c6ce8f73f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">close</a> ()</td></tr>
 <tr class="separator:a43ad1c065f552c879a3b8b2c6ce8f73f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -327,6 +327,35 @@ Package Functions</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a class="anchor" id="af19fe74676246fca6be4abb3e8f82b86"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void lsp.LspConnection.dataReceived </td>
+          <td>(</td>
+          <td class="paramtype">short&#160;</td>
+          <td class="paramname"><em>seqNumber</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">package</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00117">117</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                                       {</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        this.receivedSequence = seqNumber;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    }</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a class="anchor" id="a25375fd27202bff226292fd15524a236"></a>
 <div class="memitem">
 <div class="memproto">
@@ -498,35 +527,6 @@ Package Functions</h2></td></tr>
 <div class="fragment"><div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                           {</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        this.receivedTime = System.currentTimeMillis();</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a class="anchor" id="a3edfd9b58e45a3aab7e4eae362c969e7"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void lsp.LspConnection.receivedSequence </td>
-          <td>(</td>
-          <td class="paramtype">short&#160;</td>
-          <td class="paramname"><em>number</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00117">117</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                                        {</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        this.receivedSequence = number;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>

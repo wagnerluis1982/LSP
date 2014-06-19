@@ -4,6 +4,5 @@ var searchData=
   ['readme_2emd',['README.md',['../README_8md.html',1,'']]],
   ['receiveack',['receiveAck',['../classlsp_1_1helpers_1_1ServiceHelper.html#a0f75c703af95699cc1ff34ef42b6bd20',1,'lsp::helpers::ServiceHelper']]],
   ['receiveconnect',['receiveConnect',['../classlsp_1_1helpers_1_1ServiceHelper.html#a3433234a1e679793a77e9a17984e180d',1,'lsp::helpers::ServiceHelper']]],
-  ['receivedata',['receiveData',['../classlsp_1_1helpers_1_1ServiceHelper.html#a4a30871cb6a68cf3e38baaddc91a45a7',1,'lsp::helpers::ServiceHelper']]],
-  ['receivedsequence',['receivedSequence',['../classlsp_1_1LspConnection.html#a3edfd9b58e45a3aab7e4eae362c969e7',1,'lsp::LspConnection']]]
+  ['receivedata',['receiveData',['../classlsp_1_1helpers_1_1ServiceHelper.html#a4a30871cb6a68cf3e38baaddc91a45a7',1,'lsp::helpers::ServiceHelper']]]
 ];
