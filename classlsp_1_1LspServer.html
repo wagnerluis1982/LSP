@@ -120,7 +120,7 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Servidor LSP. </p>
 <dl class="section author"><dt>Author</dt><dd>Wagner Macedo </dd></dl>
 
-<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00022">22</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
+<p>Definition at line <a class="el" href="LspServer_8java_source.html#l00021">21</a> of file <a class="el" href="LspServer_8java_source.html">LspServer.java</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ab773daef8d2aeb4128d21ae945422116"></a>
 <div class="memitem">
@@ -155,7 +155,7 @@ Public Member Functions</h2></td></tr>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        this.connections = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;(16);</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="comment">// Inicialização do conjunto de sockets</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        this.connectedSockets = <span class="keyword">new</span> ConcurrentSkipListSet&lt;&gt;();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        this.connectedSockets = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;(16);</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="comment">// Cria filas de entrada e saída</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        this.inputQueue = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;(QUEUE_ZISE, <span class="keyword">true</span>);</div>
@@ -165,9 +165,9 @@ Public Member Functions</h2></td></tr>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        this.idCounter = <span class="keyword">new</span> AtomicInteger();</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        this.active = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="comment">// Inicia o processador de entradas do servidor</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        InOutService inputSvc = <span class="keyword">new</span> InOutServiceImpl(this.port);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        inputSvc.start();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="comment">// Inicia o serviço de entradas e saídas do servidor</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        service = <span class="keyword">new</span> Service(this.port);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        service.start();</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>

@@ -118,10 +118,15 @@ Package Functions</h2></td></tr>
 <tr class="separator:a5b7100bdd3421832759c09e109b49544"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fee65493f36c2f38f01ba6ed884b829"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#a4fee65493f36c2f38f01ba6ed884b829">ackSentMessage</a> (short seqNumber)</td></tr>
 <tr class="separator:a4fee65493f36c2f38f01ba6ed884b829"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e238a25aa25db5ed4110aff17174b8e"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#a5e238a25aa25db5ed4110aff17174b8e">getLastReceiptTime</a> ()</td></tr>
-<tr class="separator:a5e238a25aa25db5ed4110aff17174b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c19138a14cce090afdde5713d455d6c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#a4c19138a14cce090afdde5713d455d6c">setLastReceiptTime</a> (long lastReceiptTime)</td></tr>
-<tr class="separator:a4c19138a14cce090afdde5713d455d6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4c508bae10ec02ea6d39dcc19a31ff2"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#ad4c508bae10ec02ea6d39dcc19a31ff2">lastReceivedTime</a> ()</td></tr>
+<tr class="memdesc:ad4c508bae10ec02ea6d39dcc19a31ff2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Última vez que essa conexão recebeu uma mensagem.  <a href="#ad4c508bae10ec02ea6d39dcc19a31ff2">More...</a><br/></td></tr>
+<tr class="separator:ad4c508bae10ec02ea6d39dcc19a31ff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a0b19eec54ccb243919e5d31b5ad512"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#a1a0b19eec54ccb243919e5d31b5ad512">messageReceived</a> ()</td></tr>
+<tr class="separator:a1a0b19eec54ccb243919e5d31b5ad512"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83a52d061d85e7a820c37400a4bc7b83"><td class="memItemLeft" align="right" valign="top">short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#a83a52d061d85e7a820c37400a4bc7b83">lastReceivedSequence</a> ()</td></tr>
+<tr class="separator:a83a52d061d85e7a820c37400a4bc7b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3edfd9b58e45a3aab7e4eae362c969e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#a3edfd9b58e45a3aab7e4eae362c969e7">receivedSequence</a> (short number)</td></tr>
+<tr class="separator:a3edfd9b58e45a3aab7e4eae362c969e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43ad1c065f552c879a3b8b2c6ce8f73f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">close</a> ()</td></tr>
 <tr class="separator:a43ad1c065f552c879a3b8b2c6ce8f73f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -186,22 +191,23 @@ Package Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00035">35</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                                                                                      {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">if</span> (params == null || actions == null)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> NullPointerException(<span class="stringliteral">&quot;Nenhum parâmetro pode ser nulo&quot;</span>);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        this.id = id;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        this.sockId = sockId;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        this.closed = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        this.seqNumber = 0;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        this.lastReceiptTime = -1;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        this.lock = <span class="keyword">new</span> ReentrantLock();</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="comment">// Inicia a thread para monitorar o status da conexão</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        Runnable checker = <span class="keyword">new</span> StatusChecker(params, actions);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">new</span> Thread(checker).start();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00036">36</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                                                                                      {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordflow">if</span> (params == null || actions == null)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> NullPointerException(<span class="stringliteral">&quot;Nenhum parâmetro pode ser nulo&quot;</span>);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        this.id = id;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        this.sockId = sockId;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        this.closed = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        this.seqNumber = 0;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        this.receivedTime = -1;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        this.receivedSequence = -1;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        this.lock = <span class="keyword">new</span> ReentrantLock();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="comment">// Inicia a thread para monitorar o status da conexão</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        Runnable checker = <span class="keyword">new</span> StatusChecker(params, actions);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keyword">new</span> Thread(checker).start();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -253,10 +259,10 @@ Package Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00061">61</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                                                                         {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keyword">this</span>(id, -1, params, actions);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00063">63</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                                                                         {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keyword">this</span>(id, -1, params, actions);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -283,13 +289,13 @@ Package Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00091">91</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                                         {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keywordflow">if</span> (this.seqNumber == seqNumber) {</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            this.message = null;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            lock.unlock();</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00093">93</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                                         {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">if</span> (this.seqNumber == seqNumber) {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            this.message = null;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            lock.unlock();</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -314,10 +320,10 @@ Package Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00106">106</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                 {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        this.closed = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00121">121</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                 {</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        this.closed = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -342,38 +348,10 @@ Package Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00065">65</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                  {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> this.id;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a class="anchor" id="a5e238a25aa25db5ed4110aff17174b8e"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">long lsp.LspConnection.getLastReceiptTime </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00098">98</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                              {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">return</span> lastReceiptTime;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00067">67</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                  {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span> this.id;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -398,10 +376,10 @@ Package Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00078">78</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                                  {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">return</span> this.message;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00080">80</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                                  {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keywordflow">return</span> this.message;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -429,14 +407,14 @@ Package Functions</h2></td></tr>
 <p>Número único gerado a partir de um endereço IP e uma porta. </p>
 <p>Esse atributo só é usado pelo servidor </p>
 
-<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00074">74</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                     {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordflow">return</span> this.sockId;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00076">76</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                     {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> this.sockId;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a class="anchor" id="a4c19138a14cce090afdde5713d455d6c"></a>
+<a class="anchor" id="a83a52d061d85e7a820c37400a4bc7b83"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -444,10 +422,9 @@ Package Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void lsp.LspConnection.setLastReceiptTime </td>
+          <td class="memname">short lsp.LspConnection.lastReceivedSequence </td>
           <td>(</td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>lastReceiptTime</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -458,10 +435,98 @@ Package Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00102">102</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                                                  {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        this.lastReceiptTime = lastReceiptTime;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00113">113</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                                 {</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="keywordflow">return</span> this.receivedSequence;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="ad4c508bae10ec02ea6d39dcc19a31ff2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">long lsp.LspConnection.lastReceivedTime </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">package</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Última vez que essa conexão recebeu uma mensagem. </p>
+<p>Note que esse tempo é gerenciado externamente através do método messageReceived. Se receber -1, quer dizer que não chegou nenhuma mensagem depois da conexão. </p>
+
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00105">105</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                            {</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keywordflow">return</span> receivedTime;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a1a0b19eec54ccb243919e5d31b5ad512"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void lsp.LspConnection.messageReceived </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">package</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00109">109</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                           {</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        this.receivedTime = System.currentTimeMillis();</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a3edfd9b58e45a3aab7e4eae362c969e7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void lsp.LspConnection.receivedSequence </td>
+          <td>(</td>
+          <td class="paramtype">short&#160;</td>
+          <td class="paramname"><em>number</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">package</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00117">117</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                                        {</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        this.receivedSequence = number;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -487,15 +552,15 @@ Package Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00082">82</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                                           {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">if</span> (lock.tryLock()) {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            this.message = <span class="keyword">new</span> InternalPack(<span class="keywordtype">id</span>, ++seqNumber, payload);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspConnection_8java_source.html#l00084">84</a> of file <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                                           {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">if</span> (lock.tryLock()) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            this.message = <span class="keyword">new</span> InternalPack(<span class="keywordtype">id</span>, ++seqNumber, payload);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
