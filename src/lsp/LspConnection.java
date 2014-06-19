@@ -80,6 +80,15 @@ class LspConnection {
 		}
 	}
 
+	/**
+	 * Decrementa o número de sequência. Esse método é útil para não perder um
+	 * número em que houve falhas no processo. Para evitar números duplicados,
+	 * ao usar, coloque o objeto {@link LspConnection} em um bloco synchronized.
+	 */
+	void decrementSeqNumber() {
+		seqNumber.decrementAndGet();
+	}
+
 	long getLastMsgTime() {
 		return lastMsgTime;
 	}

@@ -96,15 +96,19 @@ public class LspServer {
 		checkActive();
 		LspConnection conn = connections.get(pack.getConnId());
 		if (conn != null) {
-			short seqNum = conn.nextSeqNumber();
-			try {
-				boolean success = outputQueue.offer(new InternalPack(pack, seqNum), 500,
-						TimeUnit.MILLISECONDS);
+			synchronized (conn) {
+				short seqNum = conn.nextSeqNumber();
+				boolean success = false;
+				try {
+					success = outputQueue.offer(new InternalPack(pack, seqNum),
+							500, TimeUnit.MILLISECONDS);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				if (!success) {
+					conn.decrementSeqNumber();
 					throw new IllegalStateException("Fila de saída cheia");
 				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 		throw new ClosedConnectionException(pack.getConnId());
@@ -217,14 +221,14 @@ public class LspServer {
 							params, actions);
 					connections.put(newId, conn);
 					connectedSockets.add(sockId);
+					// XXX: Enviar ACK da conexão
 				}
 			}
 		}
 
 		private void doData(final DatagramPacket pack, final ByteBuffer buf) {
 			// Descarta o pacote se não há uma conexão aberta com o remetente
-			final long sockId = uniqueSockId(pack.getSocketAddress());
-			if (connectedSockets.contains(sockId)) {
+			if (isConnected(pack.getSocketAddress())) {
 				// Descarta o pacote se não há esse id de conexão
 				final LspConnection conn = connections.get(buf.getShort());
 				if (conn != null) {
@@ -242,6 +246,10 @@ public class LspServer {
 
 		private void doAck(final DatagramPacket pack, final ByteBuffer buf) {
 			// TODO Auto-generated method stub
+		}
+
+		private boolean isConnected(SocketAddress sockAddr) {
+			return connectedSockets.contains(uniqueSockId(sockAddr));
 		}
 	}
 
