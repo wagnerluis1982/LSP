@@ -83,7 +83,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_g"><span>g</span></a></li>
       <li><a href="#index_i"><span>i</span></a></li>
       <li><a href="#index_l"><span>l</span></a></li>
-      <li><a href="#index_n"><span>n</span></a></li>
       <li><a href="#index_p"><span>p</span></a></li>
       <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
@@ -110,7 +109,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
 <li>ACK
-: <a class="el" href="classlsp_1_1helpers_1_1InputService.html#a8e0b776720bec30dd6eecdb68ce60398">lsp.helpers.InputService</a>
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#a6adf4bee2f774d17b2441ee06a8ddfbd">lsp.helpers.InOutService</a>
+</li>
+<li>ackSentMessage()
+: <a class="el" href="classlsp_1_1LspConnection.html#a4fee65493f36c2f38f01ba6ed884b829">lsp.LspConnection</a>
 </li>
 </ul>
 
@@ -133,7 +135,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classlsp_1_1ClosedConnectionException.html#ab9a6cad1c06ff90c99138517118430da">lsp.ClosedConnectionException</a>
 </li>
 <li>CONNECT
-: <a class="el" href="classlsp_1_1helpers_1_1InputService.html#ab562cb40f48f3dc54eee45917c771a4d">lsp.helpers.InputService</a>
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#af7e3dc4ce8b6ecc18b1a1ed1bc87499e">lsp.helpers.InOutService</a>
 </li>
 <li>connId
 : <a class="el" href="classlsp_1_1Pack.html#a3ca3b232bff2be790f99873943a81b5c">lsp.Pack</a>
@@ -143,7 +145,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <h3><a class="anchor" id="index_d"></a>- d -</h3><ul>
 <li>DATA
-: <a class="el" href="classlsp_1_1helpers_1_1InputService.html#ad00cfb475cf7c2f7411f4b53f38830ae">lsp.helpers.InputService</a>
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#a6a501a6b443629e8336f236ad3cad243">lsp.helpers.InOutService</a>
 </li>
 </ul>
 
@@ -169,12 +171,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>getId()
 : <a class="el" href="classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236">lsp.LspConnection</a>
 </li>
-<li>getLastMsgTime()
-: <a class="el" href="classlsp_1_1LspConnection.html#a40ab0989d24ddb4a6a744ae6bf3a1c35">lsp.LspConnection</a>
+<li>getLastReceiptTime()
+: <a class="el" href="classlsp_1_1LspConnection.html#a5e238a25aa25db5ed4110aff17174b8e">lsp.LspConnection</a>
 </li>
 <li>getPayload()
-: <a class="el" href="classlsp_1_1helpers_1_1InputService.html#a5acb2594c1e738d4b5fe6fb1d0271549">lsp.helpers.InputService</a>
-, <a class="el" href="classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568">lsp.Pack</a>
+: <a class="el" href="classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568">lsp.Pack</a>
+, <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#afca58e9fb9d5124d8e633a1349cc42b6">lsp.helpers.InOutService</a>
+</li>
+<li>getSentMessage()
+: <a class="el" href="classlsp_1_1LspConnection.html#a4880291797068fa7b41287524fe4c7a4">lsp.LspConnection</a>
 </li>
 <li>getSeqNum()
 : <a class="el" href="classlsp_1_1InternalPack.html#a168af8de0bf028e718017fc3af550bc8">lsp.InternalPack</a>
@@ -186,14 +191,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_i"></a>- i -</h3><ul>
-<li>InputService()
-: <a class="el" href="classlsp_1_1helpers_1_1InputService.html#a2bc046518cbadf70a81dc053a9d13a51">lsp.helpers.InputService</a>
+<li>InOutService()
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#a7cafc56f93569796f15f0e635ddbf37f">lsp.helpers.InOutService</a>
 </li>
 <li>InternalPack()
 : <a class="el" href="classlsp_1_1InternalPack.html#a891bdffabac482c8e94ac5f33827fdfc">lsp.InternalPack</a>
 </li>
 <li>isActive()
-: <a class="el" href="classlsp_1_1helpers_1_1InputService.html#ad6e7d1a1ce11e9c8bb2d41aca0a31063">lsp.helpers.InputService</a>
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#a6b0858cdb2ad6be3a34bbdd1ebfd427b">lsp.helpers.InOutService</a>
 </li>
 </ul>
 
@@ -214,22 +219,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 
 
-<h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
-<li>nextSeqNumber()
-: <a class="el" href="classlsp_1_1LspConnection.html#aa9efbf68b6f464595c9c84f5abcbea91">lsp.LspConnection</a>
-</li>
-</ul>
-
-
 <h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
 <li>Pack()
 : <a class="el" href="classlsp_1_1Pack.html#a49904e2421592be0cd30dd3da6e9a6cd">lsp.Pack</a>
 </li>
 <li>payload
 : <a class="el" href="classlsp_1_1Pack.html#afd047527b9376ce29de0ad4c9d6d5d83">lsp.Pack</a>
-</li>
-<li>processPacket()
-: <a class="el" href="classlsp_1_1helpers_1_1InputService.html#a130cfa0572c27bf8c132c53d89993a62">lsp.helpers.InputService</a>
 </li>
 </ul>
 
@@ -239,18 +234,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classlsp_1_1LspClient.html#a119e673d1a93337e4d93b7a01900086b">lsp.LspClient</a>
 , <a class="el" href="classlsp_1_1LspServer.html#af5f7fb6f63dba285d68141b89c8e3b0d">lsp.LspServer</a>
 </li>
+<li>receiveAck()
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#afc3a171fe9017c7bd5b63ef41a4448ba">lsp.helpers.InOutService</a>
+</li>
+<li>receiveConnect()
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#a88148a3ab014c6d7d55fd1dd4c967e53">lsp.helpers.InOutService</a>
+</li>
+<li>receiveData()
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#ac76faf80dcc6fddb21393ce3bd815392">lsp.helpers.InOutService</a>
+</li>
 </ul>
 
 
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
+<li>sendAck()
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#a6e6ed50b105ce362d8227e686ca2ddd3">lsp.helpers.InOutService</a>
+</li>
+<li>sendConnect()
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#af8a1d3e7c7999fc11eaf709c4921a1ed">lsp.helpers.InOutService</a>
+</li>
+<li>sendData()
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#a04f3611b6a3ac0e98fe5e6dbcee699e6">lsp.helpers.InOutService</a>
+</li>
 <li>setConnId()
 : <a class="el" href="classlsp_1_1Pack.html#a24373aa7bd19bfbe408b5125169c7230">lsp.Pack</a>
 </li>
-<li>setLastMsgTime()
-: <a class="el" href="classlsp_1_1LspConnection.html#a62171a71b995838278dc6939f3d5c49f">lsp.LspConnection</a>
+<li>setLastReceiptTime()
+: <a class="el" href="classlsp_1_1LspConnection.html#a4c19138a14cce090afdde5713d455d6c">lsp.LspConnection</a>
+</li>
+<li>setSentMessage()
+: <a class="el" href="classlsp_1_1LspConnection.html#a5b7100bdd3421832759c09e109b49544">lsp.LspConnection</a>
 </li>
 <li>start()
-: <a class="el" href="classlsp_1_1helpers_1_1InputService.html#a3c2817d96abae96f600438e2086cf8de">lsp.helpers.InputService</a>
+: <a class="el" href="classlsp_1_1helpers_1_1InOutService.html#a86b6d61e85c72f4a71f6e198970ff1c3">lsp.helpers.InOutService</a>
 </li>
 </ul>
 

@@ -7,7 +7,7 @@ var searchData=
   ['closedconnectionexception',['ClosedConnectionException',['../classlsp_1_1ClosedConnectionException.html#a870d6a245939ceb165ed4e8dbfb24f8e',1,'lsp.ClosedConnectionException.ClosedConnectionException(short connId)'],['../classlsp_1_1ClosedConnectionException.html#ab9a6cad1c06ff90c99138517118430da',1,'lsp.ClosedConnectionException.ClosedConnectionException()']]],
   ['closedconnectionexception',['ClosedConnectionException',['../classlsp_1_1ClosedConnectionException.html',1,'lsp']]],
   ['closedconnectionexception_2ejava',['ClosedConnectionException.java',['../ClosedConnectionException_8java.html',1,'']]],
-  ['connect',['CONNECT',['../classlsp_1_1helpers_1_1InputService.html#ab562cb40f48f3dc54eee45917c771a4d',1,'lsp::helpers::InputService']]],
+  ['connect',['CONNECT',['../classlsp_1_1helpers_1_1InOutService.html#af7e3dc4ce8b6ecc18b1a1ed1bc87499e',1,'lsp::helpers::InOutService']]],
   ['connectionactions',['ConnectionActions',['../interfacelsp_1_1ConnectionActions.html',1,'lsp']]],
   ['connectionactions_2ejava',['ConnectionActions.java',['../ConnectionActions_8java.html',1,'']]],
   ['connid',['connId',['../classlsp_1_1Pack.html#a3ca3b232bff2be790f99873943a81b5c',1,'lsp::Pack']]]
