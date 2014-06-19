@@ -1,7 +1,5 @@
 package lsp;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -22,7 +20,7 @@ class LspConnection {
 	 *
 	 * @param id
 	 *            Identificador da conexão
-	 * @param sockAddr
+	 * @param sockId
 	 *            Número IP e porta associados à conexão. Útil somente quando
 	 *            {@link LspConnection} é instanciado pelo servidor.
 	 * @param params
@@ -30,12 +28,12 @@ class LspConnection {
 	 * @param actions
 	 *            Callbacks usados na verificação da conexão.
 	 */
-	LspConnection(short id, SocketAddress sockAddr, LspParams params, ConnectionActions actions) {
+	LspConnection(short id, long sockId, LspParams params, ConnectionActions actions) {
 		if (params == null || actions == null)
 			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
 
 		this.id = id;
-		this.sockId = uniqueSockId(sockAddr);
+		this.sockId = sockId;
 		this.closed = false;
 		this.seqNumber = new AtomicInteger();
 		this.lastMsgTime = System.currentTimeMillis();
@@ -56,7 +54,7 @@ class LspConnection {
 	 *            Callbacks usados na verificação da conexão.
 	 */
 	LspConnection(short id, LspParams params, ConnectionActions actions) {
-		this(id, null, params, actions);
+		this(id, -1, params, actions);
 	}
 
 	short getId() {
@@ -92,16 +90,6 @@ class LspConnection {
 
 	void close() {
 		this.closed = true;
-	}
-
-	private long uniqueSockId(SocketAddress sockAddr) {
-		if (sockAddr == null)
-			return -1;
-
-		final InetSocketAddress addr = (InetSocketAddress) sockAddr;
-		final int ip = addr.getAddress().hashCode();
-		final int port = addr.getPort();
-		return (ip & 0xffff_ffffL) << 16 | (short) port;
 	}
 
 	/**

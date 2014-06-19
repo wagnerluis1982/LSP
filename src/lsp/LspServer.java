@@ -1,6 +1,8 @@
 package lsp;
 
 import java.net.DatagramPacket;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -150,6 +152,18 @@ public class LspServer {
 	}
 
 	/**
+	 * Número único gerado a partir de um endereço IP e uma porta
+	 *
+	 * Esse atributo só é usado pelo servidor
+	 */
+	private static long uniqueSockId(SocketAddress sockAddr) {
+		final InetSocketAddress addr = (InetSocketAddress) sockAddr;
+		final int ip = addr.getAddress().hashCode();
+		final int port = addr.getPort();
+		return (ip & 0xffff_ffffL) << 16 | (short) port;
+	}
+
+	/**
 	 * Processador de entradas do servidor.
 	 */
 	private final class InputServiceImpl extends InputService {
@@ -187,14 +201,15 @@ public class LspServer {
 			if (buf.getInt() == 0) {
 				// A abertura de novas conexões é feita a seguir. A condição
 				// garante não abrir nova conexão se esta já está aberta
-				if (!connectedSockets.contains(pack.getSocketAddress())) {
+				final long sockId = uniqueSockId(pack.getSocketAddress());
+				if (!connectedSockets.contains(sockId)) {
 					final short newId = (short) idCounter.incrementAndGet();
 					final ConnectionActions actions = new ConnectionActionsImpl(newId);
 
-					LspConnection conn = new LspConnection(newId,
-							pack.getSocketAddress(), params, actions);
+					final LspConnection conn = new LspConnection(newId, sockId,
+							params, actions);
 					connections.put(newId, conn);
-					connectedSockets.add(conn.getSockId());
+					connectedSockets.add(sockId);
 				}
 			}
 		}
