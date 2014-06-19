@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import lsp.helpers.InputService;
+import lsp.helpers.InOutService;
 
 /**
  * Servidor LSP.
@@ -62,7 +62,7 @@ public class LspServer {
 		this.active = true;
 
 		// Inicia o processador de entradas do servidor
-		InputService inputSvc = new InputServiceImpl(this.port);
+		InOutService inputSvc = new InOutServiceImpl(this.port);
 		inputSvc.start();
 	}
 
@@ -94,7 +94,8 @@ public class LspServer {
 	 */
 	public void write(Pack pack) {
 		checkActive();
-		LspConnection conn = connections.get(pack.getConnId());
+		final short connId = pack.getConnId();
+		final LspConnection conn = connections.get(connId);
 		if (conn != null) {
 			synchronized (conn) {
 				short seqNum = conn.nextSeqNumber();
@@ -111,7 +112,7 @@ public class LspServer {
 				}
 			}
 		}
-		throw new ClosedConnectionException(pack.getConnId());
+		throw new ClosedConnectionException(connId);
 	}
 
 	/**
@@ -124,6 +125,10 @@ public class LspServer {
 	 *             se a conexão estiver encerrada.
 	 */
 	public void closeConn(short connId) {
+		/* FIXME: O encerramento da conexão deve ser em duas partes
+		 *     1) Bloquear a conexão para recebimentos
+		 *     2) Aguardar a fila de saída da conexão se esvaziar
+		 */
 		checkActive();
 		// Encerra a conexão formalmente e remove da lista de conexões e do
 		// conjunto de sockets.
@@ -164,8 +169,6 @@ public class LspServer {
 
 	/**
 	 * Número único gerado a partir de um endereço IP e uma porta
-	 *
-	 * Esse atributo só é usado pelo servidor
 	 */
 	private static long uniqueSockId(SocketAddress sockAddr) {
 		final InetSocketAddress addr = (InetSocketAddress) sockAddr;
@@ -177,8 +180,8 @@ public class LspServer {
 	/**
 	 * Processador de entradas do servidor.
 	 */
-	private final class InputServiceImpl extends InputService {
-		InputServiceImpl(final int port) {
+	private final class InOutServiceImpl extends InOutService {
+		InOutServiceImpl(final int port) {
 			super(port);
 		}
 
@@ -188,76 +191,73 @@ public class LspServer {
 		}
 
 		@Override
-		protected void processPacket(final DatagramPacket pack) {
-			final ByteBuffer buf = ByteBuffer.wrap(pack.getData(), 0,
-					pack.getLength()).asReadOnlyBuffer();
-			final short msgType = buf.getShort();
-
-			switch (msgType) {
-			case CONNECT:
-				doConnect(pack, buf);
-				break;
-			case DATA:
-				doData(pack, buf);
-				break;
-			case ACK:
-				doAck(pack, buf);
-				break;
-			}
-		}
-
-		private void doConnect(final DatagramPacket pack, final ByteBuffer buf) {
+		protected void receiveConnect(final DatagramPacket pack, final ByteBuffer buf) {
 			// Somente serão aceitos pedidos de conexão bem formados, isto é,
 			// aqueles em que Connection ID e Sequence Number são iguais a zero
 			if (buf.getInt() == 0) {
+				final long sockId = uniqueSockId(pack.getSocketAddress());
+
 				// A abertura de novas conexões é feita a seguir. A condição
 				// garante não abrir nova conexão se esta já está aberta
-				final long sockId = uniqueSockId(pack.getSocketAddress());
 				if (!connectedSockets.contains(sockId)) {
 					final short newId = (short) idCounter.incrementAndGet();
 					final ConnectionActions actions = new ConnectionActionsImpl(newId);
 
+					// Adicionando a conexão ao pool de conexão
 					final LspConnection conn = new LspConnection(newId, sockId,
 							params, actions);
 					connections.put(newId, conn);
 					connectedSockets.add(sockId);
-					// XXX: Enviar ACK da conexão
+					sendAck(newId, (short) 0);
 				}
 			}
 		}
 
-		private void doData(final DatagramPacket pack, final ByteBuffer buf) {
+		@Override
+		protected void receiveData(final DatagramPacket pack, final ByteBuffer buf) {
+			LspConnection conn = getConnection(pack, buf);
+			if (conn != null) {
+				short seqNum = buf.getShort();
+				byte[] payload = getPayload(buf);
+				try {
+					inputQueue.offer(new InternalPack(conn.getId(), seqNum,
+							payload), 500, TimeUnit.MILLISECONDS);
+					sendAck(conn.getId(), seqNum);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		@Override
+		protected void receiveAck(final DatagramPacket pack, final ByteBuffer buf) {
+			final LspConnection conn = getConnection(pack, buf);
+			if (conn != null) {
+				// TODO Se o número de sequência passado for a da mensagem aguardando
+				// então remove-o da fila de espera
+				final short seqNum = buf.getShort();
+			}
+		}
+
+		private LspConnection getConnection(final DatagramPacket pack, final ByteBuffer buf) {
 			// Descarta o pacote se não há uma conexão aberta com o remetente
-			if (isConnected(pack.getSocketAddress())) {
+			final long sockId = uniqueSockId(pack.getSocketAddress());
+			if (connectedSockets.contains(sockId)) {
 				// Descarta o pacote se não há esse id de conexão
 				final LspConnection conn = connections.get(buf.getShort());
-				if (conn != null) {
-					short seqNum = buf.getShort();
-					byte[] payload = getPayload(buf);
-					try {
-						inputQueue.offer(new InternalPack(conn.getId(), seqNum,
-								payload), 500, TimeUnit.MILLISECONDS);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+				if (conn != null && conn.getSockId() == sockId) {
+					return conn;
 				}
 			}
-		}
-
-		private void doAck(final DatagramPacket pack, final ByteBuffer buf) {
-			// TODO Auto-generated method stub
-		}
-
-		private boolean isConnected(SocketAddress sockAddr) {
-			return connectedSockets.contains(uniqueSockId(sockAddr));
+			return null;
 		}
 	}
 
 	private final class ConnectionActionsImpl implements ConnectionActions {
-		private final short newId;
+		private final short connId;
 
-		private ConnectionActionsImpl(short newId) {
-			this.newId = newId;
+		private ConnectionActionsImpl(short connId) {
+			this.connId = connId;
 		}
 
 		@Override
@@ -269,7 +269,7 @@ public class LspServer {
 
 		@Override
 		public void closeConnection() {
-			closeConn(newId);
+			closeConn(connId);
 		}
 
 		private void resendData() {
