@@ -98,14 +98,45 @@ abstract class LspSocket {
 		}
 	}
 
-	/** Tratamento de um pacote do tipo CONNECT recebido */
-	abstract void receiveConnect(SocketAddress sockAddr, ByteBuffer buf);
+	/**
+	 * Tratamento de um pacote do tipo CONNECT recebido
+	 *
+	 * Esse método deve ser sobrescrito pelo servidor
+	 */
+	void receiveConnect(final SocketAddress sockAddr, final ByteBuffer buf) {
+	}
 
 	/** Tratamento de um pacote do tipo DATA recebido */
-	abstract void receiveData(SocketAddress sockAddr, ByteBuffer buf);
+	void receiveData(final SocketAddress sockAddr, final ByteBuffer buf) {
+		LspConnection conn = usedConnection(sockAddr, buf);
+		if (conn != null) {
+			short seqNum = buf.getShort();
+			byte[] payload = payload(buf);
+			InternalPack pack = new InternalPack(conn, seqNum, payload);
+
+			// Se a mensagem foi enfileirada, envia o ACK e informa o número
+			// de sequência à conexão (usado nos disparos da época).
+			if (inputQueue.offer(pack)) {
+				sendAck(pack);
+				conn.received(seqNum);
+			}
+
+			// Caso contrário, mesmo que a mensagem não possa ser lida,
+			// atualiza o momento da última mensagem recebida
+			else {
+				conn.received();
+			}
+		}
+	}
 
 	/** Tratamento de um pacote do tipo ACK recebido */
-	abstract void receiveAck(SocketAddress sockAddr, ByteBuffer buf);
+	void receiveAck(final SocketAddress sockAddr, final ByteBuffer buf) {
+		final LspConnection conn = usedConnection(sockAddr, buf);
+		if (conn != null) {
+			final short seqNum = buf.getShort();
+			conn.ack(seqNum);
+		}
+	}
 
 	private void send(final short msgType, final LspConnection conn, final short seqNum, final byte[] payload) {
 		ByteBuffer buf = ByteBuffer.allocate(6 + payload.length);
@@ -142,8 +173,38 @@ abstract class LspSocket {
 		sendAck(p.getConnection(), p.getSeqNum());
 	}
 
-	/** Faz o envio do pacote apropriadamente */
-	abstract void send(InternalPack p);
+	private void sendNextData() throws InterruptedException {
+		// Obtém o próxima pacote de dados da fila
+		final InternalPack p = outputQueue.take();
+
+		// Se já houver uma conexão associada ao pacote, envia-o e encerra
+		if (p.getConnection() != null) {
+			sendData(p);
+			return;
+		}
+
+		// Se o id de conexão é diferente da conexão em uso, encerra
+		LspConnection conn = usedConnection(p.getConnId());
+		if (conn == null) {
+			return;
+		}
+
+		// Tenta associar o pacote à conexão. Se sucesso, envia esse pacote
+		if (conn.sent(p)) {
+			sendData(p);
+			return;
+		}
+
+		// Se não foi possível associar à conexão (já havia outro pacote em
+		// espera de um ACK) então devolve o pacote à fila (segunda posição)
+		synchronized (outputQueue) {
+			InternalPack first = outputQueue.poll();
+			outputQueue.offerFirst(p);
+			if (first != null) {
+				outputQueue.offerFirst(first);
+			}
+		}
+	}
 
 	/** Helper para obter um array de bytes com o resto do {@link ByteBuffer} */
 	static final byte[] payload(final ByteBuffer buf) {
@@ -154,6 +215,28 @@ abstract class LspSocket {
 
 		return bs;
 	}
+
+	private LspConnection usedConnection(final SocketAddress sockAddr, final ByteBuffer buf) {
+		short connId = buf.getShort();
+		final LspConnection conn = usedConnection(connId);
+
+		// Descarta o pacote se não há conexão aberta com o remetente ou se
+		// o id recebido não corresponde ao id registrado com a conexão.
+		if (conn != null && conn.getId() == connId
+				&& sockAddr.equals(conn.getSockAddr())) {
+			return conn;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Obtém o objeto {@link LspConnection} em uso
+	 *
+	 * @param connId Id de conexão para validar/pesquisar
+	 * @return Uma instância de {@link LspConnection} ou null
+	 */
+	abstract LspConnection usedConnection(short connId);
 
 	/** Obtém a fila de entrada do socket */
 	BlockingQueue<InternalPack> inputQueue() {
@@ -189,8 +272,7 @@ abstract class LspSocket {
 			// Envia pacotes até o servidor ser encerrado
 			while (isActive()) {
 				try {
-					InternalPack pack = outputQueue.take();
-					send(pack);
+					sendNextData();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

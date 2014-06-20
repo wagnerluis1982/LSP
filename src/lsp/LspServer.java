@@ -182,66 +182,8 @@ public class LspServer {
 			}
 		}
 
-		@Override
-		void receiveData(final SocketAddress sockAddr, final ByteBuffer buf) {
-			LspConnection conn = getConnection(sockAddr, buf);
-			if (conn != null) {
-				short seqNum = buf.getShort();
-				byte[] payload = payload(buf);
-				InternalPack pack = new InternalPack(conn, seqNum, payload);
-
-				// Se a mensagem foi enfileirada, envia o ACK e informa o número
-				// de sequência à conexão (usado nos disparos da época).
-				if (inputQueue().offer(pack)) {
-					sendAck(pack);
-					conn.received(seqNum);
-				}
-
-				// Caso contrário, mesmo que a mensagem não possa ser lida,
-				// atualiza o momento da última mensagem recebida
-				else {
-					conn.received();
-				}
-			}
-		}
-
-		@Override
-		void receiveAck(final SocketAddress sockAddr, final ByteBuffer buf) {
-			final LspConnection conn = getConnection(sockAddr, buf);
-			if (conn != null) {
-				final short seqNum = buf.getShort();
-				conn.ack(seqNum);
-			}
-		}
-
-		@Override
-		void send(InternalPack p) {
-			// Tenta enviar
-			LspConnection conn = p.getConnection();
-			if (conn != null) {
-				sendData(p);
-				return;
-			}
-
-			conn = connectionPool.get(p.getConnId());
-			if (conn != null && conn.sent(p)) {
-				sendData(p);
-			} else {
-				outputQueue().addFirst(p);
-			}
-		}
-
-		private LspConnection getConnection(final SocketAddress sockAddr, final ByteBuffer buf) {
-			final long sockId = LspConnection.uniqueSockId(sockAddr);
-			final LspConnection conn = connectedSockets.get(sockId);
-
-			// Descarta o pacote se não há conexão aberta com o remetente ou se
-			// o id recebido não corresponde ao id registrado com esse socket.
-			if (conn != null && conn.getId() != buf.getShort()) {
-				return conn;
-			}
-
-			return null;
+		LspConnection usedConnection(short connId) {
+			return connectionPool.get(connId);
 		}
 	}
 
