@@ -1,19 +1,18 @@
-package lsp.helpers;
+package lsp;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
-
-import lsp.InternalPack;
 
 /**
  * Serviço de entrada e saída de pacotes. Classe abstrata.
  *
  * @author Wagner Macedo
  */
-public abstract class ServiceHelper {
+abstract class LspSocket {
 	protected static final byte CONNECT = 0;
 	protected static final byte DATA = 1;
 	protected static final byte ACK = 2;
@@ -21,89 +20,88 @@ public abstract class ServiceHelper {
 	private static final byte[] PAYLOAD_NIL = new byte[0];
 
 	private final int port;
-	private final Thread thread;
+	private final Thread thread = new Thread(new SvcTask());
+	private final Object sendLock = new Object();
 
 	private DatagramSocket socket;
 
-	protected ServiceHelper(int port) {
+	LspSocket(int port) {
 		this.port = port;
-		this.thread = new Thread(new SvcTask());
+		this.thread.start();
 	}
 
 	/**
-	 * Indica até quando o serviço de entrada será executado. Esse método deve
-	 * ser implementado em uma subclasse.
+	 * Indica até quando o serviço será executado. Esse método deve ser
+	 * implementado em uma subclasse.
 	 *
 	 * @return false para parar o serviço
 	 */
-	protected abstract boolean isActive();
-
-	/** Tratamento de um pacote do tipo CONNECT recebido */
-	protected abstract void receiveConnect(DatagramPacket pack, ByteBuffer buf);
-
-	/** Tratamento de um pacote do tipo DATA recebido */
-	protected abstract void receiveData(DatagramPacket pack, ByteBuffer buf);
-
-	/** Tratamento de um pacote do tipo ACK recebido */
-	protected abstract void receiveAck(DatagramPacket pack, ByteBuffer buf);
+	abstract boolean isActive();
 
 	/**
 	 * Processamento de cada pacote UDP recebido.
 	 *
 	 * @param pack Pacote enviado pelo serviço
 	 */
-	private final void receivePacket(final DatagramPacket pack) {
+	private void receive(final DatagramPacket pack) {
 		final ByteBuffer buf = ByteBuffer.wrap(pack.getData(), 0,
 				pack.getLength()).asReadOnlyBuffer();
 		final short msgType = buf.getShort();
 
 		switch (msgType) {
 		case CONNECT:
-			receiveConnect(pack, buf);
+			receiveConnect(pack.getSocketAddress(), buf.slice());
 			break;
 		case DATA:
-			receiveData(pack, buf);
+			receiveData(pack.getSocketAddress(), buf.slice());
 			break;
 		case ACK:
-			receiveAck(pack, buf);
+			receiveAck(pack.getSocketAddress(), buf.slice());
 			break;
 		}
 	}
 
-	private final void send(final short msgType, final short connId, final short seqNum, final byte[] payload) {
+	/** Tratamento de um pacote do tipo CONNECT recebido */
+	abstract void receiveConnect(SocketAddress sockAddr, ByteBuffer buf);
+
+	/** Tratamento de um pacote do tipo DATA recebido */
+	abstract void receiveData(SocketAddress sockAddr, ByteBuffer buf);
+
+	/** Tratamento de um pacote do tipo ACK recebido */
+	abstract void receiveAck(SocketAddress sockAddr, ByteBuffer buf);
+
+	private void send(final short msgType, final short connId, final short seqNum, final byte[] payload) {
 		ByteBuffer buf = ByteBuffer.allocate(6 + payload.length);
 		buf.putShort(msgType).putShort(connId).putShort(seqNum).put(payload);
 
 		DatagramPacket packet = new DatagramPacket(buf.array(), buf.capacity());
 		try {
-			socket.send(packet);
+			synchronized (sendLock) {
+				socket.send(packet);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public final void sendConnect(final short connId, final short seqNum) {
+	final void sendConnect(final short connId, final short seqNum) {
 		send(CONNECT, connId, seqNum, PAYLOAD_NIL);
 	}
 
-	public final void sendData(final short connId, final short seqNum, final byte[] payload) {
+	final void sendData(final short connId, final short seqNum, final byte[] payload) {
 		send(DATA, connId, seqNum, payload);
 	}
 
-	public final void sendData(final InternalPack p) {
+	final void sendData(final InternalPack p) {
 		sendData(p.getConnId(), p.getSeqNum(), p.getPayload());
 	}
 
-	public final void sendAck(final short connId, final short seqNum) {
+	final void sendAck(final short connId, final short seqNum) {
 		send(ACK, connId, seqNum, PAYLOAD_NIL);
 	}
 
-	public final void start() {
-		thread.start();
-	}
-
 	/** Helper para obter um array de bytes com o resto do {@link ByteBuffer} */
-	protected static final byte[] getPayload(final ByteBuffer buf) {
+	static final byte[] getPayload(final ByteBuffer buf) {
 		byte[] bs = new byte[buf.remaining()];
 		for (int i = 0; i < bs.length; i++) {
 			bs[i] = buf.get();
@@ -129,7 +127,7 @@ public abstract class ServiceHelper {
 			while (isActive()) {
 				try {
 					socket.receive(packet);
-					receivePacket(packet);
+					receive(packet);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

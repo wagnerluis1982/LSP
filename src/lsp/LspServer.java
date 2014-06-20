@@ -1,6 +1,5 @@
 package lsp;
 
-import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -11,59 +10,43 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import lsp.helpers.ServiceHelper;
-
 /**
  * Servidor LSP.
  *
  * @author Wagner Macedo
  */
 public class LspServer {
-	private final int port;
-	private final LspParams params;
-
-	/** Pool de conexões */
-	private final ConcurrentMap<Short, LspConnection> connections;
+	/** Pool de conexões inicialmente com capacidade para 16 conexões */
+	private final ConcurrentMap<Short, LspConnection> connectionPool = new ConcurrentHashMap<>(16);
 
 	/**
-	 * Conjunto de sockets conectados. Garante que haja apenas uma conexão por
-	 * socket remoto
+	 * Pool de conexões rastreáveis pelo id do socket. Essa estrutura ajuda a
+	 * garantir que haja somente uma conexão por socket remoto.
+	 *
+	 * @see uniqueSockId
 	 */
-	private final ConcurrentMap<Long, LspConnection> connectedSockets;
+	private final ConcurrentMap<Long, LspConnection> connectedSockets = new ConcurrentHashMap<>(16);
 
 	/** Capacidade das filas de entrada e saída em termos de pacotes de 1KB */
 	private static final byte QUEUE_ZISE = 50;
 
-	/* Filas de entrada e de saída */
-	private final BlockingQueue<InternalPack> inputQueue;
-	private final BlockingQueue<Pack> outputQueue;
-	private final ServiceHelper service;
+	/* Filas de entrada e saída */
+	private final BlockingQueue<InternalPack> inputQueue = new ArrayBlockingQueue<>(QUEUE_ZISE, true);;
+	private final BlockingQueue<Pack> outputQueue = new ArrayBlockingQueue<>(QUEUE_ZISE, true);
 
 	// Variáveis de controle do servidor
-	private AtomicInteger idCounter;
-	private volatile boolean active;
+	private final AtomicInteger idCounter = new AtomicInteger();
+	private volatile boolean active = true;
+
+	/* Parâmetros do servidor */
+	private final LspParams params;
+
+	/* Socket LSP */
+	private final LspSocket lspSocket;
 
 	public LspServer(int port, LspParams params) {
-		this.port = port;
+		this.lspSocket = new LspSocketImpl(port);
 		this.params = params;
-
-		// Cria o pool de conexões, inicialmente com capacidade para 16 conexões
-		this.connections = new ConcurrentHashMap<>(16);
-
-		// Inicialização do conjunto de sockets
-		this.connectedSockets = new ConcurrentHashMap<>(16);
-
-		// Cria filas de entrada e saída
-		this.inputQueue = new ArrayBlockingQueue<>(QUEUE_ZISE, true);
-		this.outputQueue = new ArrayBlockingQueue<>(QUEUE_ZISE, true);
-
-		// Inicialização das variáveis de controle
-		this.idCounter = new AtomicInteger();
-		this.active = true;
-
-		// Inicia o serviço de entradas e saídas do servidor
-		service = new Service(this.port);
-		service.start();
 	}
 
 	/**
@@ -95,7 +78,7 @@ public class LspServer {
 	public void write(Pack pack) {
 		checkActive();
 		final short connId = pack.getConnId();
-		final LspConnection conn = connections.get(connId);
+		final LspConnection conn = connectionPool.get(connId);
 		if (conn != null) {
 			boolean success = false;
 			try {
@@ -127,7 +110,7 @@ public class LspServer {
 		checkActive();
 		// Encerra a conexão formalmente e remove da lista de conexões e do
 		// conjunto de sockets.
-		LspConnection conn = connections.remove(connId);
+		LspConnection conn = connectionPool.remove(connId);
 		if (conn != null) {
 			conn.close();
 			connectedSockets.remove(conn.getSockId());
@@ -144,7 +127,7 @@ public class LspServer {
 		this.active = false;
 
 		// Fecha todas as conexões (em paralelo)
-		for (final LspConnection conn : this.connections.values()) {
+		for (final LspConnection conn : this.connectionPool.values()) {
 			new Thread() {
 				public void run() {
 					conn.close();
@@ -153,7 +136,7 @@ public class LspServer {
 		}
 
 		// Limpeza de memória
-		this.connections.clear();
+		this.connectionPool.clear();
 		this.connectedSockets.clear();
 	}
 
@@ -177,22 +160,22 @@ public class LspServer {
 	/**
 	 * Serviço de entrada e saída do servidor.
 	 */
-	private final class Service extends ServiceHelper {
-		Service(final int port) {
+	private final class LspSocketImpl extends LspSocket {
+		LspSocketImpl(final int port) {
 			super(port);
 		}
 
 		@Override
-		protected boolean isActive() {
+		boolean isActive() {
 			return active;
 		}
 
 		@Override
-		protected void receiveConnect(final DatagramPacket pack, final ByteBuffer buf) {
+		void receiveConnect(final SocketAddress sockAddr, final ByteBuffer buf) {
 			// Somente serão aceitos pedidos de conexão bem formados, isto é,
 			// aqueles em que Connection ID e Sequence Number são iguais a zero
 			if (buf.getInt() == 0) {
-				final long sockId = uniqueSockId(pack.getSocketAddress());
+				final long sockId = uniqueSockId(sockAddr);
 
 				// A abertura de novas conexões é feita a seguir. A condição
 				// garante não abrir nova conexão se esta já está aberta
@@ -203,7 +186,7 @@ public class LspServer {
 
 					// Adicionando a conexão ao pool de conexão
 					conn = new LspConnection(newId, sockId, params, actions);
-					connections.put(newId, conn);
+					connectionPool.put(newId, conn);
 					connectedSockets.put(sockId, conn);
 					sendAck(newId, (short) 0);
 
@@ -216,8 +199,8 @@ public class LspServer {
 		}
 
 		@Override
-		protected void receiveData(final DatagramPacket pack, final ByteBuffer buf) {
-			LspConnection conn = getConnection(pack, buf);
+		void receiveData(final SocketAddress sockAddr, final ByteBuffer buf) {
+			LspConnection conn = getConnection(sockAddr, buf);
 			if (conn != null) {
 				conn.messageReceived();
 				short seqNum = buf.getShort();
@@ -234,8 +217,8 @@ public class LspServer {
 		}
 
 		@Override
-		protected void receiveAck(final DatagramPacket pack, final ByteBuffer buf) {
-			final LspConnection conn = getConnection(pack, buf);
+		void receiveAck(final SocketAddress sockAddr, final ByteBuffer buf) {
+			final LspConnection conn = getConnection(sockAddr, buf);
 			if (conn != null) {
 				conn.messageReceived();
 				// Se o número de sequência passado for a da mensagem aguardando
@@ -245,8 +228,8 @@ public class LspServer {
 			}
 		}
 
-		private LspConnection getConnection(final DatagramPacket pack, final ByteBuffer buf) {
-			final long sockId = uniqueSockId(pack.getSocketAddress());
+		private LspConnection getConnection(final SocketAddress sockAddr, final ByteBuffer buf) {
+			final long sockId = uniqueSockId(sockAddr);
 			final LspConnection conn = connectedSockets.get(sockId);
 
 			// Descarta o pacote se não há conexão aberta com o remetente ou se
@@ -277,19 +260,19 @@ public class LspServer {
 		private void resendData() {
 			InternalPack message = conn.getSentMessage();
 			if (message != null) {
-				service.sendData(message);
+				lspSocket.sendData(message);
 			}
 		}
 
 		private void resendAckConnect() {
 			if (conn.lastReceivedTime() == -1) {
-				service.sendAck(conn.getId(), (short) 0);
+				lspSocket.sendAck(conn.getId(), (short) 0);
 			}
 		}
 
 		private void resendAckData() {
 			if (conn.lastReceivedSequence() != -1) {
-				service.sendAck(conn.getId(), conn.lastReceivedSequence());
+				lspSocket.sendAck(conn.getId(), conn.lastReceivedSequence());
 			}
 		}
 

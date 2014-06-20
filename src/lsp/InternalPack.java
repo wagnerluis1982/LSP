@@ -1,6 +1,6 @@
 package lsp;
 
-public class InternalPack extends Pack {
+class InternalPack extends Pack {
 	private final short seqNum;
 
 	InternalPack(short connId, short seqNum, byte[] payload) {
@@ -12,7 +12,7 @@ public class InternalPack extends Pack {
 		this(pack.getConnId(), seqNum, pack.getPayload());
 	}
 
-	public short getSeqNum() {
+	short getSeqNum() {
 		return this.seqNum;
 	}
 }
