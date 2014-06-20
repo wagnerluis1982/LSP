@@ -216,7 +216,14 @@ public class LspServer {
 
 		@Override
 		void send(InternalPack p) {
-			LspConnection conn = connectionPool.get(p.getConnId());
+			// Tenta enviar
+			LspConnection conn = p.getConnection();
+			if (conn != null) {
+				sendData(p);
+				return;
+			}
+
+			conn = connectionPool.get(p.getConnId());
 			if (conn != null && conn.sent(p)) {
 				sendData(p);
 			} else {
@@ -235,12 +242,6 @@ public class LspServer {
 			}
 
 			return null;
-		}
-
-		@Override
-		SocketAddress sockAddr(short connId) {
-			LspConnection conn = connectionPool.get(connId);
-			return conn.getSockAddr();
 		}
 	}
 

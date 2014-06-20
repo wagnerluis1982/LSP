@@ -73,8 +73,6 @@ abstract class LspSocket {
 	 */
 	abstract boolean isActive();
 
-	abstract SocketAddress sockAddr(short connId);
-
 	/**
 	 * Processamento de cada pacote UDP recebido.
 	 *
