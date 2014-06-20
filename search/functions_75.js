@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['uniqueid',['uniqueId',['../classlsp_1_1LspSocketAddress.html#aafb215c81eae0c95c12d155e3f4be040',1,'lsp::LspSocketAddress']]]
+  ['uniquesockid',['uniqueSockId',['../classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9',1,'lsp::LspConnection']]]
 ];

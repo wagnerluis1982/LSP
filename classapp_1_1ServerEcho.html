@@ -135,7 +135,7 @@ Static Public Member Functions</h2></td></tr>
 <p>Definition at line <a class="el" href="ServerEcho_8java_source.html#l00017">17</a> of file <a class="el" href="ServerEcho_8java_source.html">ServerEcho.java</a>.</p>
 <div class="fragment"><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;                                                                  {</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="comment">// Servidor fica apto a receber conexões na porta 4455</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        LspServer server = <span class="keyword">new</span> LspServer(4455, <span class="keyword">new</span> LspParams(5000, 5));</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        LspServer server = <span class="keyword">new</span> LspServer(4455, <span class="keyword">new</span> LspParams(50000, 5));</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            <span class="comment">// Lê próxima mensagem</span></div>

@@ -1,4 +1,4 @@
 <map id="lsp.LspSocket.sendAck" name="lsp.LspSocket.sendAck">
-<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#aac4e30afcfe31b7cffa3564ee847562c" title="lsp.LspSocket.sendAck" alt="" coords="213,5,373,35"/>
-<area shape="rect" id="node5" href="$classlsp_1_1Pack.html#acf7842abafd8718cd1345097a500bd21" title="lsp.Pack.getConnId" alt="" coords="225,59,361,88"/>
+<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#ad3efe69ecc109b842f809bd1f5133c21" title="lsp.LspSocket.sendAck" alt="" coords="236,5,396,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1InternalPack.html#a3bdedf152e4822179605799575d6d693" title="lsp.InternalPack.getConnection" alt="" coords="215,59,417,88"/>
 </map>

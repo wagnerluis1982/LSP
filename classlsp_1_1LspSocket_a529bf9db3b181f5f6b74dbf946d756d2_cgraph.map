@@ -1,5 +1,5 @@
 <map id="lsp.LspSocket.sendData" name="lsp.LspSocket.sendData">
-<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#a2e94eb9dd84fd90e11621dca2b6d1cf6" title="lsp.LspSocket.sendData" alt="" coords="219,5,384,35"/>
-<area shape="rect" id="node5" href="$classlsp_1_1Pack.html#acf7842abafd8718cd1345097a500bd21" title="lsp.Pack.getConnId" alt="" coords="233,59,369,88"/>
-<area shape="rect" id="node7" href="$classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568" title="lsp.Pack.getPayload" alt="" coords="231,112,372,141"/>
+<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#a49f21a421ffbcce1895b219c69b3000d" title="lsp.LspSocket.sendData" alt="" coords="239,5,404,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1InternalPack.html#a3bdedf152e4822179605799575d6d693" title="lsp.InternalPack.getConnection" alt="" coords="220,59,423,88"/>
+<area shape="rect" id="node7" href="$classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568" title="lsp.Pack.getPayload" alt="" coords="251,112,392,141"/>
 </map>
