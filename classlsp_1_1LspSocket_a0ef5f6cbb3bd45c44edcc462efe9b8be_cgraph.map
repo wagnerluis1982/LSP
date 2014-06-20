@@ -1,0 +1,5 @@
+<map id="lsp.LspSocket.receiveData" name="lsp.LspSocket.receiveData">
+<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#ad95f2e86db9705071b6c8e8c2c6b24e4" title="Helper para obter um array de bytes com o resto do ByteBuffer. " alt="" coords="243,5,397,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1LspSocket.html#a7f4144ede9baef1e412cca8861416fd3" title="Obtém a fila de entrada do socket. " alt="" coords="233,59,407,88"/>
+<area shape="rect" id="node7" href="$classlsp_1_1LspSocket.html#ad3efe69ecc109b842f809bd1f5133c21" title="lsp.LspSocket.sendAck" alt="" coords="240,112,400,141"/>
+</map>

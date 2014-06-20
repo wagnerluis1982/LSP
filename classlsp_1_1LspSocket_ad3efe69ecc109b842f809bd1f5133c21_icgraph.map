@@ -1,3 +1,4 @@
 <map id="lsp.LspSocket.sendAck" name="lsp.LspSocket.sendAck">
-<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#ad5c76c6da8f25d2c1fb3ddceeb809835" title="lsp.LspSocket.sendAck" alt="" coords="213,5,373,35"/>
+<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#a0ef5f6cbb3bd45c44edcc462efe9b8be" title="Tratamento de um pacote do tipo DATA recebido. " alt="" coords="213,5,392,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1LspSocket.html#ad5c76c6da8f25d2c1fb3ddceeb809835" title="lsp.LspSocket.sendAck" alt="" coords="223,59,383,88"/>
 </map>

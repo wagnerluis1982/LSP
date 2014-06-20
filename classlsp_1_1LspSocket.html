@@ -128,17 +128,15 @@ Package Functions</h2></td></tr>
 <tr class="memitem:a4acae955bc00d318bef18d6387743bf4"><td class="memItemLeft" align="right" valign="top">abstract boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#a4acae955bc00d318bef18d6387743bf4">isActive</a> ()</td></tr>
 <tr class="memdesc:a4acae955bc00d318bef18d6387743bf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indica até quando o serviço será executado.  <a href="#a4acae955bc00d318bef18d6387743bf4">More...</a><br/></td></tr>
 <tr class="separator:a4acae955bc00d318bef18d6387743bf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb83d6c2146566a2c60315e01f0f0c07"><td class="memItemLeft" align="right" valign="top">abstract SocketAddress&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#acb83d6c2146566a2c60315e01f0f0c07">sockAddr</a> (short connId)</td></tr>
-<tr class="separator:acb83d6c2146566a2c60315e01f0f0c07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf64e5006e96e979fcef1414e78dd40d"><td class="memItemLeft" align="right" valign="top">abstract void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#adf64e5006e96e979fcef1414e78dd40d">receiveConnect</a> (SocketAddress <a class="el" href="classlsp_1_1LspSocket.html#acb83d6c2146566a2c60315e01f0f0c07">sockAddr</a>, ByteBuffer buf)</td></tr>
-<tr class="memdesc:adf64e5006e96e979fcef1414e78dd40d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tratamento de um pacote do tipo CONNECT recebido.  <a href="#adf64e5006e96e979fcef1414e78dd40d">More...</a><br/></td></tr>
-<tr class="separator:adf64e5006e96e979fcef1414e78dd40d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ba7daf7c1aa449a948e52ae77fe488e"><td class="memItemLeft" align="right" valign="top">abstract void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#a8ba7daf7c1aa449a948e52ae77fe488e">receiveData</a> (SocketAddress <a class="el" href="classlsp_1_1LspSocket.html#acb83d6c2146566a2c60315e01f0f0c07">sockAddr</a>, ByteBuffer buf)</td></tr>
-<tr class="memdesc:a8ba7daf7c1aa449a948e52ae77fe488e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tratamento de um pacote do tipo DATA recebido.  <a href="#a8ba7daf7c1aa449a948e52ae77fe488e">More...</a><br/></td></tr>
-<tr class="separator:a8ba7daf7c1aa449a948e52ae77fe488e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b8036c9019b1d19e604b05b80795c92"><td class="memItemLeft" align="right" valign="top">abstract void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#a6b8036c9019b1d19e604b05b80795c92">receiveAck</a> (SocketAddress <a class="el" href="classlsp_1_1LspSocket.html#acb83d6c2146566a2c60315e01f0f0c07">sockAddr</a>, ByteBuffer buf)</td></tr>
-<tr class="memdesc:a6b8036c9019b1d19e604b05b80795c92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tratamento de um pacote do tipo ACK recebido.  <a href="#a6b8036c9019b1d19e604b05b80795c92">More...</a><br/></td></tr>
-<tr class="separator:a6b8036c9019b1d19e604b05b80795c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7225c8114a9cae77cac9bd2367c51515"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#a7225c8114a9cae77cac9bd2367c51515">receiveConnect</a> (final SocketAddress sockAddr, final ByteBuffer buf)</td></tr>
+<tr class="memdesc:a7225c8114a9cae77cac9bd2367c51515"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tratamento de um pacote do tipo CONNECT recebido.  <a href="#a7225c8114a9cae77cac9bd2367c51515">More...</a><br/></td></tr>
+<tr class="separator:a7225c8114a9cae77cac9bd2367c51515"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ef5f6cbb3bd45c44edcc462efe9b8be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#a0ef5f6cbb3bd45c44edcc462efe9b8be">receiveData</a> (final SocketAddress sockAddr, final ByteBuffer buf)</td></tr>
+<tr class="memdesc:a0ef5f6cbb3bd45c44edcc462efe9b8be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tratamento de um pacote do tipo DATA recebido.  <a href="#a0ef5f6cbb3bd45c44edcc462efe9b8be">More...</a><br/></td></tr>
+<tr class="separator:a0ef5f6cbb3bd45c44edcc462efe9b8be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92a0d732da54312fec921af2313c52a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#a92a0d732da54312fec921af2313c52a2">receiveAck</a> (final SocketAddress sockAddr, final ByteBuffer buf)</td></tr>
+<tr class="memdesc:a92a0d732da54312fec921af2313c52a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tratamento de um pacote do tipo ACK recebido.  <a href="#a92a0d732da54312fec921af2313c52a2">More...</a><br/></td></tr>
+<tr class="separator:a92a0d732da54312fec921af2313c52a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a930888d52151cbe08bedd852100441b0"><td class="memItemLeft" align="right" valign="top">final void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#a930888d52151cbe08bedd852100441b0">sendConnect</a> (final <a class="el" href="classlsp_1_1LspConnection.html">LspConnection</a> conn, final short seqNum)</td></tr>
 <tr class="separator:a930888d52151cbe08bedd852100441b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49f21a421ffbcce1895b219c69b3000d"><td class="memItemLeft" align="right" valign="top">final void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#a49f21a421ffbcce1895b219c69b3000d">sendData</a> (final <a class="el" href="classlsp_1_1LspConnection.html">LspConnection</a> conn, final short seqNum, final byte[] <a class="el" href="classlsp_1_1LspSocket.html#ad95f2e86db9705071b6c8e8c2c6b24e4">payload</a>)</td></tr>
@@ -149,9 +147,9 @@ Package Functions</h2></td></tr>
 <tr class="separator:ad3efe69ecc109b842f809bd1f5133c21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5c76c6da8f25d2c1fb3ddceeb809835"><td class="memItemLeft" align="right" valign="top">final void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#ad5c76c6da8f25d2c1fb3ddceeb809835">sendAck</a> (final <a class="el" href="classlsp_1_1InternalPack.html">InternalPack</a> p)</td></tr>
 <tr class="separator:ad5c76c6da8f25d2c1fb3ddceeb809835"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ef8eba349321933dd9f547319048130"><td class="memItemLeft" align="right" valign="top">abstract void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#a8ef8eba349321933dd9f547319048130">send</a> (<a class="el" href="classlsp_1_1InternalPack.html">InternalPack</a> p)</td></tr>
-<tr class="memdesc:a8ef8eba349321933dd9f547319048130"><td class="mdescLeft">&#160;</td><td class="mdescRight">Faz o envio do pacote apropriadamente.  <a href="#a8ef8eba349321933dd9f547319048130">More...</a><br/></td></tr>
-<tr class="separator:a8ef8eba349321933dd9f547319048130"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a080c414431aadd88d42a2588b465fa26"><td class="memItemLeft" align="right" valign="top">abstract <a class="el" href="classlsp_1_1LspConnection.html">LspConnection</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#a080c414431aadd88d42a2588b465fa26">usedConnection</a> (short connId)</td></tr>
+<tr class="memdesc:a080c414431aadd88d42a2588b465fa26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtém o objeto <a class="el" href="classlsp_1_1LspConnection.html">LspConnection</a> em uso.  <a href="#a080c414431aadd88d42a2588b465fa26">More...</a><br/></td></tr>
+<tr class="separator:a080c414431aadd88d42a2588b465fa26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f4144ede9baef1e412cca8861416fd3"><td class="memItemLeft" align="right" valign="top">BlockingQueue&lt; <a class="el" href="classlsp_1_1InternalPack.html">InternalPack</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlsp_1_1LspSocket.html#a7f4144ede9baef1e412cca8861416fd3">inputQueue</a> ()</td></tr>
 <tr class="memdesc:a7f4144ede9baef1e412cca8861416fd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtém a fila de entrada do socket.  <a href="#a7f4144ede9baef1e412cca8861416fd3">More...</a><br/></td></tr>
 <tr class="separator:a7f4144ede9baef1e412cca8861416fd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -301,11 +299,20 @@ Static Package Functions</h2></td></tr>
 
 <p>Obtém a fila de entrada do socket. </p>
 
-<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00161">161</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;                                             {</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        <span class="keywordflow">return</span> this.inputQueue;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00242">242</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                                             {</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;        <span class="keywordflow">return</span> this.inputQueue;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    }</div>
 </div><!-- fragment -->
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classlsp_1_1LspSocket_a7f4144ede9baef1e412cca8861416fd3_icgraph.png" border="0" usemap="#classlsp_1_1LspSocket_a7f4144ede9baef1e412cca8861416fd3_icgraph" alt=""/></div>
+<map name="classlsp_1_1LspSocket_a7f4144ede9baef1e412cca8861416fd3_icgraph" id="classlsp_1_1LspSocket_a7f4144ede9baef1e412cca8861416fd3_icgraph">
+<area shape="rect" id="node3" href="classlsp_1_1LspSocket.html#a0ef5f6cbb3bd45c44edcc462efe9b8be" title="Tratamento de um pacote do tipo DATA recebido. " alt="" coords="229,5,408,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <a class="anchor" id="a4acae955bc00d318bef18d6387743bf4"></a>
@@ -358,10 +365,10 @@ Static Package Functions</h2></td></tr>
 
 <p>Obtém a fila de saída do socket. </p>
 
-<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00166">166</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                                              {</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="keywordflow">return</span> this.outputQueue;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00247">247</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;                                              {</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;        <span class="keywordflow">return</span> this.outputQueue;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -389,19 +396,28 @@ Static Package Functions</h2></td></tr>
 
 <p>Helper para obter um array de bytes com o resto do <a class="el" href="">ByteBuffer</a>. </p>
 
-<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00151">151</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                                                      {</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        byte[] bs = <span class="keyword">new</span> byte[buf.remaining()];</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; bs.length; i++) {</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            bs[i] = buf.get();</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        }</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="keywordflow">return</span> bs;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00210">210</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;                                                      {</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        byte[] bs = <span class="keyword">new</span> byte[buf.remaining()];</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; bs.length; i++) {</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;            bs[i] = buf.get();</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        }</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        <span class="keywordflow">return</span> bs;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    }</div>
 </div><!-- fragment -->
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classlsp_1_1LspSocket_ad95f2e86db9705071b6c8e8c2c6b24e4_icgraph.png" border="0" usemap="#classlsp_1_1LspSocket_ad95f2e86db9705071b6c8e8c2c6b24e4_icgraph" alt=""/></div>
+<map name="classlsp_1_1LspSocket_ad95f2e86db9705071b6c8e8c2c6b24e4_icgraph" id="classlsp_1_1LspSocket_ad95f2e86db9705071b6c8e8c2c6b24e4_icgraph">
+<area shape="rect" id="node3" href="classlsp_1_1LspSocket.html#a0ef5f6cbb3bd45c44edcc462efe9b8be" title="Tratamento de um pacote do tipo DATA recebido. " alt="" coords="208,5,387,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
-<a class="anchor" id="a6b8036c9019b1d19e604b05b80795c92"></a>
+<a class="anchor" id="a92a0d732da54312fec921af2313c52a2"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -409,15 +425,15 @@ Static Package Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">abstract void lsp.LspSocket.receiveAck </td>
+          <td class="memname">void lsp.LspSocket.receiveAck </td>
           <td>(</td>
-          <td class="paramtype">SocketAddress&#160;</td>
+          <td class="paramtype">final SocketAddress&#160;</td>
           <td class="paramname"><em>sockAddr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ByteBuffer&#160;</td>
+          <td class="paramtype">final ByteBuffer&#160;</td>
           <td class="paramname"><em>buf</em>&#160;</td>
         </tr>
         <tr>
@@ -428,16 +444,25 @@ Static Package Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">package</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Tratamento de um pacote do tipo ACK recebido. </p>
 
+<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00133">133</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                                                                        {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keyword">final</span> LspConnection conn = usedConnection(sockAddr, buf);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keywordflow">if</span> (conn != null) {</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            <span class="keyword">final</span> <span class="keywordtype">short</span> seqNum = buf.getShort();</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            conn.ack(seqNum);</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        }</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    }</div>
+</div><!-- fragment -->
 </div>
 </div>
-<a class="anchor" id="adf64e5006e96e979fcef1414e78dd40d"></a>
+<a class="anchor" id="a7225c8114a9cae77cac9bd2367c51515"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -445,15 +470,15 @@ Static Package Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">abstract void lsp.LspSocket.receiveConnect </td>
+          <td class="memname">void lsp.LspSocket.receiveConnect </td>
           <td>(</td>
-          <td class="paramtype">SocketAddress&#160;</td>
+          <td class="paramtype">final SocketAddress&#160;</td>
           <td class="paramname"><em>sockAddr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ByteBuffer&#160;</td>
+          <td class="paramtype">final ByteBuffer&#160;</td>
           <td class="paramname"><em>buf</em>&#160;</td>
         </tr>
         <tr>
@@ -464,16 +489,21 @@ Static Package Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">package</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Tratamento de um pacote do tipo CONNECT recebido. </p>
+<p>Esse método deve ser sobrescrito pelo servidor </p>
 
+<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00106">106</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                                                                            {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
+</div><!-- fragment -->
 </div>
 </div>
-<a class="anchor" id="a8ba7daf7c1aa449a948e52ae77fe488e"></a>
+<a class="anchor" id="a0ef5f6cbb3bd45c44edcc462efe9b8be"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -481,15 +511,15 @@ Static Package Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">abstract void lsp.LspSocket.receiveData </td>
+          <td class="memname">void lsp.LspSocket.receiveData </td>
           <td>(</td>
-          <td class="paramtype">SocketAddress&#160;</td>
+          <td class="paramtype">final SocketAddress&#160;</td>
           <td class="paramname"><em>sockAddr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ByteBuffer&#160;</td>
+          <td class="paramtype">final ByteBuffer&#160;</td>
           <td class="paramname"><em>buf</em>&#160;</td>
         </tr>
         <tr>
@@ -500,38 +530,47 @@ Static Package Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">package</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Tratamento de um pacote do tipo DATA recebido. </p>
 
+<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00110">110</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                                                                         {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        LspConnection conn = usedConnection(sockAddr, buf);</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordflow">if</span> (conn != null) {</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            <span class="keywordtype">short</span> seqNum = buf.getShort();</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            byte[] <a class="code" href="classlsp_1_1LspSocket.html#ad95f2e86db9705071b6c8e8c2c6b24e4">payload</a> = <a class="code" href="classlsp_1_1LspSocket.html#ad95f2e86db9705071b6c8e8c2c6b24e4">payload</a>(buf);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            InternalPack pack = <span class="keyword">new</span> InternalPack(conn, seqNum, payload);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            <span class="comment">// Se a mensagem foi enfileirada, envia o ACK e informa o número</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            <span class="comment">// de sequência à conexão (usado nos disparos da época).</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="classlsp_1_1LspSocket.html#a7f4144ede9baef1e412cca8861416fd3">inputQueue</a>.offer(pack)) {</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                <a class="code" href="classlsp_1_1LspSocket.html#ad3efe69ecc109b842f809bd1f5133c21">sendAck</a>(pack);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                conn.received(seqNum);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            <span class="comment">// Caso contrário, mesmo que a mensagem não possa ser lida,</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            <span class="comment">// atualiza o momento da última mensagem recebida</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                conn.received();</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            }</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        }</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
+<div class="ttc" id="classlsp_1_1LspSocket_html_ad3efe69ecc109b842f809bd1f5133c21"><div class="ttname"><a href="classlsp_1_1LspSocket.html#ad3efe69ecc109b842f809bd1f5133c21">lsp.LspSocket.sendAck</a></div><div class="ttdeci">final void sendAck(final LspConnection conn, final short seqNum)</div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00168">LspSocket.java:168</a></div></div>
+<div class="ttc" id="classlsp_1_1LspSocket_html_ad95f2e86db9705071b6c8e8c2c6b24e4"><div class="ttname"><a href="classlsp_1_1LspSocket.html#ad95f2e86db9705071b6c8e8c2c6b24e4">lsp.LspSocket.payload</a></div><div class="ttdeci">static final byte[] payload(final ByteBuffer buf)</div><div class="ttdoc">Helper para obter um array de bytes com o resto do ByteBuffer. </div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00210">LspSocket.java:210</a></div></div>
+<div class="ttc" id="classlsp_1_1LspSocket_html_a7f4144ede9baef1e412cca8861416fd3"><div class="ttname"><a href="classlsp_1_1LspSocket.html#a7f4144ede9baef1e412cca8861416fd3">lsp.LspSocket.inputQueue</a></div><div class="ttdeci">BlockingQueue&lt; InternalPack &gt; inputQueue()</div><div class="ttdoc">Obtém a fila de entrada do socket. </div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00242">LspSocket.java:242</a></div></div>
+</div><!-- fragment -->
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classlsp_1_1LspSocket_a0ef5f6cbb3bd45c44edcc462efe9b8be_cgraph.png" border="0" usemap="#classlsp_1_1LspSocket_a0ef5f6cbb3bd45c44edcc462efe9b8be_cgraph" alt=""/></div>
+<map name="classlsp_1_1LspSocket_a0ef5f6cbb3bd45c44edcc462efe9b8be_cgraph" id="classlsp_1_1LspSocket_a0ef5f6cbb3bd45c44edcc462efe9b8be_cgraph">
+<area shape="rect" id="node3" href="classlsp_1_1LspSocket.html#ad95f2e86db9705071b6c8e8c2c6b24e4" title="Helper para obter um array de bytes com o resto do ByteBuffer. " alt="" coords="243,5,397,35"/><area shape="rect" id="node5" href="classlsp_1_1LspSocket.html#a7f4144ede9baef1e412cca8861416fd3" title="Obtém a fila de entrada do socket. " alt="" coords="233,59,407,88"/><area shape="rect" id="node7" href="classlsp_1_1LspSocket.html#ad3efe69ecc109b842f809bd1f5133c21" title="lsp.LspSocket.sendAck" alt="" coords="240,112,400,141"/></map>
 </div>
-</div>
-<a class="anchor" id="a8ef8eba349321933dd9f547319048130"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">abstract void lsp.LspSocket.send </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classlsp_1_1InternalPack.html">InternalPack</a>&#160;</td>
-          <td class="paramname"><em>p</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Faz o envio do pacote apropriadamente. </p>
+</p>
 
 </div>
 </div>
@@ -567,10 +606,10 @@ Static Package Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00139">139</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;                                                                     {</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        send(<a class="code" href="classlsp_1_1LspSocket.html#aada2d3dd2bbccacf90acc5030834b958">ACK</a>, conn, seqNum, PAYLOAD_NIL);</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00168">168</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;                                                                     {</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        send(<a class="code" href="classlsp_1_1LspSocket.html#aada2d3dd2bbccacf90acc5030834b958">ACK</a>, conn, seqNum, PAYLOAD_NIL);</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    }</div>
 <div class="ttc" id="classlsp_1_1LspSocket_html_aada2d3dd2bbccacf90acc5030834b958"><div class="ttname"><a href="classlsp_1_1LspSocket.html#aada2d3dd2bbccacf90acc5030834b958">lsp.LspSocket.ACK</a></div><div class="ttdeci">static final byte ACK</div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00022">LspSocket.java:22</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
@@ -578,7 +617,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classlsp_1_1LspSocket_ad3efe69ecc109b842f809bd1f5133c21_icgraph.png" border="0" usemap="#classlsp_1_1LspSocket_ad3efe69ecc109b842f809bd1f5133c21_icgraph" alt=""/></div>
 <map name="classlsp_1_1LspSocket_ad3efe69ecc109b842f809bd1f5133c21_icgraph" id="classlsp_1_1LspSocket_ad3efe69ecc109b842f809bd1f5133c21_icgraph">
-<area shape="rect" id="node3" href="classlsp_1_1LspSocket.html#ad5c76c6da8f25d2c1fb3ddceeb809835" title="lsp.LspSocket.sendAck" alt="" coords="213,5,373,35"/></map>
+<area shape="rect" id="node3" href="classlsp_1_1LspSocket.html#a0ef5f6cbb3bd45c44edcc462efe9b8be" title="Tratamento de um pacote do tipo DATA recebido. " alt="" coords="213,5,392,35"/><area shape="rect" id="node5" href="classlsp_1_1LspSocket.html#ad5c76c6da8f25d2c1fb3ddceeb809835" title="lsp.LspSocket.sendAck" alt="" coords="223,59,383,88"/></map>
 </div>
 </p>
 
@@ -606,11 +645,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00143">143</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                                             {</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <a class="code" href="classlsp_1_1LspSocket.html#ad3efe69ecc109b842f809bd1f5133c21">sendAck</a>(p.getConnection(), p.getSeqNum());</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    }</div>
-<div class="ttc" id="classlsp_1_1LspSocket_html_ad3efe69ecc109b842f809bd1f5133c21"><div class="ttname"><a href="classlsp_1_1LspSocket.html#ad3efe69ecc109b842f809bd1f5133c21">lsp.LspSocket.sendAck</a></div><div class="ttdeci">final void sendAck(final LspConnection conn, final short seqNum)</div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00139">LspSocket.java:139</a></div></div>
+<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00172">172</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;                                             {</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <a class="code" href="classlsp_1_1LspSocket.html#ad3efe69ecc109b842f809bd1f5133c21">sendAck</a>(p.getConnection(), p.getSeqNum());</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    }</div>
+<div class="ttc" id="classlsp_1_1LspSocket_html_ad3efe69ecc109b842f809bd1f5133c21"><div class="ttname"><a href="classlsp_1_1LspSocket.html#ad3efe69ecc109b842f809bd1f5133c21">lsp.LspSocket.sendAck</a></div><div class="ttdeci">final void sendAck(final LspConnection conn, final short seqNum)</div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00168">LspSocket.java:168</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -655,10 +694,10 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00127">127</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                                                                         {</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        send(<a class="code" href="classlsp_1_1LspSocket.html#ab29ac806fd91540723aedf4f22498af3">CONNECT</a>, conn, seqNum, PAYLOAD_NIL);</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00156">156</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;                                                                         {</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        send(<a class="code" href="classlsp_1_1LspSocket.html#ab29ac806fd91540723aedf4f22498af3">CONNECT</a>, conn, seqNum, PAYLOAD_NIL);</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    }</div>
 <div class="ttc" id="classlsp_1_1LspSocket_html_ab29ac806fd91540723aedf4f22498af3"><div class="ttname"><a href="classlsp_1_1LspSocket.html#ab29ac806fd91540723aedf4f22498af3">lsp.LspSocket.CONNECT</a></div><div class="ttdeci">static final byte CONNECT</div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00020">LspSocket.java:20</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -701,12 +740,12 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00131">131</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;                                                                                            {</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        send(<a class="code" href="classlsp_1_1LspSocket.html#a757a8fd41f322be3849f863ccef4dd3d">DATA</a>, conn, seqNum, <a class="code" href="classlsp_1_1LspSocket.html#ad95f2e86db9705071b6c8e8c2c6b24e4">payload</a>);</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    }</div>
+<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00160">160</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;                                                                                            {</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        send(<a class="code" href="classlsp_1_1LspSocket.html#a757a8fd41f322be3849f863ccef4dd3d">DATA</a>, conn, seqNum, <a class="code" href="classlsp_1_1LspSocket.html#ad95f2e86db9705071b6c8e8c2c6b24e4">payload</a>);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    }</div>
 <div class="ttc" id="classlsp_1_1LspSocket_html_a757a8fd41f322be3849f863ccef4dd3d"><div class="ttname"><a href="classlsp_1_1LspSocket.html#a757a8fd41f322be3849f863ccef4dd3d">lsp.LspSocket.DATA</a></div><div class="ttdeci">static final byte DATA</div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00021">LspSocket.java:21</a></div></div>
-<div class="ttc" id="classlsp_1_1LspSocket_html_ad95f2e86db9705071b6c8e8c2c6b24e4"><div class="ttname"><a href="classlsp_1_1LspSocket.html#ad95f2e86db9705071b6c8e8c2c6b24e4">lsp.LspSocket.payload</a></div><div class="ttdeci">static final byte[] payload(final ByteBuffer buf)</div><div class="ttdoc">Helper para obter um array de bytes com o resto do ByteBuffer. </div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00151">LspSocket.java:151</a></div></div>
+<div class="ttc" id="classlsp_1_1LspSocket_html_ad95f2e86db9705071b6c8e8c2c6b24e4"><div class="ttname"><a href="classlsp_1_1LspSocket.html#ad95f2e86db9705071b6c8e8c2c6b24e4">lsp.LspSocket.payload</a></div><div class="ttdeci">static final byte[] payload(final ByteBuffer buf)</div><div class="ttdoc">Helper para obter um array de bytes com o resto do ByteBuffer. </div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00210">LspSocket.java:210</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -741,11 +780,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00135">135</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                                              {</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <a class="code" href="classlsp_1_1LspSocket.html#a49f21a421ffbcce1895b219c69b3000d">sendData</a>(p.getConnection(), p.getSeqNum(), p.getPayload());</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    }</div>
-<div class="ttc" id="classlsp_1_1LspSocket_html_a49f21a421ffbcce1895b219c69b3000d"><div class="ttname"><a href="classlsp_1_1LspSocket.html#a49f21a421ffbcce1895b219c69b3000d">lsp.LspSocket.sendData</a></div><div class="ttdeci">final void sendData(final LspConnection conn, final short seqNum, final byte[] payload)</div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00131">LspSocket.java:131</a></div></div>
+<p>Definition at line <a class="el" href="LspSocket_8java_source.html#l00164">164</a> of file <a class="el" href="LspSocket_8java_source.html">LspSocket.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                                              {</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <a class="code" href="classlsp_1_1LspSocket.html#a49f21a421ffbcce1895b219c69b3000d">sendData</a>(p.getConnection(), p.getSeqNum(), p.getPayload());</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    }</div>
+<div class="ttc" id="classlsp_1_1LspSocket_html_a49f21a421ffbcce1895b219c69b3000d"><div class="ttname"><a href="classlsp_1_1LspSocket.html#a49f21a421ffbcce1895b219c69b3000d">lsp.LspSocket.sendData</a></div><div class="ttdeci">final void sendData(final LspConnection conn, final short seqNum, final byte[] payload)</div><div class="ttdef"><b>Definition:</b> <a href="LspSocket_8java_source.html#l00160">LspSocket.java:160</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -758,7 +797,7 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="acb83d6c2146566a2c60315e01f0f0c07"></a>
+<a class="anchor" id="a080c414431aadd88d42a2588b465fa26"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -766,7 +805,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">abstract SocketAddress lsp.LspSocket.sockAddr </td>
+          <td class="memname">abstract <a class="el" href="classlsp_1_1LspConnection.html">LspConnection</a> lsp.LspSocket.usedConnection </td>
           <td>(</td>
           <td class="paramtype">short&#160;</td>
           <td class="paramname"><em>connId</em></td><td>)</td>
@@ -779,6 +818,15 @@ Here is the call graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Obtém o objeto <a class="el" href="classlsp_1_1LspConnection.html">LspConnection</a> em uso. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">connId</td><td>Id de conexão para validar/pesquisar </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Uma instância de <a class="el" href="classlsp_1_1LspConnection.html">LspConnection</a> ou null </dd></dl>
 
 </div>
 </div>
