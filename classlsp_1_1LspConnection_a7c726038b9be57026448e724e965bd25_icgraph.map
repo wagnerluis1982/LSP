@@ -1,0 +1,4 @@
+<map id="lsp.LspConnection.received" name="lsp.LspConnection.received">
+<area shape="rect" id="node3" href="$classlsp_1_1LspConnection.html#abac47a33d19ce3006d7882b9d90bce07" title="Informa que o ACK do número de sequência informado foi recebido. " alt="" coords="252,5,407,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1LspConnection.html#af5b616c9b7d6b019f21ce87312e81636" title="Informa o número de sequência em que uma mensagem DATA foi recebida. " alt="" coords="239,59,420,88"/>
+</map>

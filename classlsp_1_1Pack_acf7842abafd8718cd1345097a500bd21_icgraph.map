@@ -1,3 +1,5 @@
 <map id="lsp.Pack.getConnId" name="lsp.Pack.getConnId">
-<area shape="rect" id="node3" href="$classlsp_1_1helpers_1_1ServiceHelper.html#af113effb0ffa7ec2a89fb040ad18ab6c" title="lsp.helpers.ServiceHelper.sendData" alt="" coords="193,5,423,35"/>
+<area shape="rect" id="node3" href="$classlsp_1_1LspServer.html#a34e57e92093b9cc450c3b58a186ef9e5" title="Envia dados para um determinado cliente. " alt="" coords="208,5,341,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1LspSocket.html#a529bf9db3b181f5f6b74dbf946d756d2" title="lsp.LspSocket.sendData" alt="" coords="192,59,357,88"/>
+<area shape="rect" id="node7" href="$classlsp_1_1LspSocket.html#ad5c76c6da8f25d2c1fb3ddceeb809835" title="lsp.LspSocket.sendAck" alt="" coords="195,112,355,141"/>
 </map>

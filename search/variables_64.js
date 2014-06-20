@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['data',['DATA',['../classlsp_1_1helpers_1_1ServiceHelper.html#a435fd2561359ca726ffe3a4180d32dfd',1,'lsp::helpers::ServiceHelper']]]
+  ['data',['DATA',['../classlsp_1_1LspSocket.html#a757a8fd41f322be3849f863ccef4dd3d',1,'lsp::LspSocket']]]
 ];
