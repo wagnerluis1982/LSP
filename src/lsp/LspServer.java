@@ -3,7 +3,6 @@ package lsp;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -26,12 +25,9 @@ public class LspServer {
 	 */
 	private final ConcurrentMap<Long, LspConnection> connectedSockets = new ConcurrentHashMap<>(16);
 
-	/** Capacidade das filas de entrada e saída em termos de pacotes de 1KB */
-	private static final byte QUEUE_ZISE = 50;
-
-	/* Filas de entrada e saída */
-	private final BlockingQueue<InternalPack> inputQueue = new ArrayBlockingQueue<>(QUEUE_ZISE, true);;
-	private final BlockingQueue<Pack> outputQueue = new ArrayBlockingQueue<>(QUEUE_ZISE, true);
+	/* Referências das filas de entrada e saída */
+	private final BlockingQueue<InternalPack> inputQueue;
+	private final BlockingQueue<Pack> outputQueue;
 
 	// Variáveis de controle do servidor
 	private final AtomicInteger idCounter = new AtomicInteger();
@@ -46,6 +42,9 @@ public class LspServer {
 	public LspServer(int port, LspParams params) {
 		this.lspSocket = new LspSocketImpl(port);
 		this.params = params;
+
+		this.inputQueue = lspSocket.inputQueue();
+		this.outputQueue = lspSocket.outputQueue();
 	}
 
 	/**
@@ -199,7 +198,7 @@ public class LspServer {
 			LspConnection conn = getConnection(sockAddr, buf);
 			if (conn != null) {
 				short seqNum = buf.getShort();
-				byte[] payload = getPayload(buf);
+				byte[] payload = payload(buf);
 				InternalPack pack = new InternalPack(conn.getId(), seqNum, payload);
 
 				// Se a mensagem foi enfileirada, envia o ACK e informa o número

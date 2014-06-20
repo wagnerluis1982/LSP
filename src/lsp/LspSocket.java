@@ -6,6 +6,8 @@ import java.net.DatagramSocket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Serviço de entrada e saída de pacotes. Classe abstrata.
@@ -19,7 +21,13 @@ abstract class LspSocket {
 
 	private static final byte[] PAYLOAD_NIL = new byte[0];
 
-	private final int port;
+	/** Capacidade das filas de entrada e saída em termos de pacotes de 1KB */
+	private static final byte QUEUE_ZISE = 50;
+
+	/* Filas de entrada e saída */
+	private final BlockingQueue<InternalPack> inputQueue;
+	private final BlockingQueue<Pack> outputQueue;
+
 	private final Thread thread = new Thread(new SvcTask());
 	private final Object sendLock = new Object();
 
@@ -29,9 +37,27 @@ abstract class LspSocket {
 	 * Inicia um LspSocket
 	 *
 	 * @param port Porta onde o socket estará vinculado
+	 * @throws RuntimeException
 	 */
 	LspSocket(int port) {
-		this.port = port;
+		this(port, QUEUE_ZISE);
+	}
+
+	/**
+	 * Inicia um LspSocket
+	 *
+	 * @param port Porta onde o socket estará vinculado
+	 * @param queueSize Tamanho inicial das filas de entrada e saída
+	 * @throws RuntimeException
+	 */
+	LspSocket(int port, int queueSize) {
+		try {
+			this.socket = new DatagramSocket(port);
+		} catch (SocketException e) {
+			throw new RuntimeException(e);
+		}
+		this.inputQueue = new ArrayBlockingQueue<>(queueSize, true);
+		this.outputQueue = new ArrayBlockingQueue<>(queueSize, true);
 		this.thread.start();
 	}
 
@@ -47,8 +73,10 @@ abstract class LspSocket {
 	 * Processamento de cada pacote UDP recebido.
 	 *
 	 * @param pack Pacote enviado pelo serviço
+	 * @throws IOException
 	 */
-	private void receive(final DatagramPacket pack) {
+	private void receive(final DatagramPacket pack) throws IOException {
+		this.socket.receive(pack);
 		final ByteBuffer buf = ByteBuffer.wrap(pack.getData(), 0,
 				pack.getLength()).asReadOnlyBuffer();
 		final short msgType = buf.getShort();
@@ -110,7 +138,7 @@ abstract class LspSocket {
 	}
 
 	/** Helper para obter um array de bytes com o resto do {@link ByteBuffer} */
-	static final byte[] getPayload(final ByteBuffer buf) {
+	static final byte[] payload(final ByteBuffer buf) {
 		byte[] bs = new byte[buf.remaining()];
 		for (int i = 0; i < bs.length; i++) {
 			bs[i] = buf.get();
@@ -119,24 +147,25 @@ abstract class LspSocket {
 		return bs;
 	}
 
+	BlockingQueue<InternalPack> inputQueue() {
+		return this.inputQueue;
+	}
+
+	BlockingQueue<Pack> outputQueue() {
+		return this.outputQueue;
+	}
+
 	private final class SvcTask implements Runnable {
 		@Override
 		public void run() {
-			try {
-				socket = new DatagramSocket(port);
-			} catch (SocketException e) {
-				throw new RuntimeException(e);
-			}
-
 			// Configuração do pacote de entrada
 			byte[] bs = new byte[1024];
-			DatagramPacket packet = new DatagramPacket(bs, bs.length);
+			DatagramPacket pack = new DatagramPacket(bs, bs.length);
 
 			// Recebe pacotes até o servidor ser encerrado
 			while (isActive()) {
 				try {
-					socket.receive(packet);
-					receive(packet);
+					receive(pack);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
