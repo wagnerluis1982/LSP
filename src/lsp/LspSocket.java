@@ -6,8 +6,10 @@ import java.net.DatagramSocket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Serviço de entrada e saída de pacotes. Classe abstrata.
@@ -26,7 +28,7 @@ abstract class LspSocket {
 
 	/* Filas de entrada e saída */
 	private final BlockingQueue<InternalPack> inputQueue;
-	private final BlockingQueue<Pack> outputQueue;
+	private final BlockingDeque<Pack> outputQueue;
 
 	private final Thread inputThread;
 	private final Thread outputThread;
@@ -53,8 +55,8 @@ abstract class LspSocket {
 	 */
 	LspSocket(int port, int queueSize) throws SocketException {
 		this.socket = new DatagramSocket(port);
-		this.inputQueue = new ArrayBlockingQueue<>(queueSize, true);
-		this.outputQueue = new ArrayBlockingQueue<>(queueSize, true);
+		this.inputQueue = new LinkedBlockingQueue<>(queueSize);
+		this.outputQueue = new LinkedBlockingDeque<>(queueSize);
 
 		this.inputThread = new Thread(new InputTask());
 		this.inputThread.start();
@@ -158,7 +160,7 @@ abstract class LspSocket {
 	}
 
 	/** Obtém a fila de saída do socket */
-	BlockingQueue<Pack> outputQueue() {
+	BlockingDeque<Pack> outputQueue() {
 		return this.outputQueue;
 	}
 

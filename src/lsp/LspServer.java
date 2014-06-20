@@ -204,7 +204,7 @@ public class LspServer {
 
 				// Se a mensagem foi enfileirada, envia o ACK e informa o número
 				// de sequência à conexão (usado nos disparos da época).
-				if (inputQueue.offer(pack)) {
+				if (inputQueue().offer(pack)) {
 					sendAck(pack);
 					conn.received(seqNum);
 				}
@@ -229,9 +229,13 @@ public class LspServer {
 		@Override
 		void send(Pack p) {
 			LspConnection conn = connectionPool.get(p.getConnId());
-			InternalPack pack;
-			if (conn != null && (pack=conn.sent(p)) != null) {
-				sendData(pack);
+			if (conn != null) {
+				InternalPack pack = conn.sent(p);
+				if (pack != null) {
+					sendData(pack);
+				} else {
+					outputQueue().addFirst(p);
+				}
 			}
 		}
 
