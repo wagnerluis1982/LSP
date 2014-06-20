@@ -18,21 +18,20 @@ public class LspConnectionTest {
 		// alterar closed para true no final.
 		epoch = 4;
 		closed = false;
-		LspConnection conn = new LspConnection((short) 1, new LspParams(2, 3),
-				new ConnectionActions() {
-					public void epochTriggers() {
-						epoch--;
-					}
-					public void closeConnection() {
-						closed = true;
-					}
-				});
+		LspConnection conn = new LspConnection((short) 1, new LspParams(2, 3)) {
+			public void callEpochTriggers() {
+				epoch--;
+			}
+			public void callCloseConnection() {
+				closed = true;
+			}
+		};
 
 		// Ao iniciar... ainda não houve alterações
 		assertEquals(4, epoch);
 		assertFalse(closed);
 
-		// Manipulando o atributo lastMsgTime para propósitos do teste
+		// Chamando received() manualmente para propósitos do teste
 		Thread.sleep(2);
 		conn.received();
 

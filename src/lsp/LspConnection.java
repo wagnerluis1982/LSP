@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Wagner Macedo
  */
-class LspConnection {
+abstract class LspConnection {
 	private final short id;
 	private final long sockId;
 
@@ -33,8 +33,8 @@ class LspConnection {
 	 * @param actions
 	 *            Callbacks usados na verificação da conexão.
 	 */
-	LspConnection(short id, long sockId, LspParams params, ConnectionActions actions) {
-		if (params == null || actions == null)
+	LspConnection(short id, long sockId, LspParams params) {
+		if (params == null)
 			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
 
 		this.id = id;
@@ -46,7 +46,7 @@ class LspConnection {
 		this.lock = new ReentrantLock();
 
 		// Inicia a thread para monitorar o status da conexão
-		Runnable checker = new StatusChecker(params, actions);
+		Runnable checker = new StatusChecker(params);
 		new Thread(checker).start();
 	}
 
@@ -60,8 +60,8 @@ class LspConnection {
 	 * @param actions
 	 *            Callbacks usados na verificação da conexão.
 	 */
-	LspConnection(short id, LspParams params, ConnectionActions actions) {
-		this(id, -1, params, actions);
+	LspConnection(short id, LspParams params) {
+		this(id, -1, params);
 	}
 
 	short getId() {
@@ -152,16 +152,24 @@ class LspConnection {
 	}
 
 	/**
+	 * Callback representando as ações a serem disparadas a cada época
+	 */
+	abstract void callEpochTriggers();
+
+	/**
+	 * Callback representando as ações de fechamento da conexão
+	 */
+	abstract void callCloseConnection();
+
+	/**
 	 * Monitoramento da conexão LSP. Verifica se está ativa. Este processo é
 	 * feito através de callbacks definidos em uma instância de {@link ConnectionActions}.
 	 */
 	private final class StatusChecker implements Runnable {
 		private final LspParams params;
-		private final ConnectionActions actions;
 
-		private StatusChecker(LspParams params, ConnectionActions actions) {
+		private StatusChecker(LspParams params) {
 			this.params = params;
-			this.actions = actions;
 		}
 
 		@Override
@@ -179,7 +187,7 @@ class LspConnection {
 				sleep(epoch);
 
 				// Dispara as ações da época
-				actions.epochTriggers();
+				callEpochTriggers();
 
 				// Reinicia contagem de épocas se houve mensagens recebidas
 				// desde a última época
@@ -191,7 +199,7 @@ class LspConnection {
 			}
 
 			// Encerra formalmente a conexão
-			actions.closeConnection();
+			callCloseConnection();
 		}
 
 		/* Sleep sem lançamento de exceção */

@@ -174,16 +174,12 @@ public class LspServer {
 				LspConnection conn = connectedSockets.get(sockId);
 				if (conn == null) {
 					final short newId = (short) idCounter.incrementAndGet();
-					final ConnectionActionsImpl actions = new ConnectionActionsImpl();
 
 					// Adicionando a conexão ao pool de conexão
-					conn = new LspConnection(newId, sockId, params, actions);
+					conn = new LspConnectionImpl(newId, sockId, params);
 					connectionPool.put(newId, conn);
 					connectedSockets.put(sockId, conn);
 					sendAck(newId, (short) 0);
-
-					// Anexando conexão ao objeto actions
-					actions.setConnection(conn);
 				}
 
 				// Mesmo recebendo o pedido de conexão do mesmo socket remoto,
@@ -253,43 +249,41 @@ public class LspServer {
 		}
 	}
 
-	private final class ConnectionActionsImpl implements ConnectionActions {
-		private LspConnection conn;
+	private final class LspConnectionImpl extends LspConnection {
+		LspConnectionImpl(short id, long sockId, LspParams params) {
+			super(id, sockId, params);
+		}
 
 		@Override
-		public void epochTriggers() {
+		void callEpochTriggers() {
 			resendData();
 			resendAckConnect();
 			resendAckData();
 		}
 
 		@Override
-		public void closeConnection() {
-			closeConn(conn.getId());
+		void callCloseConnection() {
+			closeConn(getId());
 		}
 
 		private void resendData() {
-			InternalPack pack = conn.sent();
+			InternalPack pack = this.sent();
 			if (pack != null) {
 				lspSocket.sendData(pack);
 			}
 		}
 
 		private void resendAckConnect() {
-			if (conn.receivedTime() == -1) {
-				lspSocket.sendAck(conn.getId(), (short) 0);
+			if (this.receivedTime() == -1) {
+				lspSocket.sendAck(getId(), (short) 0);
 			}
 		}
 
 		private void resendAckData() {
-			short seqNum = conn.receivedSeqNum();
+			short seqNum = this.receivedSeqNum();
 			if (seqNum != -1) {
-				lspSocket.sendAck(conn.getId(), seqNum);
+				lspSocket.sendAck(getId(), seqNum);
 			}
-		}
-
-		private void setConnection(LspConnection conn) {
-			this.conn = conn;
 		}
 	}
 }
