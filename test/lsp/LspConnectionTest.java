@@ -34,7 +34,7 @@ public class LspConnectionTest {
 
 		// Manipulando o atributo lastMsgTime para propósitos do teste
 		Thread.sleep(2);
-		conn.messageReceived();
+		conn.received();
 
 		// Ao finalizar...
 		Thread.sleep(8);

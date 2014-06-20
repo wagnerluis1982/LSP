@@ -7,7 +7,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -77,20 +76,13 @@ public class LspServer {
 	 */
 	public void write(Pack pack) {
 		checkActive();
-		final short connId = pack.getConnId();
-		final LspConnection conn = connectionPool.get(connId);
-		if (conn != null) {
-			boolean success = false;
-			try {
-				success = outputQueue.offer(pack, 500, TimeUnit.MILLISECONDS);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			if (!success) {
-				throw new IllegalStateException("Fila de saída cheia");
-			}
+		final LspConnection conn = connectionPool.get(pack.getConnId());
+
+		if (conn != null && !outputQueue.offer(pack)) {
+			throw new IllegalStateException("Fila de saída cheia");
+		} else {
+			throw new ClosedConnectionException(pack.getConnId());
 		}
-		throw new ClosedConnectionException(connId);
 	}
 
 	/**
@@ -108,14 +100,16 @@ public class LspServer {
 		 *     2) Aguardar a fila de saída da conexão se esvaziar
 		 */
 		checkActive();
+
 		// Encerra a conexão formalmente e remove da lista de conexões e do
 		// conjunto de sockets.
 		LspConnection conn = connectionPool.remove(connId);
 		if (conn != null) {
 			conn.close();
 			connectedSockets.remove(conn.getSockId());
+		} else {
+			throw new ClosedConnectionException(connId);
 		}
-		throw new ClosedConnectionException(connId);
 	}
 
 	/**
@@ -147,8 +141,6 @@ public class LspServer {
 
 	/**
 	 * Número único gerado a partir de um endereço IP e uma porta
-	 *
-	 * Esse atributo só é usado pelo servidor
 	 */
 	private static long uniqueSockId(SocketAddress sockAddr) {
 		final InetSocketAddress addr = (InetSocketAddress) sockAddr;
@@ -158,7 +150,7 @@ public class LspServer {
 	}
 
 	/**
-	 * Serviço de entrada e saída do servidor.
+	 * Socket LSP. Serve para as entradas e saídas do servidor.
 	 */
 	private final class LspSocketImpl extends LspSocket {
 		LspSocketImpl(final int port) {
@@ -192,8 +184,12 @@ public class LspServer {
 
 					// Anexando conexão ao objeto actions
 					actions.setConnection(conn);
-				} else {
-					conn.messageReceived();
+				}
+
+				// Mesmo recebendo o pedido de conexão do mesmo socket remoto,
+				// deve ser avisado que a conexão recebeu uma mensagem.
+				else {
+					conn.received();
 				}
 			}
 		}
@@ -202,16 +198,21 @@ public class LspServer {
 		void receiveData(final SocketAddress sockAddr, final ByteBuffer buf) {
 			LspConnection conn = getConnection(sockAddr, buf);
 			if (conn != null) {
-				conn.messageReceived();
 				short seqNum = buf.getShort();
 				byte[] payload = getPayload(buf);
-				try {
-					inputQueue.offer(new InternalPack(conn.getId(), seqNum,
-							payload), 500, TimeUnit.MILLISECONDS);
-					sendAck(conn.getId(), seqNum);
-					conn.dataReceived(seqNum);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				InternalPack pack = new InternalPack(conn.getId(), seqNum, payload);
+
+				// Se a mensagem foi enfileirada, envia o ACK e informa o número
+				// de sequência à conexão (usado nos disparos da época).
+				if (inputQueue.offer(pack)) {
+					sendAck(pack);
+					conn.received(seqNum);
+				}
+
+				// Caso contrário, mesmo que a mensagem não possa ser lida,
+				// atualiza o momento da última mensagem recebida
+				else {
+					conn.received();
 				}
 			}
 		}
@@ -220,11 +221,8 @@ public class LspServer {
 		void receiveAck(final SocketAddress sockAddr, final ByteBuffer buf) {
 			final LspConnection conn = getConnection(sockAddr, buf);
 			if (conn != null) {
-				conn.messageReceived();
-				// Se o número de sequência passado for a da mensagem aguardando
-				// então remove-o da fila de espera
 				final short seqNum = buf.getShort();
-				conn.ackSentMessage(seqNum);
+				conn.ack(seqNum);
 			}
 		}
 
@@ -258,21 +256,22 @@ public class LspServer {
 		}
 
 		private void resendData() {
-			InternalPack message = conn.getSentMessage();
-			if (message != null) {
-				lspSocket.sendData(message);
+			InternalPack pack = conn.sent();
+			if (pack != null) {
+				lspSocket.sendData(pack);
 			}
 		}
 
 		private void resendAckConnect() {
-			if (conn.lastReceivedTime() == -1) {
+			if (conn.receivedTime() == -1) {
 				lspSocket.sendAck(conn.getId(), (short) 0);
 			}
 		}
 
 		private void resendAckData() {
-			if (conn.lastReceivedSequence() != -1) {
-				lspSocket.sendAck(conn.getId(), conn.lastReceivedSequence());
+			short seqNum = conn.receivedSeqNum();
+			if (seqNum != -1) {
+				lspSocket.sendAck(conn.getId(), seqNum);
 			}
 		}
 

@@ -13,12 +13,12 @@ class LspConnection {
 	private final long sockId;
 
 	private volatile boolean closed;
-	private volatile short seqNumber;
+	private volatile short seqNum;
 	private volatile long receivedTime;
-	private volatile short receivedSequence;
+	private volatile short receivedSeqNum;
 	private final Lock lock;
 
-	private volatile InternalPack message;
+	private volatile InternalPack dataMessage;
 
 	/**
 	 * Constrói um objeto {@link LspConnection}
@@ -40,9 +40,9 @@ class LspConnection {
 		this.id = id;
 		this.sockId = sockId;
 		this.closed = false;
-		this.seqNumber = 0;
+		this.seqNum = 0;
 		this.receivedTime = -1;
-		this.receivedSequence = -1;
+		this.receivedSeqNum = -1;
 		this.lock = new ReentrantLock();
 
 		// Inicia a thread para monitorar o status da conexão
@@ -77,45 +77,69 @@ class LspConnection {
 		return this.sockId;
 	}
 
-	InternalPack getSentMessage() {
-		return this.message;
+	/** Obtém a última mensagem de dados enviada */
+	InternalPack sent() {
+		return this.dataMessage;
 	}
 
-	boolean setSentMessage(byte[] payload) {
+	/** Passa o payload da última mensagem enviada */
+	boolean sent(byte[] payload) {
 		if (lock.tryLock()) {
-			this.message = new InternalPack(id, ++seqNumber, payload);
+			this.dataMessage = new InternalPack(id, ++seqNum, payload);
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	void ackSentMessage(short seqNumber) {
-		if (this.seqNumber == seqNumber) {
-			this.message = null;
+	/** Informa que o ACK do número de sequência informado foi recebido */
+	void ack(short seqNum) {
+		// Atualiza o momento de recebimento
+		received();
+
+		// Marca dados como recebidos, se o número de sequência é igual ao atual
+		if (this.seqNum == seqNum) {
+			this.dataMessage = null;
 			lock.unlock();
 		}
 	}
 
 	/**
-	 * Última vez que essa conexão recebeu uma mensagem. Note que esse tempo é
-	 * gerenciado externamente através do método messageReceived. Se receber -1,
-	 * quer dizer que não chegou nenhuma mensagem depois da conexão.
+	 * Última vez que essa conexão recebeu uma mensagem. Esse tempo é gerenciado
+	 * externamente através do método received. Se receber -1, quer dizer que
+	 * não chegou nenhuma mensagem depois do pedido de conexão.
 	 */
-	long lastReceivedTime() {
+	long receivedTime() {
 		return receivedTime;
 	}
 
-	void messageReceived() {
+	/**
+	 * Número de sequência da última mensagem DATA recebida por essa conexão.
+	 * Esse número é gerenciado externamente através do método received(short).
+	 * Se receber -1, quer dizer que não chegou nenhuma mensagem depois do
+	 * pedido de conexão.
+	 */
+	short receivedSeqNum() {
+		return receivedSeqNum;
+	}
+
+	/**
+	 * Informa que houve uma mensagem recebida por essa conexão. Esse método
+	 * tem como único propósito a atualização do momento de recebimento.
+	 */
+	void received() {
 		this.receivedTime = System.currentTimeMillis();
 	}
 
-	short lastReceivedSequence() {
-		return this.receivedSequence;
-	}
-
-	void dataReceived(short seqNumber) {
-		this.receivedSequence = seqNumber;
+	/**
+	 * Informa o número de sequência em que uma mensagem DATA foi recebida. Esse
+	 * método atualiza o último momento de recebimento
+	 */
+	void received(short seqNum) {
+		// Atualiza o momento de recebimento
+		received();
+		// Altera o número de sequência atual
+		this.receivedSeqNum = seqNum;
 	}
 
 	void close() {

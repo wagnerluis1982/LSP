@@ -25,6 +25,11 @@ abstract class LspSocket {
 
 	private DatagramSocket socket;
 
+	/**
+	 * Inicia um LspSocket
+	 *
+	 * @param port Porta onde o socket estará vinculado
+	 */
 	LspSocket(int port) {
 		this.port = port;
 		this.thread.start();
@@ -98,6 +103,10 @@ abstract class LspSocket {
 
 	final void sendAck(final short connId, final short seqNum) {
 		send(ACK, connId, seqNum, PAYLOAD_NIL);
+	}
+
+	final void sendAck(final InternalPack p) {
+		sendAck(p.getConnId(), p.getSeqNum());
 	}
 
 	/** Helper para obter um array de bytes com o resto do {@link ByteBuffer} */
