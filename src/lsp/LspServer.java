@@ -1,6 +1,5 @@
 package lsp;
 
-import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
@@ -22,13 +21,13 @@ public class LspServer {
 	 * Pool de conexões rastreáveis pelo id do socket. Essa estrutura ajuda a
 	 * garantir que haja somente uma conexão por socket remoto.
 	 *
-	 * @see uniqueSockId
+	 * @see LspConnection.uniqueSockId
 	 */
 	private final ConcurrentMap<Long, LspConnection> connectedSockets = new ConcurrentHashMap<>(16);
 
 	/* Referências das filas de entrada e saída */
 	private final BlockingQueue<InternalPack> inputQueue;
-	private final BlockingQueue<Pack> outputQueue;
+	private final BlockingQueue<InternalPack> outputQueue;
 
 	// Variáveis de controle do servidor
 	private final AtomicInteger idCounter = new AtomicInteger();
@@ -78,10 +77,13 @@ public class LspServer {
 		checkActive();
 		final LspConnection conn = connectionPool.get(pack.getConnId());
 
-		if (conn != null && !outputQueue.offer(pack)) {
-			throw new IllegalStateException("Fila de saída cheia");
-		} else {
+		if (conn == null) {
 			throw new ClosedConnectionException(pack.getConnId());
+		}
+
+		InternalPack p = new InternalPack(pack);
+		if (!outputQueue.offer(p)) {
+			throw new IllegalStateException("Fila de saída cheia");
 		}
 	}
 
@@ -140,16 +142,6 @@ public class LspServer {
 	}
 
 	/**
-	 * Número único gerado a partir de um endereço IP e uma porta
-	 */
-	private static long uniqueSockId(SocketAddress sockAddr) {
-		final InetSocketAddress addr = (InetSocketAddress) sockAddr;
-		final int ip = addr.getAddress().hashCode();
-		final int port = addr.getPort();
-		return (ip & 0xffff_ffffL) << 16 | (short) port;
-	}
-
-	/**
 	 * Socket LSP. Serve para as entradas e saídas do servidor.
 	 */
 	private final class LspSocketImpl extends LspSocket {
@@ -167,7 +159,7 @@ public class LspServer {
 			// Somente serão aceitos pedidos de conexão bem formados, isto é,
 			// aqueles em que Connection ID e Sequence Number são iguais a zero
 			if (buf.getInt() == 0) {
-				final long sockId = uniqueSockId(sockAddr);
+				final long sockId = LspConnection.uniqueSockId(sockAddr);
 
 				// A abertura de novas conexões é feita a seguir. A condição
 				// garante não abrir nova conexão se esta já está aberta
@@ -176,10 +168,10 @@ public class LspServer {
 					final short newId = (short) idCounter.incrementAndGet();
 
 					// Adicionando a conexão ao pool de conexão
-					conn = new LspConnectionImpl(newId, sockId, params);
+					conn = new LspConnectionImpl(newId, sockId, sockAddr, params);
 					connectionPool.put(newId, conn);
 					connectedSockets.put(sockId, conn);
-					sendAck(newId, (short) 0);
+					sendAck(conn, (short) 0);
 				}
 
 				// Mesmo recebendo o pedido de conexão do mesmo socket remoto,
@@ -196,7 +188,7 @@ public class LspServer {
 			if (conn != null) {
 				short seqNum = buf.getShort();
 				byte[] payload = payload(buf);
-				InternalPack pack = new InternalPack(conn.getId(), seqNum, payload);
+				InternalPack pack = new InternalPack(conn, seqNum, payload);
 
 				// Se a mensagem foi enfileirada, envia o ACK e informa o número
 				// de sequência à conexão (usado nos disparos da época).
@@ -223,20 +215,17 @@ public class LspServer {
 		}
 
 		@Override
-		void send(Pack p) {
+		void send(InternalPack p) {
 			LspConnection conn = connectionPool.get(p.getConnId());
-			if (conn != null) {
-				InternalPack pack = conn.sent(p);
-				if (pack != null) {
-					sendData(pack);
-				} else {
-					outputQueue().addFirst(p);
-				}
+			if (conn != null && conn.sent(p)) {
+				sendData(p);
+			} else {
+				outputQueue().addFirst(p);
 			}
 		}
 
 		private LspConnection getConnection(final SocketAddress sockAddr, final ByteBuffer buf) {
-			final long sockId = uniqueSockId(sockAddr);
+			final long sockId = LspConnection.uniqueSockId(sockAddr);
 			final LspConnection conn = connectedSockets.get(sockId);
 
 			// Descarta o pacote se não há conexão aberta com o remetente ou se
@@ -247,11 +236,17 @@ public class LspServer {
 
 			return null;
 		}
+
+		@Override
+		SocketAddress sockAddr(short connId) {
+			LspConnection conn = connectionPool.get(connId);
+			return conn.getSockAddr();
+		}
 	}
 
 	private final class LspConnectionImpl extends LspConnection {
-		LspConnectionImpl(short id, long sockId, LspParams params) {
-			super(id, sockId, params);
+		LspConnectionImpl(short id, long sockId, SocketAddress sockAddr, LspParams params) {
+			super(id, sockId, sockAddr, params);
 		}
 
 		@Override
@@ -275,14 +270,14 @@ public class LspServer {
 
 		private void resendAckConnect() {
 			if (this.receivedTime() == -1) {
-				lspSocket.sendAck(getId(), (short) 0);
+				lspSocket.sendAck(this, (short) 0);
 			}
 		}
 
 		private void resendAckData() {
 			short seqNum = this.receivedSeqNum();
 			if (seqNum != -1) {
-				lspSocket.sendAck(getId(), seqNum);
+				lspSocket.sendAck(this, seqNum);
 			}
 		}
 	}

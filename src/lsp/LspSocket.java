@@ -28,7 +28,7 @@ abstract class LspSocket {
 
 	/* Filas de entrada e saída */
 	private final BlockingQueue<InternalPack> inputQueue;
-	private final BlockingDeque<Pack> outputQueue;
+	private final BlockingDeque<InternalPack> outputQueue;
 
 	private final Thread inputThread;
 	private final Thread outputThread;
@@ -73,6 +73,8 @@ abstract class LspSocket {
 	 */
 	abstract boolean isActive();
 
+	abstract SocketAddress sockAddr(short connId);
+
 	/**
 	 * Processamento de cada pacote UDP recebido.
 	 *
@@ -107,11 +109,12 @@ abstract class LspSocket {
 	/** Tratamento de um pacote do tipo ACK recebido */
 	abstract void receiveAck(SocketAddress sockAddr, ByteBuffer buf);
 
-	private void send(final short msgType, final short connId, final short seqNum, final byte[] payload) {
+	private void send(final short msgType, final LspConnection conn, final short seqNum, final byte[] payload) {
 		ByteBuffer buf = ByteBuffer.allocate(6 + payload.length);
-		buf.putShort(msgType).putShort(connId).putShort(seqNum).put(payload);
+		buf.putShort(msgType).putShort(conn.getId()).putShort(seqNum).put(payload);
 
 		DatagramPacket packet = new DatagramPacket(buf.array(), buf.capacity());
+		packet.setSocketAddress(conn.getSockAddr());
 		try {
 			synchronized (sendLock) {
 				socket.send(packet);
@@ -121,28 +124,28 @@ abstract class LspSocket {
 		}
 	}
 
-	final void sendConnect(final short connId, final short seqNum) {
-		send(CONNECT, connId, seqNum, PAYLOAD_NIL);
+	final void sendConnect(final LspConnection conn, final short seqNum) {
+		send(CONNECT, conn, seqNum, PAYLOAD_NIL);
 	}
 
-	final void sendData(final short connId, final short seqNum, final byte[] payload) {
-		send(DATA, connId, seqNum, payload);
+	final void sendData(final LspConnection conn, final short seqNum, final byte[] payload) {
+		send(DATA, conn, seqNum, payload);
 	}
 
 	final void sendData(final InternalPack p) {
-		sendData(p.getConnId(), p.getSeqNum(), p.getPayload());
+		sendData(p.getConnection(), p.getSeqNum(), p.getPayload());
 	}
 
-	final void sendAck(final short connId, final short seqNum) {
-		send(ACK, connId, seqNum, PAYLOAD_NIL);
+	final void sendAck(final LspConnection conn, final short seqNum) {
+		send(ACK, conn, seqNum, PAYLOAD_NIL);
 	}
 
 	final void sendAck(final InternalPack p) {
-		sendAck(p.getConnId(), p.getSeqNum());
+		sendAck(p.getConnection(), p.getSeqNum());
 	}
 
 	/** Faz o envio do pacote apropriadamente */
-	abstract void send(Pack p);
+	abstract void send(InternalPack p);
 
 	/** Helper para obter um array de bytes com o resto do {@link ByteBuffer} */
 	static final byte[] payload(final ByteBuffer buf) {
@@ -160,7 +163,7 @@ abstract class LspSocket {
 	}
 
 	/** Obtém a fila de saída do socket */
-	BlockingDeque<Pack> outputQueue() {
+	BlockingDeque<InternalPack> outputQueue() {
 		return this.outputQueue;
 	}
 
@@ -188,7 +191,7 @@ abstract class LspSocket {
 			// Envia pacotes até o servidor ser encerrado
 			while (isActive()) {
 				try {
-					Pack pack = outputQueue.take();
+					InternalPack pack = outputQueue.take();
 					send(pack);
 				} catch (InterruptedException e) {
 					e.printStackTrace();

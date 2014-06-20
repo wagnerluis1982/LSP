@@ -1,5 +1,7 @@
 package lsp;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -19,6 +21,7 @@ abstract class LspConnection {
 	private final Lock lock;
 
 	private volatile InternalPack dataMessage;
+	private final SocketAddress sockAddr;
 
 	/**
 	 * Constrói um objeto {@link LspConnection}
@@ -28,17 +31,19 @@ abstract class LspConnection {
 	 * @param sockId
 	 *            Número IP e porta associados à conexão. Útil somente quando
 	 *            {@link LspConnection} é instanciado pelo servidor.
+	 * @param sockAddr
+	 *            IP e porta vinculados à essa conexão. Útil somente quando
+	 *            {@link LspConnection} é instanciado pelo servidor.
 	 * @param params
 	 *            Parâmetros de temporização da conexão
-	 * @param actions
-	 *            Callbacks usados na verificação da conexão.
 	 */
-	LspConnection(short id, long sockId, LspParams params) {
-		if (params == null)
+	LspConnection(short id, long sockId, SocketAddress sockAddr, LspParams params) {
+		if (sockAddr == null || params == null)
 			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
 
 		this.id = id;
 		this.sockId = sockId;
+		this.sockAddr = sockAddr;
 		this.closed = false;
 		this.seqNum = 0;
 		this.receivedTime = -1;
@@ -55,13 +60,26 @@ abstract class LspConnection {
 	 *
 	 * @param id
 	 *            Identificador da conexão
+	 * @param sockAddr
+	 *            IP e porta vinculados à essa conexão. Útil somente quando
+	 *            {@link LspConnection} é instanciado pelo servidor.
 	 * @param params
 	 *            Parâmetros de temporização da conexão
-	 * @param actions
-	 *            Callbacks usados na verificação da conexão.
+	 */
+	LspConnection(short id, SocketAddress sockAddr, LspParams params) {
+		this(id, uniqueSockId(sockAddr), sockAddr, params);
+	}
+
+	/**
+	 * Constrói um objeto {@link LspConnection}
+	 *
+	 * @param id
+	 *            Identificador da conexão
+	 * @param params
+	 *            Parâmetros de temporização da conexão
 	 */
 	LspConnection(short id, LspParams params) {
-		this(id, -1, params);
+		this(id, null, params);
 	}
 
 	short getId() {
@@ -71,10 +89,26 @@ abstract class LspConnection {
 	/**
 	 * Número único gerado a partir de um endereço IP e uma porta
 	 *
+	 * Esse método só é usado pelo servidor
+	 */
+	static long uniqueSockId(SocketAddress sockAddr) {
+		final InetSocketAddress addr = (InetSocketAddress) sockAddr;
+		final int ip = addr.getAddress().hashCode();
+		final int port = addr.getPort();
+		return (ip & 0xffff_ffffL) << 16 | (short) port;
+	}
+
+	/**
+	 * Número único gerado a partir de um endereço IP e uma porta
+	 *
 	 * Esse atributo só é usado pelo servidor
 	 */
 	long getSockId() {
 		return this.sockId;
+	}
+
+	public SocketAddress getSockAddr() {
+		return this.sockAddr;
 	}
 
 	/** Obtém a última mensagem de dados enviada (aguardando ACK) */
@@ -88,12 +122,14 @@ abstract class LspConnection {
 	 * @return Pacote com um novo número de sequência ou null se já há um pacote
 	 *         aguardando ACK
 	 */
-	InternalPack sent(Pack pack) {
+	boolean sent(InternalPack pack) {
 		if (lock.tryLock()) {
-			this.dataMessage = new InternalPack(pack, ++seqNum);
-			return this.dataMessage;
+			pack.setConnection(this);
+			pack.setSeqNum(++seqNum);
+			this.dataMessage = pack;
+			return true;
 		} else {
-			return null;
+			return false;
 		}
 	}
 

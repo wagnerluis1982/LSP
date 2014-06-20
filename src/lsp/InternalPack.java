@@ -1,18 +1,36 @@
 package lsp;
 
 class InternalPack extends Pack {
-	private final short seqNum;
+	private LspConnection connection;
+	private short seqNum;
 
-	InternalPack(short connId, short seqNum, byte[] payload) {
-		super(connId, payload);
+	InternalPack(LspConnection conn, short seqNum, byte[] payload) {
+		super(conn.getId(), payload);
+		this.connection = conn;
 		this.seqNum = seqNum;
 	}
 
-	InternalPack(Pack pack, short seqNum) {
-		this(pack.getConnId(), seqNum, pack.getPayload());
+	InternalPack(LspConnection conn, byte[] payload) {
+		this(conn, (short) -1, payload);
+	}
+
+	public InternalPack(Pack pack) {
+		super(pack.getConnId(), pack.getPayload());
+	}
+
+	LspConnection getConnection() {
+		return this.connection;
+	}
+
+	void setConnection(LspConnection connection) {
+		this.connection = connection;
 	}
 
 	short getSeqNum() {
 		return this.seqNum;
+	}
+
+	void setSeqNum(short seqNum) {
+		this.seqNum = seqNum;
 	}
 }
