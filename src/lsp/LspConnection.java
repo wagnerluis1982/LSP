@@ -77,18 +77,23 @@ class LspConnection {
 		return this.sockId;
 	}
 
-	/** Obtém a última mensagem de dados enviada */
+	/** Obtém a última mensagem de dados enviada (aguardando ACK) */
 	InternalPack sent() {
 		return this.dataMessage;
 	}
 
-	/** Passa o payload da última mensagem enviada */
-	boolean sent(byte[] payload) {
+	/**
+	 * Informa o payload da última mensagem enviada
+	 *
+	 * @return Pacote com um novo número de sequência ou null se já há um pacote
+	 *         aguardando ACK
+	 */
+	InternalPack sent(Pack pack) {
 		if (lock.tryLock()) {
-			this.dataMessage = new InternalPack(id, ++seqNum, payload);
-			return true;
+			this.dataMessage = new InternalPack(pack, ++seqNum);
+			return this.dataMessage;
 		} else {
-			return false;
+			return null;
 		}
 	}
 

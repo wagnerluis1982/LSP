@@ -28,7 +28,8 @@ abstract class LspSocket {
 	private final BlockingQueue<InternalPack> inputQueue;
 	private final BlockingQueue<Pack> outputQueue;
 
-	private final Thread thread = new Thread(new SvcTask());
+	private final Thread inputThread;
+	private final Thread outputThread;
 	private final Object sendLock = new Object();
 
 	private DatagramSocket socket;
@@ -37,9 +38,9 @@ abstract class LspSocket {
 	 * Inicia um LspSocket
 	 *
 	 * @param port Porta onde o socket estará vinculado
-	 * @throws RuntimeException
+	 * @throws SocketException
 	 */
-	LspSocket(int port) {
+	LspSocket(int port) throws SocketException {
 		this(port, QUEUE_ZISE);
 	}
 
@@ -48,17 +49,18 @@ abstract class LspSocket {
 	 *
 	 * @param port Porta onde o socket estará vinculado
 	 * @param queueSize Tamanho inicial das filas de entrada e saída
-	 * @throws RuntimeException
+	 * @throws SocketException
 	 */
-	LspSocket(int port, int queueSize) {
-		try {
-			this.socket = new DatagramSocket(port);
-		} catch (SocketException e) {
-			throw new RuntimeException(e);
-		}
+	LspSocket(int port, int queueSize) throws SocketException {
+		this.socket = new DatagramSocket(port);
 		this.inputQueue = new ArrayBlockingQueue<>(queueSize, true);
 		this.outputQueue = new ArrayBlockingQueue<>(queueSize, true);
-		this.thread.start();
+
+		this.inputThread = new Thread(new InputTask());
+		this.inputThread.start();
+
+		this.outputThread = new Thread(new OutputTask());
+		this.outputThread.start();
 	}
 
 	/**
@@ -137,6 +139,9 @@ abstract class LspSocket {
 		sendAck(p.getConnId(), p.getSeqNum());
 	}
 
+	/** Faz o envio do pacote apropriadamente */
+	abstract void send(Pack p);
+
 	/** Helper para obter um array de bytes com o resto do {@link ByteBuffer} */
 	static final byte[] payload(final ByteBuffer buf) {
 		byte[] bs = new byte[buf.remaining()];
@@ -147,15 +152,17 @@ abstract class LspSocket {
 		return bs;
 	}
 
+	/** Obtém a fila de entrada do socket */
 	BlockingQueue<InternalPack> inputQueue() {
 		return this.inputQueue;
 	}
 
+	/** Obtém a fila de saída do socket */
 	BlockingQueue<Pack> outputQueue() {
 		return this.outputQueue;
 	}
 
-	private final class SvcTask implements Runnable {
+	private final class InputTask implements Runnable {
 		@Override
 		public void run() {
 			// Configuração do pacote de entrada
@@ -167,6 +174,21 @@ abstract class LspSocket {
 				try {
 					receive(pack);
 				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private final class OutputTask implements Runnable {
+		@Override
+		public void run() {
+			// Envia pacotes até o servidor ser encerrado
+			while (isActive()) {
+				try {
+					Pack pack = outputQueue.take();
+					send(pack);
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}

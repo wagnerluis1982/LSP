@@ -2,6 +2,7 @@ package lsp;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,7 +40,7 @@ public class LspServer {
 	/* Socket LSP */
 	private final LspSocket lspSocket;
 
-	public LspServer(int port, LspParams params) {
+	public LspServer(int port, LspParams params) throws SocketException {
 		this.lspSocket = new LspSocketImpl(port);
 		this.params = params;
 
@@ -152,7 +153,7 @@ public class LspServer {
 	 * Socket LSP. Serve para as entradas e saídas do servidor.
 	 */
 	private final class LspSocketImpl extends LspSocket {
-		LspSocketImpl(final int port) {
+		LspSocketImpl(final int port) throws SocketException {
 			super(port);
 		}
 
@@ -222,6 +223,15 @@ public class LspServer {
 			if (conn != null) {
 				final short seqNum = buf.getShort();
 				conn.ack(seqNum);
+			}
+		}
+
+		@Override
+		void send(Pack p) {
+			LspConnection conn = connectionPool.get(p.getConnId());
+			InternalPack pack;
+			if (conn != null && (pack=conn.sent(p)) != null) {
+				sendData(pack);
 			}
 		}
 
