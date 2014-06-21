@@ -78,14 +78,6 @@ abstract class LspSocket {
 	 */
 	abstract boolean isActive();
 
-	/**
-	 * Obtém o objeto {@link LspConnection} em uso
-	 *
-	 * @param connId Id de conexão para validar/pesquisar
-	 * @return Uma instância de {@link LspConnection} ou null
-	 */
-	abstract LspConnection usedConnection(short connId);
-
 	final short connect(SocketAddress sockAddr) {
 		synchronized (connLock) {
 			// Envia requisição de conexão
@@ -263,6 +255,14 @@ abstract class LspSocket {
 		return bs;
 	}
 
+	/**
+	 * Obtém o objeto {@link LspConnection} em uso
+	 *
+	 * @param connId Id de conexão para validar/pesquisar
+	 * @return Uma instância de {@link LspConnection} ou null
+	 */
+	abstract LspConnection usedConnection(short connId);
+
 	private LspConnection usedConnection(final SocketAddress sockAddr, final short connId) {
 		final LspConnection conn = usedConnection(connId);
 
@@ -276,14 +276,20 @@ abstract class LspSocket {
 		return null;
 	}
 
-	/** Obtém a fila de entrada do socket */
-	BlockingQueue<InternalPack> inputQueue() {
-		return this.inputQueue;
+	/** Recebe um pacote da fila de entrada */
+	InternalPack input() {
+		try {
+			return inputQueue.take();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	/** Obtém a fila de saída do socket */
-	BlockingDeque<InternalPack> outputQueue() {
-		return this.outputQueue;
+	/** Insere um pacote na fila de saída */
+	void output(InternalPack p) {
+		if (!outputQueue.offer(p))
+			throw new IllegalStateException("Fila de saída cheia");;
 	}
 
 	private final class InputTask implements Runnable {

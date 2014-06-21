@@ -32,12 +32,7 @@ public class LspClient {
 	 */
 	public byte[] read() {
 		checkActive();
-		try {
-			return lspSocket.inputQueue().take().getPayload();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return lspSocket.input().getPayload();
 	}
 
 	/**
@@ -46,10 +41,9 @@ public class LspClient {
 	 */
 	public void write(byte[] payload) {
 		checkActive();
+
 		InternalPack p = new InternalPack(conn, payload);
-		if (!lspSocket.outputQueue().offer(p)) {
-			throw new IllegalStateException("Fila de saída cheia");
-		}
+		lspSocket.output(p);
 	}
 
 	/**

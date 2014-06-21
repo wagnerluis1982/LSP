@@ -1,9 +1,14 @@
 package lsp;
 
 import static org.junit.Assert.*;
+
+import java.net.InetSocketAddress;
+
 import org.junit.Test;
 
 public class LspConnectionTest {
+	private static final InetSocketAddress ADDR = InetSocketAddress.createUnresolved("", 1);
+
 	int epoch;
 	boolean closed;
 
@@ -18,7 +23,7 @@ public class LspConnectionTest {
 		// alterar closed para true no final.
 		epoch = 4;
 		closed = false;
-		LspConnection conn = new LspConnection((short) 1, new LspParams(2, 3)) {
+		LspConnection conn = new LspConnection((short) 1, 1, ADDR, new LspParams(2, 3)) {
 			public void callEpochTriggers() {
 				epoch--;
 			}

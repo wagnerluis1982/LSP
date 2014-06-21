@@ -51,12 +51,7 @@ public class LspServer {
 	 */
 	public Pack read() {
 		checkActive();
-		try {
-			return lspSocket.inputQueue().take();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return lspSocket.input();
 	}
 
 	/**
@@ -74,9 +69,7 @@ public class LspServer {
 		}
 
 		InternalPack p = new InternalPack(pack);
-		if (!lspSocket.outputQueue().offer(p)) {
-			throw new IllegalStateException("Fila de saída cheia");
-		}
+		lspSocket.output(p);
 	}
 
 	/**
