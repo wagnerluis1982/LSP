@@ -5,8 +5,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 public class LspClient {
-	private final LspSocketImpl lspSocket;
-	private final LspConnectionImpl conn;
+	private final LspSocket lspSocket;
+	private final LspConnection conn;
 
 	private volatile boolean active = true;
 
@@ -64,7 +64,7 @@ public class LspClient {
 		close();
 	}
 
-	private class LspSocketImpl extends LspSocket {
+	private final class LspSocketImpl extends LspSocket {
 		LspSocketImpl(int port) throws IOException {
 			super(port);
 		}

@@ -7,6 +7,11 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
@@ -35,12 +40,12 @@ abstract class LspSocket {
 	/* Lock para garantir que apenas uma thread envie pacotes */
 	private final Object sendLock = new Object();
 
-	/* Usados nos pedidos de conexão partindo desse socket */
-	private volatile short reqConnId;
-	private volatile SocketAddress reqAddr;
-	private volatile Condition connAck;
-	private final Lock connLock = new ReentrantLock();
+	/* Usados no pedido de conexão a um servidor LSP partindo desse socket */
+	private final ExecutorService executorService;
+	private ConnectTask conntTask;
+	private final Lock connLock;
 
+	/** Socket de comunicação em uso */
 	private final DatagramSocket socket;
 
 	/**
@@ -51,9 +56,14 @@ abstract class LspSocket {
 	 * @throws SocketException
 	 */
 	LspSocket(int port, int queueSize) throws IOException {
+		// Cria o socket e as filas
 		this.socket = new DatagramSocket(port);
 		this.inputQueue = new LinkedBlockingQueue<>(queueSize);
 		this.outputQueue = new LinkedBlockingDeque<>(queueSize);
+
+		// Inicializa atributos para uso na conexão a um servidor LSP
+		this.executorService = Executors.newSingleThreadExecutor();
+		this.connLock = new ReentrantLock();
 
 		// Inicia as threads
 		new Thread(new InputTask()).start();
@@ -80,25 +90,18 @@ abstract class LspSocket {
 
 	final short connect(SocketAddress sockAddr) {
 		synchronized (connLock) {
-			// Envia requisição de conexão
-			send(sockAddr, CONNECT, (short) 0, (short) 0, PAYLOAD_NIL);
+			// Inicia uma nova tarefa de conexão
+			conntTask = new ConnectTask(sockAddr, connLock.newCondition());
+			Future<Short> call = executorService.submit(conntTask);
 
-			// Configura objetos compartilhados
-			this.reqAddr = sockAddr;
-			this.connAck = connLock.newCondition();
-
-			// Aguarda pela resposta da conexão
-			this.connAck.awaitUninterruptibly();
-			return this.reqConnId;
-		}
-	}
-
-	private final void connectAck(SocketAddress sockAddr, short connId) {
-		// Confere se o ACK vem do socket remoto correto
-		if (connAck != null && reqAddr.equals(sockAddr)) {
-			this.reqConnId = connId;
-			this.connAck.signal();
-			this.connAck = null;
+			try {
+				short connId = call.get();
+				conntTask = null;
+				return connId;
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+				throw new RuntimeException();
+			}
 		}
 	}
 
@@ -172,7 +175,10 @@ abstract class LspSocket {
 		// Senão, verifica se o número de sequência é 0. Caso positivo, deve se
 		// tratar de uma requisição de conexão efetuada por esse socket.
 		else if (buf.getShort() == 0) {
-			connectAck(sockAddr, connId);
+			// Confere antes se o ACK vem do socket remoto correto
+			if (conntTask != null && sockAddr.equals(conntTask.sockAddr)) {
+				conntTask.ack(connId);
+			}
 		}
 	}
 
@@ -290,6 +296,33 @@ abstract class LspSocket {
 	void output(InternalPack p) {
 		if (!outputQueue.offer(p))
 			throw new IllegalStateException("Fila de saída cheia");;
+	}
+
+	private final class ConnectTask implements Callable<Short> {
+		private SocketAddress sockAddr;
+		private Condition ackCondition;
+		private short connId;
+
+		ConnectTask(SocketAddress sockAddr, Condition condition) {
+			this.sockAddr = sockAddr;
+			this.ackCondition = condition;
+		}
+
+		@Override
+		public Short call() throws Exception {
+			// Envia requisição de conexão
+			send(sockAddr, CONNECT, (short) 0, (short) 0, PAYLOAD_NIL);
+
+			// Aguarda pelo ACK da conexão
+			ackCondition.awaitUninterruptibly();
+
+			return connId;
+		}
+
+		void ack(short connId) {
+			this.connId = connId;
+			ackCondition.notify();
+		}
 	}
 
 	private final class InputTask implements Runnable {
