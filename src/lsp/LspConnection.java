@@ -29,11 +29,9 @@ abstract class LspConnection {
 	 * @param id
 	 *            Identificador da conexão
 	 * @param sockId
-	 *            Número IP e porta associados à conexão. Útil somente quando
-	 *            {@link LspConnection} é instanciado pelo servidor.
+	 *            Número IP e porta associados à conexão
 	 * @param sockAddr
-	 *            IP e porta vinculados à essa conexão. Útil somente quando
-	 *            {@link LspConnection} é instanciado pelo servidor.
+	 *            IP e porta vinculados à essa conexão
 	 * @param params
 	 *            Parâmetros de temporização da conexão
 	 */
@@ -61,25 +59,12 @@ abstract class LspConnection {
 	 * @param id
 	 *            Identificador da conexão
 	 * @param sockAddr
-	 *            IP e porta vinculados à essa conexão. Útil somente quando
-	 *            {@link LspConnection} é instanciado pelo servidor.
+	 *            IP e porta vinculados à essa conexão
 	 * @param params
 	 *            Parâmetros de temporização da conexão
 	 */
 	LspConnection(short id, SocketAddress sockAddr, LspParams params) {
 		this(id, uniqueSockId(sockAddr), sockAddr, params);
-	}
-
-	/**
-	 * Constrói um objeto {@link LspConnection}
-	 *
-	 * @param id
-	 *            Identificador da conexão
-	 * @param params
-	 *            Parâmetros de temporização da conexão
-	 */
-	LspConnection(short id, LspParams params) {
-		this(id, null, params);
 	}
 
 	short getId() {
@@ -107,7 +92,7 @@ abstract class LspConnection {
 		return this.sockId;
 	}
 
-	public SocketAddress getSockAddr() {
+	SocketAddress getSockAddr() {
 		return this.sockAddr;
 	}
 

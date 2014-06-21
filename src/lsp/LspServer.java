@@ -3,7 +3,6 @@ package lsp;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,10 +24,6 @@ public class LspServer {
 	 */
 	private final ConcurrentMap<Long, LspConnection> connectedSockets = new ConcurrentHashMap<>(16);
 
-	/* Referências das filas de entrada e saída */
-	private final BlockingQueue<InternalPack> inputQueue;
-	private final BlockingQueue<InternalPack> outputQueue;
-
 	// Variáveis de controle do servidor
 	private final AtomicInteger idCounter = new AtomicInteger();
 	private volatile boolean active = true;
@@ -42,9 +37,6 @@ public class LspServer {
 	public LspServer(int port, LspParams params) throws SocketException {
 		this.lspSocket = new LspSocketImpl(port);
 		this.params = params;
-
-		this.inputQueue = lspSocket.inputQueue();
-		this.outputQueue = lspSocket.outputQueue();
 	}
 
 	/**
@@ -60,7 +52,7 @@ public class LspServer {
 	public Pack read() {
 		checkActive();
 		try {
-			return inputQueue.take();
+			return lspSocket.inputQueue().take();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			return null;
@@ -82,7 +74,7 @@ public class LspServer {
 		}
 
 		InternalPack p = new InternalPack(pack);
-		if (!outputQueue.offer(p)) {
+		if (!lspSocket.outputQueue().offer(p)) {
 			throw new IllegalStateException("Fila de saída cheia");
 		}
 	}
@@ -141,9 +133,6 @@ public class LspServer {
 			throw new ClosedConnectionException();
 	}
 
-	/**
-	 * Socket LSP. Serve para as entradas e saídas do servidor.
-	 */
 	private final class LspSocketImpl extends LspSocket {
 		LspSocketImpl(final int port) throws SocketException {
 			super(port);

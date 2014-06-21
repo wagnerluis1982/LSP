@@ -10,6 +10,9 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Serviço de entrada e saída de pacotes. Classe abstrata.
@@ -30,11 +33,15 @@ abstract class LspSocket {
 	private final BlockingQueue<InternalPack> inputQueue;
 	private final BlockingDeque<InternalPack> outputQueue;
 
-	private final Thread inputThread;
-	private final Thread outputThread;
 	private final Object sendLock = new Object();
 
-	private DatagramSocket socket;
+	/* Usados nos pedidos de conexão partindo desse socket */
+	private volatile short reqConnId;
+	private volatile SocketAddress reqAddr;
+	private volatile Condition connAck;
+	private final Lock connLock = new ReentrantLock();
+
+	private final DatagramSocket socket;
 
 	/**
 	 * Inicia um LspSocket
@@ -58,11 +65,9 @@ abstract class LspSocket {
 		this.inputQueue = new LinkedBlockingQueue<>(queueSize);
 		this.outputQueue = new LinkedBlockingDeque<>(queueSize);
 
-		this.inputThread = new Thread(new InputTask());
-		this.inputThread.start();
-
-		this.outputThread = new Thread(new OutputTask());
-		this.outputThread.start();
+		// Inicia as threads
+		new Thread(new InputTask()).start();
+		new Thread(new OutputTask()).start();
 	}
 
 	/**
@@ -72,6 +77,36 @@ abstract class LspSocket {
 	 * @return false para parar o serviço
 	 */
 	abstract boolean isActive();
+
+	/**
+	 * Obtém o objeto {@link LspConnection} em uso
+	 *
+	 * @param connId Id de conexão para validar/pesquisar
+	 * @return Uma instância de {@link LspConnection} ou null
+	 */
+	abstract LspConnection usedConnection(short connId);
+
+	final short connect(SocketAddress sockAddr) {
+		synchronized (connLock) {
+			send(sockAddr, CONNECT, (short) 0, (short) 0, PAYLOAD_NIL);
+
+			// Configura objetos compartilhados
+			this.reqAddr = sockAddr;
+			this.connAck = connLock.newCondition();
+
+			// Aguarda pela resposta da conexão
+			this.connAck.awaitUninterruptibly();
+			return this.reqConnId;
+		}
+	}
+
+	private final void connectAck(SocketAddress sockAddr, short connId) {
+		if (connAck != null && reqAddr.equals(sockAddr)) {
+			this.reqConnId = connId;
+			this.connAck.signal();
+			this.connAck = null;
+		}
+	}
 
 	/**
 	 * Processamento de cada pacote UDP recebido.
@@ -108,7 +143,7 @@ abstract class LspSocket {
 
 	/** Tratamento de um pacote do tipo DATA recebido */
 	void receiveData(final SocketAddress sockAddr, final ByteBuffer buf) {
-		LspConnection conn = usedConnection(sockAddr, buf);
+		LspConnection conn = usedConnection(sockAddr, buf.getShort());
 		if (conn != null) {
 			short seqNum = buf.getShort();
 			byte[] payload = payload(buf);
@@ -131,19 +166,29 @@ abstract class LspSocket {
 
 	/** Tratamento de um pacote do tipo ACK recebido */
 	void receiveAck(final SocketAddress sockAddr, final ByteBuffer buf) {
-		final LspConnection conn = usedConnection(sockAddr, buf);
+		final short connId = buf.getShort();
+		final LspConnection conn = usedConnection(sockAddr, connId);
+
+		// Se o connId é válido, reconhece a mensage
 		if (conn != null) {
 			final short seqNum = buf.getShort();
 			conn.ack(seqNum);
 		}
+
+		// Senão, verifica se o número de sequência é 0. Caso positivo, deve se
+		// tratar de uma requisição de conexão efetuada por esse socket.
+		else if (buf.getShort() == 0) {
+			connectAck(sockAddr, connId);
+		}
 	}
 
-	private void send(final short msgType, final LspConnection conn, final short seqNum, final byte[] payload) {
+	private void send(final SocketAddress sockAddr, final short msgType,
+			final short connId, final short seqNum, final byte[] payload) {
 		ByteBuffer buf = ByteBuffer.allocate(6 + payload.length);
-		buf.putShort(msgType).putShort(conn.getId()).putShort(seqNum).put(payload);
+		buf.putShort(msgType).putShort(connId).putShort(seqNum).put(payload);
 
 		DatagramPacket packet = new DatagramPacket(buf.array(), buf.capacity());
-		packet.setSocketAddress(conn.getSockAddr());
+		packet.setSocketAddress(sockAddr);
 		try {
 			synchronized (sendLock) {
 				socket.send(packet);
@@ -153,8 +198,8 @@ abstract class LspSocket {
 		}
 	}
 
-	final void sendConnect(final LspConnection conn, final short seqNum) {
-		send(CONNECT, conn, seqNum, PAYLOAD_NIL);
+	private void send(final short msgType, final LspConnection conn, final short seqNum, final byte[] payload) {
+		send(conn.getSockAddr(), msgType, conn.getId(), seqNum, payload);
 	}
 
 	final void sendData(final LspConnection conn, final short seqNum, final byte[] payload) {
@@ -216,8 +261,7 @@ abstract class LspSocket {
 		return bs;
 	}
 
-	private LspConnection usedConnection(final SocketAddress sockAddr, final ByteBuffer buf) {
-		short connId = buf.getShort();
+	private LspConnection usedConnection(final SocketAddress sockAddr, final short connId) {
 		final LspConnection conn = usedConnection(connId);
 
 		// Descarta o pacote se não há conexão aberta com o remetente ou se
@@ -229,14 +273,6 @@ abstract class LspSocket {
 
 		return null;
 	}
-
-	/**
-	 * Obtém o objeto {@link LspConnection} em uso
-	 *
-	 * @param connId Id de conexão para validar/pesquisar
-	 * @return Uma instância de {@link LspConnection} ou null
-	 */
-	abstract LspConnection usedConnection(short connId);
 
 	/** Obtém a fila de entrada do socket */
 	BlockingQueue<InternalPack> inputQueue() {
