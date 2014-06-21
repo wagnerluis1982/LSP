@@ -14,7 +14,7 @@ class InternalPack extends Pack {
 		this(conn, (short) -1, payload);
 	}
 
-	public InternalPack(Pack pack) {
+	InternalPack(Pack pack) {
 		super(pack.getConnId(), pack.getPayload());
 	}
 

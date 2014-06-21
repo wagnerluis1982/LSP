@@ -1,7 +1,7 @@
 package lsp;
 
+import java.io.IOException;
 import java.net.SocketAddress;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -34,7 +34,7 @@ public class LspServer {
 	/* Socket LSP */
 	private final LspSocket lspSocket;
 
-	public LspServer(int port, LspParams params) throws SocketException {
+	public LspServer(int port, LspParams params) throws IOException {
 		this.lspSocket = new LspSocketImpl(port);
 		this.params = params;
 	}
@@ -134,7 +134,7 @@ public class LspServer {
 	}
 
 	private final class LspSocketImpl extends LspSocket {
-		LspSocketImpl(final int port) throws SocketException {
+		LspSocketImpl(final int port) throws IOException {
 			super(port);
 		}
 
@@ -143,6 +143,11 @@ public class LspServer {
 			return active;
 		}
 
+		/*
+		 * TODO: Considerando que pode haver buracos no contador de ID devido a
+		 * fechamentos da conexão, é preciso solucionar isso verificando antes
+		 * se a posição já existe.
+		 */
 		@Override
 		void receiveConnect(final SocketAddress sockAddr, final ByteBuffer buf) {
 			// Somente serão aceitos pedidos de conexão bem formados, isto é,

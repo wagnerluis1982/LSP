@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketAddress;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
@@ -33,6 +32,7 @@ abstract class LspSocket {
 	private final BlockingQueue<InternalPack> inputQueue;
 	private final BlockingDeque<InternalPack> outputQueue;
 
+	/* Lock para garantir que apenas uma thread envie pacotes */
 	private final Object sendLock = new Object();
 
 	/* Usados nos pedidos de conexão partindo desse socket */
@@ -47,20 +47,10 @@ abstract class LspSocket {
 	 * Inicia um LspSocket
 	 *
 	 * @param port Porta onde o socket estará vinculado
-	 * @throws SocketException
-	 */
-	LspSocket(int port) throws SocketException {
-		this(port, QUEUE_ZISE);
-	}
-
-	/**
-	 * Inicia um LspSocket
-	 *
-	 * @param port Porta onde o socket estará vinculado
 	 * @param queueSize Tamanho inicial das filas de entrada e saída
 	 * @throws SocketException
 	 */
-	LspSocket(int port, int queueSize) throws SocketException {
+	LspSocket(int port, int queueSize) throws IOException {
 		this.socket = new DatagramSocket(port);
 		this.inputQueue = new LinkedBlockingQueue<>(queueSize);
 		this.outputQueue = new LinkedBlockingDeque<>(queueSize);
@@ -68,6 +58,16 @@ abstract class LspSocket {
 		// Inicia as threads
 		new Thread(new InputTask()).start();
 		new Thread(new OutputTask()).start();
+	}
+
+	/**
+	 * Inicia um LspSocket
+	 *
+	 * @param port Porta onde o socket estará vinculado
+	 * @throws SocketException
+	 */
+	LspSocket(int port) throws IOException {
+		this(port, QUEUE_ZISE);
 	}
 
 	/**
@@ -88,6 +88,7 @@ abstract class LspSocket {
 
 	final short connect(SocketAddress sockAddr) {
 		synchronized (connLock) {
+			// Envia requisição de conexão
 			send(sockAddr, CONNECT, (short) 0, (short) 0, PAYLOAD_NIL);
 
 			// Configura objetos compartilhados
@@ -101,6 +102,7 @@ abstract class LspSocket {
 	}
 
 	private final void connectAck(SocketAddress sockAddr, short connId) {
+		// Confere se o ACK vem do socket remoto correto
 		if (connAck != null && reqAddr.equals(sockAddr)) {
 			this.reqConnId = connId;
 			this.connAck.signal();
@@ -169,7 +171,7 @@ abstract class LspSocket {
 		final short connId = buf.getShort();
 		final LspConnection conn = usedConnection(sockAddr, connId);
 
-		// Se o connId é válido, reconhece a mensage
+		// Se o connId é válido, reconhece a mensagem
 		if (conn != null) {
 			final short seqNum = buf.getShort();
 			conn.ack(seqNum);
