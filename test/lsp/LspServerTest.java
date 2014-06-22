@@ -58,16 +58,25 @@ public class LspServerTest {
 		assertArrayEquals(payload, recv.getPayload());
 	}
 
-	public void testWrite() {
-		fail("Not yet implemented");
-	}
+	@Test
+	public void testWrite() throws Exception {
+		String payload = "Holla, client!";
+		server.write(new Pack(connId, payload.getBytes()));
 
-	public void testCloseConn() {
-		fail("Not yet implemented");
-	}
+		DatagramPacket p = createPacket();
+		sock.receive(p);
 
-	public void testCloseAll() {
-		fail("Not yet implemented");
+		ByteBuffer buf = ByteBuffer.wrap(p.getData(), 0, p.getLength());
+		assertEquals(DATA, buf.getShort());
+		assertEquals(connId, buf.getShort());
+		assertEquals(1, buf.getShort());
+
+		byte[] recv = new byte[buf.remaining()];
+		buf.get(recv);
+		assertEquals(payload, new String(recv));
+
+		p = createPacket(ACK, connId, (short) 1, "".getBytes());
+		sock.send(p);
 	}
 
 	private static ShortBuffer connectServer(DatagramSocket sock) throws Exception {
@@ -87,15 +96,23 @@ public class LspServerTest {
 	}
 
 	private static DatagramPacket createPacket(short msgType, short connId, short seqNum, byte[] payload) throws Exception {
-		ByteBuffer buf = ByteBuffer.wrap(new byte[1024]);
+		DatagramPacket pack = createPacket();
+		ByteBuffer buf = ByteBuffer.wrap(pack.getData());
 		buf.asShortBuffer().put(new short[] {msgType, connId, seqNum});
 		buf.position(6);
 		buf.put(payload);
 
-		return new DatagramPacket(buf.array(), buf.position(), InetAddress.getLocalHost(), port);
+		pack.setLength(buf.position());
+		pack.setAddress(InetAddress.getLocalHost());
+		pack.setPort(port);
+		return pack;
 	}
 
 	private static DatagramPacket createPacket(short msgType, byte[] payload) throws Exception {
 		return createPacket(msgType, connId, ++seqNum, payload);
+	}
+
+	private static DatagramPacket createPacket() {
+		return new DatagramPacket(new byte[1024], 1024);
 	}
 }
