@@ -2,8 +2,6 @@ package lsp;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Representa uma conexão LSP.
@@ -18,7 +16,7 @@ abstract class LspConnection {
 	private volatile short seqNum;
 	private volatile long receivedTime;
 	private volatile short receivedSeqNum;
-	private final Lock lock;
+	private final Object lock = new Object();;
 
 	private volatile InternalPack dataMessage;
 	private final SocketAddress sockAddr;
@@ -46,7 +44,6 @@ abstract class LspConnection {
 		this.seqNum = 0;
 		this.receivedTime = -1;
 		this.receivedSeqNum = -1;
-		this.lock = new ReentrantLock();
 
 		// Inicia a thread para monitorar o status da conexão
 		Runnable checker = new StatusChecker(params);
@@ -108,14 +105,16 @@ abstract class LspConnection {
 	 *         aguardando ACK
 	 */
 	boolean sent(InternalPack pack) {
-		if (lock.tryLock()) {
-			pack.setConnection(this);
-			pack.setSeqNum(++seqNum);
-			this.dataMessage = pack;
-			return true;
-		} else {
-			return false;
+		synchronized (lock) {
+			if (this.dataMessage == null) {
+				pack.setConnection(this);
+				pack.setSeqNum(++seqNum);
+				this.dataMessage = pack;
+				return true;
+			}
 		}
+
+		return false;
 	}
 
 	/** Informa que o ACK do número de sequência informado foi recebido */
@@ -123,10 +122,11 @@ abstract class LspConnection {
 		// Atualiza o momento de recebimento
 		received();
 
-		// Marca dados como recebidos, se o número de sequência é igual ao atual
-		if (this.seqNum == seqNum) {
-			this.dataMessage = null;
-			lock.unlock();
+		synchronized (lock) {
+			// Marca dados como recebidos, se o número de sequência é igual ao atual
+			if (this.seqNum == seqNum) {
+				this.dataMessage = null;
+			}
 		}
 	}
 
