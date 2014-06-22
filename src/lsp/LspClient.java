@@ -32,7 +32,7 @@ public class LspClient {
 	 */
 	public byte[] read() {
 		checkActive();
-		return lspSocket.input().getPayload();
+		return lspSocket.receive().getPayload();
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class LspClient {
 		checkActive();
 
 		InternalPack p = new InternalPack(conn, payload);
-		lspSocket.output(p);
+		lspSocket.send(p);
 	}
 
 	/**

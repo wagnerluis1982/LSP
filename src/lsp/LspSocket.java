@@ -111,7 +111,7 @@ abstract class LspSocket {
 	 * @param pack Pacote enviado pelo serviço
 	 * @throws IOException
 	 */
-	private void receive(final DatagramPacket pack) throws IOException {
+	private void dgramReceive(final DatagramPacket pack) throws IOException {
 		this.socket.receive(pack);
 		final ByteBuffer buf = ByteBuffer.wrap(pack.getData(), 0,
 				pack.getLength()).asReadOnlyBuffer();
@@ -119,13 +119,13 @@ abstract class LspSocket {
 
 		switch (msgType) {
 		case CONNECT:
-			receiveConnect(pack.getSocketAddress(), buf.slice());
+			dgramReceiveConnect(pack.getSocketAddress(), buf.slice());
 			break;
 		case DATA:
-			receiveData(pack.getSocketAddress(), buf.slice());
+			dgramReceiveData(pack.getSocketAddress(), buf.slice());
 			break;
 		case ACK:
-			receiveAck(pack.getSocketAddress(), buf.slice());
+			dgramReceiveAck(pack.getSocketAddress(), buf.slice());
 			break;
 		}
 	}
@@ -135,11 +135,11 @@ abstract class LspSocket {
 	 *
 	 * Esse método deve ser sobrescrito pelo servidor
 	 */
-	void receiveConnect(final SocketAddress sockAddr, final ByteBuffer buf) {
+	void dgramReceiveConnect(final SocketAddress sockAddr, final ByteBuffer buf) {
 	}
 
 	/** Tratamento de um pacote do tipo DATA recebido */
-	void receiveData(final SocketAddress sockAddr, final ByteBuffer buf) {
+	void dgramReceiveData(final SocketAddress sockAddr, final ByteBuffer buf) {
 		LspConnection conn = usedConnection(sockAddr, buf.getShort());
 		if (conn != null) {
 			short seqNum = buf.getShort();
@@ -149,7 +149,7 @@ abstract class LspSocket {
 			// Se a mensagem foi enfileirada, envia o ACK e informa o número
 			// de sequência à conexão (usado nos disparos da época).
 			if (inputQueue.offer(pack)) {
-				sendAck(pack);
+				dgramSendAck(pack);
 				conn.received(seqNum);
 			}
 
@@ -162,7 +162,7 @@ abstract class LspSocket {
 	}
 
 	/** Tratamento de um pacote do tipo ACK recebido */
-	void receiveAck(final SocketAddress sockAddr, final ByteBuffer buf) {
+	void dgramReceiveAck(final SocketAddress sockAddr, final ByteBuffer buf) {
 		final short connId = buf.getShort();
 		final LspConnection conn = usedConnection(sockAddr, connId);
 
@@ -182,7 +182,7 @@ abstract class LspSocket {
 		}
 	}
 
-	private void send(final SocketAddress sockAddr, final short msgType,
+	private void dgramSend(final SocketAddress sockAddr, final short msgType,
 			final short connId, final short seqNum, final byte[] payload) {
 		ByteBuffer buf = ByteBuffer.allocate(6 + payload.length);
 		buf.putShort(msgType).putShort(connId).putShort(seqNum).put(payload);
@@ -198,57 +198,25 @@ abstract class LspSocket {
 		}
 	}
 
-	private void send(final short msgType, final LspConnection conn, final short seqNum, final byte[] payload) {
-		send(conn.getSockAddr(), msgType, conn.getId(), seqNum, payload);
+	private void dgramSend(final short msgType, final LspConnection conn,
+			final short seqNum, final byte[] payload) {
+		dgramSend(conn.getSockAddr(), msgType, conn.getId(), seqNum, payload);
 	}
 
-	final void sendData(final LspConnection conn, final short seqNum, final byte[] payload) {
-		send(DATA, conn, seqNum, payload);
+	final void dgramSendData(final LspConnection conn, final short seqNum, final byte[] payload) {
+		dgramSend(DATA, conn, seqNum, payload);
 	}
 
-	final void sendData(final InternalPack p) {
-		sendData(p.getConnection(), p.getSeqNum(), p.getPayload());
+	final void dgramSendData(final InternalPack p) {
+		dgramSendData(p.getConnection(), p.getSeqNum(), p.getPayload());
 	}
 
-	final void sendAck(final LspConnection conn, final short seqNum) {
-		send(ACK, conn, seqNum, PAYLOAD_NIL);
+	final void dgramSendAck(final LspConnection conn, final short seqNum) {
+		dgramSend(ACK, conn, seqNum, PAYLOAD_NIL);
 	}
 
-	final void sendAck(final InternalPack p) {
-		sendAck(p.getConnection(), p.getSeqNum());
-	}
-
-	private void sendNextData() throws InterruptedException {
-		// Obtém o próxima pacote de dados da fila
-		final InternalPack p = outputQueue.take();
-
-		// Se já houver uma conexão associada ao pacote, envia-o e encerra
-		if (p.getConnection() != null) {
-			sendData(p);
-			return;
-		}
-
-		// Se o id de conexão é diferente da conexão em uso, encerra
-		LspConnection conn = usedConnection(p.getConnId());
-		if (conn == null) {
-			return;
-		}
-
-		// Tenta associar o pacote à conexão. Se sucesso, envia esse pacote
-		if (conn.sent(p)) {
-			sendData(p);
-			return;
-		}
-
-		// Se não foi possível associar à conexão (já havia outro pacote em
-		// espera de um ACK) então devolve o pacote à fila (segunda posição)
-		synchronized (outputQueue) {
-			InternalPack first = outputQueue.poll();
-			outputQueue.offerFirst(p);
-			if (first != null) {
-				outputQueue.offerFirst(first);
-			}
-		}
+	final void dgramSendAck(final InternalPack p) {
+		dgramSendAck(p.getConnection(), p.getSeqNum());
 	}
 
 	/** Helper para obter um array de bytes com o resto do {@link ByteBuffer} */
@@ -283,7 +251,7 @@ abstract class LspSocket {
 	}
 
 	/** Recebe um pacote da fila de entrada */
-	InternalPack input() {
+	InternalPack receive() {
 		try {
 			return inputQueue.take();
 		} catch (InterruptedException e) {
@@ -293,7 +261,7 @@ abstract class LspSocket {
 	}
 
 	/** Insere um pacote na fila de saída */
-	void output(InternalPack p) {
+	void send(InternalPack p) {
 		if (!outputQueue.offer(p))
 			throw new IllegalStateException("Fila de saída cheia");;
 	}
@@ -311,7 +279,7 @@ abstract class LspSocket {
 		@Override
 		public Short call() throws Exception {
 			// Envia requisição de conexão
-			send(sockAddr, CONNECT, (short) 0, (short) 0, PAYLOAD_NIL);
+			dgramSend(sockAddr, CONNECT, (short) 0, (short) 0, PAYLOAD_NIL);
 
 			// Aguarda pelo ACK da conexão
 			ackCondition.awaitUninterruptibly();
@@ -335,7 +303,7 @@ abstract class LspSocket {
 			// Recebe pacotes até o servidor ser encerrado
 			while (isActive()) {
 				try {
-					receive(pack);
+					dgramReceive(pack);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -352,6 +320,39 @@ abstract class LspSocket {
 					sendNextData();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
+				}
+			}
+		}
+
+		private void sendNextData() throws InterruptedException {
+			// Obtém o próximo pacote de dados da fila
+			final InternalPack p = outputQueue.take();
+
+			// Se já houver uma conexão associada ao pacote, envia-o e encerra
+			if (p.getConnection() != null) {
+				dgramSendData(p);
+				return;
+			}
+
+			// Se o id de conexão é diferente da conexão em uso, encerra
+			LspConnection conn = usedConnection(p.getConnId());
+			if (conn == null) {
+				return;
+			}
+
+			// Tenta associar o pacote à conexão. Se sucesso, envia esse pacote
+			if (conn.sent(p)) {
+				dgramSendData(p);
+				return;
+			}
+
+			// Se não foi possível associar à conexão (já havia outro pacote em
+			// espera de um ACK) então devolve o pacote à fila (segunda posição)
+			synchronized (outputQueue) {
+				InternalPack first = outputQueue.poll();
+				outputQueue.offerFirst(p);
+				if (first != null) {
+					outputQueue.offerFirst(first);
 				}
 			}
 		}

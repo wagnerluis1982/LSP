@@ -51,7 +51,7 @@ public class LspServer {
 	 */
 	public Pack read() {
 		checkActive();
-		return lspSocket.input();
+		return lspSocket.receive();
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class LspServer {
 		}
 
 		InternalPack p = new InternalPack(pack);
-		lspSocket.output(p);
+		lspSocket.send(p);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class LspServer {
 		 * se a posição já existe.
 		 */
 		@Override
-		void receiveConnect(final SocketAddress sockAddr, final ByteBuffer buf) {
+		void dgramReceiveConnect(final SocketAddress sockAddr, final ByteBuffer buf) {
 			// Somente serão aceitos pedidos de conexão bem formados, isto é,
 			// aqueles em que Connection ID e Sequence Number são iguais a zero
 			if (buf.getInt() == 0) {
@@ -158,7 +158,7 @@ public class LspServer {
 					conn = new LspConnectionImpl(newId, sockId, sockAddr, params);
 					connectionPool.put(newId, conn);
 					connectedSockets.put(sockId, conn);
-					sendAck(conn, (short) 0);
+					dgramSendAck(conn, (short) 0);
 				}
 
 				// Mesmo recebendo o pedido de conexão do mesmo socket remoto,
@@ -194,20 +194,20 @@ public class LspServer {
 		private void resendData() {
 			InternalPack pack = this.sent();
 			if (pack != null) {
-				lspSocket.sendData(pack);
+				lspSocket.dgramSendData(pack);
 			}
 		}
 
 		private void resendAckConnect() {
 			if (this.receivedTime() == -1) {
-				lspSocket.sendAck(this, (short) 0);
+				lspSocket.dgramSendAck(this, (short) 0);
 			}
 		}
 
 		private void resendAckData() {
 			short seqNum = this.receivedSeqNum();
 			if (seqNum != -1) {
-				lspSocket.sendAck(this, seqNum);
+				lspSocket.dgramSendAck(this, seqNum);
 			}
 		}
 	}
