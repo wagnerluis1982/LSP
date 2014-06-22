@@ -14,6 +14,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -42,11 +44,12 @@ abstract class LspSocket {
 
 	/* Usados no pedido de conexão a um servidor LSP partindo desse socket */
 	private final ExecutorService executorService;
-	private ConnectTask conntTask;
+	private ConnectTask connTask;
 	private final Lock connLock;
 
 	/** Socket de comunicação em uso */
 	private final DatagramSocket socket;
+	private final int port;
 
 	/**
 	 * Inicia um LspSocket
@@ -58,6 +61,7 @@ abstract class LspSocket {
 	LspSocket(int port, int queueSize) throws IOException {
 		// Cria o socket e as filas
 		this.socket = new DatagramSocket(port);
+		this.port = this.socket.getLocalPort();
 		this.inputQueue = new LinkedBlockingQueue<>(queueSize);
 		this.outputQueue = new LinkedBlockingDeque<>(queueSize);
 
@@ -88,21 +92,26 @@ abstract class LspSocket {
 	 */
 	abstract boolean isActive();
 
-	final short connect(SocketAddress sockAddr) {
+	final short connect(SocketAddress sockAddr, long timeout) throws TimeoutException {
 		synchronized (connLock) {
 			// Inicia uma nova tarefa de conexão
-			conntTask = new ConnectTask(sockAddr, connLock.newCondition());
-			Future<Short> call = executorService.submit(conntTask);
+			connTask = new ConnectTask(sockAddr, connLock.newCondition());
+			Future<Short> call = executorService.submit(connTask);
 
 			try {
-				short connId = call.get();
-				conntTask = null;
-				return connId;
+				return call.get(timeout, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
-				throw new RuntimeException();
+				connTask.ackCondition.signal();  // libera a thread
+				throw new RuntimeException(e);
+			} finally {
+				connTask = null;
 			}
 		}
+	}
+
+	/** Estabelece conexão com um servidor LSP aguardando até 10 segundos */
+	final short connect(SocketAddress sockAddr) throws TimeoutException {
+		return connect(sockAddr, 10000);
 	}
 
 	/**
@@ -172,13 +181,12 @@ abstract class LspSocket {
 			conn.ack(seqNum);
 		}
 
-		// Senão, verifica se o número de sequência é 0. Caso positivo, deve se
-		// tratar de uma requisição de conexão efetuada por esse socket.
-		else if (buf.getShort() == 0) {
-			// Confere antes se o ACK vem do socket remoto correto
-			if (conntTask != null && sockAddr.equals(conntTask.sockAddr)) {
-				conntTask.ack(connId);
-			}
+		// Senão verifica se há uma tentativa de conexão em curso. Caso
+		// positivo, verifica também se id não é 0, número de sequência é 0,
+		// conferindo antes se o ACK vem do socket remoto correto
+		else if (connTask != null && connId != 0 && buf.getShort() == 0
+				&& sockAddr.equals(connTask.sockAddr)) {
+			connTask.ack(connId);
 		}
 	}
 
@@ -264,6 +272,10 @@ abstract class LspSocket {
 	void send(InternalPack p) {
 		if (!outputQueue.offer(p))
 			throw new IllegalStateException("Fila de saída cheia");;
+	}
+
+	int getPort() {
+		return this.port;
 	}
 
 	private final class ConnectTask implements Callable<Short> {

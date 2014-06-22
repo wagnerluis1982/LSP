@@ -3,6 +3,7 @@ package lsp;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.concurrent.TimeoutException;
 
 public class LspClient {
 	private final LspSocket lspSocket;
@@ -10,7 +11,7 @@ public class LspClient {
 
 	private volatile boolean active = true;
 
-	public LspClient(String host, int port, LspParams params) throws IOException {
+	public LspClient(String host, int port, LspParams params) throws IOException, TimeoutException {
 		SocketAddress sockAddr = InetSocketAddress.createUnresolved(host, port);
 
 		lspSocket = new LspSocketImpl(0);

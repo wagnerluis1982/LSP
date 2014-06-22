@@ -33,9 +33,11 @@ public class LspServer {
 
 	/* Socket LSP */
 	private final LspSocket lspSocket;
+	private final int port;
 
 	public LspServer(int port, LspParams params) throws IOException {
 		this.lspSocket = new LspSocketImpl(port);
+		this.port = this.lspSocket.getPort();
 		this.params = params;
 	}
 
@@ -124,6 +126,10 @@ public class LspServer {
 	private void checkActive() {
 		if (!active)
 			throw new ClosedConnectionException();
+	}
+
+	public int getPort() {
+		return this.port;
 	}
 
 	private final class LspSocketImpl extends LspSocket {
