@@ -8,9 +8,10 @@ import java.net.SocketAddress;
  *
  * @author Wagner Macedo
  */
-abstract class LspConnection {
+class LspConnection {
 	private final short id;
 	private final long sockId;
+	private final ConnectionTriggers triggers;
 
 	private volatile boolean closed;
 	private volatile short seqNum;
@@ -33,13 +34,14 @@ abstract class LspConnection {
 	 * @param params
 	 *            Parâmetros de temporização da conexão
 	 */
-	LspConnection(short id, long sockId, SocketAddress sockAddr, LspParams params) {
+	LspConnection(short id, long sockId, SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers) {
 		if (sockAddr == null || params == null)
 			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
 
 		this.id = id;
 		this.sockId = sockId;
 		this.sockAddr = sockAddr;
+		this.triggers = triggers;
 		this.closed = false;
 		this.seqNum = 0;
 		this.receivedTime = -1;
@@ -60,8 +62,8 @@ abstract class LspConnection {
 	 * @param params
 	 *            Parâmetros de temporização da conexão
 	 */
-	LspConnection(short id, SocketAddress sockAddr, LspParams params) {
-		this(id, uniqueSockId(sockAddr), sockAddr, params);
+	LspConnection(short id, SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers) {
+		this(id, uniqueSockId(sockAddr), sockAddr, params, triggers);
 	}
 
 	short getId() {
@@ -173,16 +175,6 @@ abstract class LspConnection {
 	}
 
 	/**
-	 * Callback representando as ações a serem disparadas a cada época
-	 */
-	abstract void callEpochTriggers();
-
-	/**
-	 * Callback representando as ações de fechamento da conexão
-	 */
-	abstract void callCloseConnection();
-
-	/**
 	 * Monitoramento da conexão LSP. Verifica se está ativa. Este processo é
 	 * feito através de callbacks definidos em uma instância de {@link ConnectionActions}.
 	 */
@@ -208,7 +200,7 @@ abstract class LspConnection {
 				sleep(epoch);
 
 				// Dispara as ações da época
-				callEpochTriggers();
+				triggers.doEpochActions();
 
 				// Reinicia contagem de épocas se houve mensagens recebidas
 				// desde a última época
@@ -220,7 +212,7 @@ abstract class LspConnection {
 			}
 
 			// Encerra formalmente a conexão
-			callCloseConnection();
+			triggers.doCloseConnection();
 		}
 
 		/* Sleep sem lançamento de exceção */

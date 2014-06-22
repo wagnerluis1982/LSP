@@ -159,12 +159,16 @@ public class LspServer {
 				LspConnection conn = connectedSockets.get(sockId);
 				if (conn == null) {
 					final short newId = (short) idCounter.incrementAndGet();
+					ServerTriggers triggers = new ServerTriggers();
 
 					// Adicionando a conexão ao pool de conexão
-					conn = new LspConnectionImpl(newId, sockId, sockAddr, params);
+					conn = new LspConnection(newId, sockId, sockAddr, params, triggers);
 					connectionPool.put(newId, conn);
 					connectedSockets.put(sockId, conn);
 					dgramSendAck(conn, (short) 0);
+
+					// Adicionando referência da conexão associada a triggers
+					triggers.bindedConn = conn;
 				}
 
 				// Mesmo recebendo o pedido de conexão do mesmo socket remoto,
@@ -180,40 +184,38 @@ public class LspServer {
 		}
 	}
 
-	private final class LspConnectionImpl extends LspConnection {
-		LspConnectionImpl(short id, long sockId, SocketAddress sockAddr, LspParams params) {
-			super(id, sockId, sockAddr, params);
-		}
+	private final class ServerTriggers implements ConnectionTriggers {
+		public LspConnection bindedConn;
 
 		@Override
-		void callEpochTriggers() {
+		public void doEpochActions() {
 			resendData();
 			resendAckConnect();
 			resendAckData();
 		}
 
 		@Override
-		void callCloseConnection() {
-			closeConn(getId());
+		public void doCloseConnection() {
+			closeConn(bindedConn.getId());
 		}
 
 		private void resendData() {
-			InternalPack pack = this.sent();
+			InternalPack pack = bindedConn.sent();
 			if (pack != null) {
 				lspSocket.dgramSendData(pack);
 			}
 		}
 
 		private void resendAckConnect() {
-			if (this.receivedTime() == -1) {
-				lspSocket.dgramSendAck(this, (short) 0);
+			if (bindedConn.receivedTime() == -1) {
+				lspSocket.dgramSendAck(bindedConn, (short) 0);
 			}
 		}
 
 		private void resendAckData() {
-			short seqNum = this.receivedSeqNum();
+			short seqNum = bindedConn.receivedSeqNum();
 			if (seqNum != -1) {
-				lspSocket.dgramSendAck(this, seqNum);
+				lspSocket.dgramSendAck(bindedConn, seqNum);
 			}
 		}
 	}

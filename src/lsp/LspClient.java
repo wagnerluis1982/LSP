@@ -17,7 +17,7 @@ public class LspClient {
 		lspSocket = new LspSocketImpl(0);
 		short connId = lspSocket.connect(sockAddr);
 
-		conn = new LspConnectionImpl(connId, sockAddr, params);
+		conn = new LspConnection(connId, sockAddr, params, new ClientTriggers());
 	}
 
 	/**
@@ -60,11 +60,6 @@ public class LspClient {
 			throw new ClosedConnectionException();
 	}
 
-	/* Definição devido ao sombreamento de close na classe aninhada LspConnectionImpl */
-	private void closeConn() {
-		close();
-	}
-
 	private final class LspSocketImpl extends LspSocket {
 		LspSocketImpl(int port) throws IOException {
 			super(port);
@@ -81,13 +76,9 @@ public class LspClient {
 		}
 	}
 
-	private final class LspConnectionImpl extends LspConnection {
-		LspConnectionImpl(short id, SocketAddress sockAddr, LspParams params) {
-			super(id, sockAddr, params);
-		}
-
+	private final class ClientTriggers implements ConnectionTriggers {
 		@Override
-		void callEpochTriggers() {
+		public void doEpochActions() {
 			resendConnect();
 			resendData();
 			resendAckData();
@@ -95,8 +86,8 @@ public class LspClient {
 		}
 
 		@Override
-		void callCloseConnection() {
-			closeConn();
+		public void doCloseConnection() {
+			close();
 		}
 
 		private void resendConnect() {
