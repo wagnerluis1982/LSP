@@ -15,9 +15,7 @@ public class LspClient {
 		SocketAddress sockAddr = InetSocketAddress.createUnresolved(host, port);
 
 		lspSocket = new LspSocketImpl(0);
-		short connId = lspSocket.connect(sockAddr);
-
-		conn = new LspConnection(connId, sockAddr, params, new ClientTriggers());
+		conn = lspSocket.connect(sockAddr, params, new ClientTriggers());
 	}
 
 	/**

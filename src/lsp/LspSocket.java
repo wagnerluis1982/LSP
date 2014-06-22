@@ -92,14 +92,15 @@ abstract class LspSocket {
 	 */
 	abstract boolean isActive();
 
-	final short connect(SocketAddress sockAddr, long timeout) throws TimeoutException {
+	final LspConnection connect(SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers, long timeout) throws TimeoutException {
 		synchronized (connLock) {
 			// Inicia uma nova tarefa de conexão
 			connTask = new ConnectTask(sockAddr, connLock.newCondition());
 			Future<Short> call = executorService.submit(connTask);
 
 			try {
-				return call.get(timeout, TimeUnit.MILLISECONDS);
+				short connId = call.get(timeout, TimeUnit.MILLISECONDS);
+				return new LspConnection(connId, sockAddr, params, triggers);
 			} catch (InterruptedException | ExecutionException e) {
 				connTask.ackCondition.signal();  // libera a thread
 				throw new RuntimeException(e);
@@ -110,8 +111,8 @@ abstract class LspSocket {
 	}
 
 	/** Estabelece conexão com um servidor LSP aguardando até 10 segundos */
-	final short connect(SocketAddress sockAddr) throws TimeoutException {
-		return connect(sockAddr, 10000);
+	final LspConnection connect(SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers) throws TimeoutException {
+		return connect(sockAddr, params, triggers, 10000);
 	}
 
 	/**
