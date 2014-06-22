@@ -2,7 +2,6 @@ package lsp;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -21,8 +20,8 @@ public class LspServerTest {
 	private static LspServer server;
 	private static int port;
 	private static DatagramSocket sock;
-	private static DatagramPacket pack;
 	private static short connId;
+	private static short seqNum = 0;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -30,7 +29,6 @@ public class LspServerTest {
 		port = server.getPort();
 
 		sock = new DatagramSocket();
-		pack = createPacket();
 		connId = connectServer();
 	}
 
@@ -42,16 +40,22 @@ public class LspServerTest {
 	@Test
 	public void testAcceptingConnection() throws Exception {
 		DatagramSocket sock = new DatagramSocket();
-		DatagramPacket pack = createPacket();
 
-		ShortBuffer buf = connectServer(sock, pack);
+		ShortBuffer buf = connectServer(sock);
 		assertEquals(ACK, buf.get());
 		assertNotEquals(0, buf.get());
 		assertEquals(0, buf.get());
 	}
 
-	public void testRead() {
-		fail("Not yet implemented");
+	@Test
+	public void testRead() throws Exception {
+		byte[] payload = "Hello, server!".getBytes();
+
+		DatagramPacket pack = createPacket(DATA, payload);
+		sock.send(pack);
+
+		Pack recv = server.read();
+		assertArrayEquals(payload, recv.getPayload());
 	}
 
 	public void testWrite() {
@@ -66,20 +70,32 @@ public class LspServerTest {
 		fail("Not yet implemented");
 	}
 
-	private static ShortBuffer connectServer(DatagramSocket sock, DatagramPacket pack) throws IOException {
+	private static ShortBuffer connectServer(DatagramSocket sock) throws Exception {
+		DatagramPacket pack = createPacket(CONNECT, (short) 0, (short) 0, "".getBytes());
 		ShortBuffer buf = ByteBuffer.wrap(pack.getData()).asShortBuffer();
 		buf.put(new short[] {CONNECT, 0, 0});
 		sock.send(pack);
 		sock.receive(pack);
 
-		return ByteBuffer.wrap(pack.getData()).asShortBuffer();
+		buf.rewind();
+		buf.limit(pack.getLength()/2);
+		return buf;
 	}
 
-	private static short connectServer() throws IOException {
-		return connectServer(sock, pack).get(1);
+	private static short connectServer() throws Exception {
+		return connectServer(sock).get(1);
 	}
 
-	private static DatagramPacket createPacket() throws Exception {
-		return new DatagramPacket(new byte[1024], 1024, InetAddress.getLocalHost(), port);
+	private static DatagramPacket createPacket(short msgType, short connId, short seqNum, byte[] payload) throws Exception {
+		ByteBuffer buf = ByteBuffer.wrap(new byte[1024]);
+		buf.asShortBuffer().put(new short[] {msgType, connId, seqNum});
+		buf.position(6);
+		buf.put(payload);
+
+		return new DatagramPacket(buf.array(), buf.position(), InetAddress.getLocalHost(), port);
+	}
+
+	private static DatagramPacket createPacket(short msgType, byte[] payload) throws Exception {
+		return createPacket(msgType, connId, ++seqNum, payload);
 	}
 }
