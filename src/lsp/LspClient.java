@@ -12,7 +12,7 @@ public class LspClient {
 	private volatile boolean active = true;
 
 	public LspClient(String host, int port, LspParams params) throws IOException, TimeoutException {
-		SocketAddress sockAddr = InetSocketAddress.createUnresolved(host, port);
+		SocketAddress sockAddr = new InetSocketAddress(host, port);
 
 		lspSocket = new LspSocketImpl(0);
 		conn = lspSocket.connect(sockAddr, params, new ClientTriggers());

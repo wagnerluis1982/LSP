@@ -14,11 +14,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Serviço de entrada e saída de pacotes. Classe abstrata.
@@ -43,9 +41,8 @@ abstract class LspSocket {
 	private final Object sendLock = new Object();
 
 	/* Usados no pedido de conexão a um servidor LSP partindo desse socket */
-	private final ExecutorService executorService;
+	private final ExecutorService connectExecutor;
 	private ConnectTask connTask;
-	private final Lock connLock;
 
 	/** Socket de comunicação em uso */
 	private final DatagramSocket socket;
@@ -66,8 +63,7 @@ abstract class LspSocket {
 		this.outputQueue = new LinkedBlockingDeque<>(queueSize);
 
 		// Inicializa atributos para uso na conexão a um servidor LSP
-		this.executorService = Executors.newSingleThreadExecutor();
-		this.connLock = new ReentrantLock();
+		this.connectExecutor = Executors.newSingleThreadExecutor();
 
 		// Inicia as threads
 		new Thread(new InputTask()).start();
@@ -93,16 +89,16 @@ abstract class LspSocket {
 	abstract boolean isActive();
 
 	final LspConnection connect(SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers, long timeout) throws TimeoutException {
-		synchronized (connLock) {
+		synchronized (connectExecutor) {
 			// Inicia uma nova tarefa de conexão
-			connTask = new ConnectTask(sockAddr, connLock.newCondition());
-			Future<Short> call = executorService.submit(connTask);
+			connTask = new ConnectTask(sockAddr);
+			Future<Short> call = connectExecutor.submit(connTask);
 
 			try {
 				short connId = call.get(timeout, TimeUnit.MILLISECONDS);
 				return new LspConnection(connId, sockAddr, params, triggers);
 			} catch (InterruptedException | ExecutionException e) {
-				connTask.ackCondition.signal();  // libera a thread
+				connTask.ack((short) 0);  // libera a thread
 				throw new RuntimeException(e);
 			} finally {
 				connTask = null;
@@ -281,12 +277,11 @@ abstract class LspSocket {
 
 	private final class ConnectTask implements Callable<Short> {
 		private SocketAddress sockAddr;
-		private Condition ackCondition;
-		private short connId;
+		private SynchronousQueue<Short> result;
 
-		ConnectTask(SocketAddress sockAddr, Condition condition) {
+		ConnectTask(SocketAddress sockAddr) {
 			this.sockAddr = sockAddr;
-			this.ackCondition = condition;
+			this.result = new SynchronousQueue<>();
 		}
 
 		@Override
@@ -294,15 +289,16 @@ abstract class LspSocket {
 			// Envia requisição de conexão
 			dgramSend(sockAddr, CONNECT, (short) 0, (short) 0, PAYLOAD_NIL);
 
-			// Aguarda pelo ACK da conexão
-			ackCondition.awaitUninterruptibly();
-
-			return connId;
+			// Retorna connId quando retornar o ACK da conexão
+			return result.take();
 		}
 
 		void ack(short connId) {
-			this.connId = connId;
-			ackCondition.notify();
+			try {
+				result.put(connId);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
