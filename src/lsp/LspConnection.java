@@ -133,15 +133,6 @@ class LspConnection {
 	}
 
 	/**
-	 * Última vez que essa conexão recebeu uma mensagem. Esse tempo é gerenciado
-	 * externamente através do método received. Se receber -1, quer dizer que
-	 * não chegou nenhuma mensagem depois do pedido de conexão.
-	 */
-	long receivedTime() {
-		return receivedTime;
-	}
-
-	/**
 	 * Número de sequência da última mensagem DATA recebida por essa conexão.
 	 * Esse número é gerenciado externamente através do método received(short).
 	 * Se receber -1, quer dizer que não chegou nenhuma mensagem depois do
