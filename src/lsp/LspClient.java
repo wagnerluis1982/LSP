@@ -53,6 +53,8 @@ public class LspClient {
 			checkActive();
 		}
 		this.active = false;
+		this.conn.close();
+		this.lspSocket.close();
 	}
 
 	public void close() {

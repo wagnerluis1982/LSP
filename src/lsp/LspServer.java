@@ -118,6 +118,9 @@ public class LspServer {
 			}.start();
 		}
 
+		// Fecha socket lsp
+		this.lspSocket.close();
+
 		// Limpeza de memória
 		this.connectionPool.clear();
 		this.connectedSockets.clear();

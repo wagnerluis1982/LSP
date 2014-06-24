@@ -21,6 +21,7 @@ class LspConnection {
 
 	private volatile InternalPack dataMessage;
 	private final SocketAddress sockAddr;
+	private final Thread statusThread;
 
 	/**
 	 * Constrói um objeto {@link LspConnection}
@@ -47,9 +48,8 @@ class LspConnection {
 		this.receivedTime = -1;
 		this.receivedSeqNum = -1;
 
-		// Inicia a thread para monitorar o status da conexão
-		Runnable checker = new StatusChecker(params);
-		new Thread(checker).start();
+		this.statusThread = new Thread(new StatusChecker(params));
+		this.statusThread.start();
 	}
 
 	/**
@@ -171,6 +171,7 @@ class LspConnection {
 	}
 
 	void close() {
+		this.statusThread.interrupt();
 		this.closed = true;
 	}
 
@@ -197,7 +198,11 @@ class LspConnection {
 			// Monitora a conexão continuamente até que o limite de épocas seja
 			// atingido ou a conexão seja fechada
 			while (!closed && limit-- > 0) {
-				sleep(epoch);
+				try {
+					Thread.sleep(epoch);
+				} catch (InterruptedException e) {
+					return;
+				}
 
 				// Dispara as ações da época
 				triggers.doEpochActions();
@@ -213,15 +218,6 @@ class LspConnection {
 
 			// Encerra formalmente a conexão
 			triggers.doCloseConnection();
-		}
-
-		/* Sleep sem lançamento de exceção */
-		private void sleep(long millis) {
-			try {
-				Thread.sleep(millis);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 }

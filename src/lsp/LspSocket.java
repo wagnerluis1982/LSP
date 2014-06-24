@@ -44,7 +44,7 @@ abstract class LspSocket {
 	private final ExecutorService connectExecutor;
 	private ConnectTask connTask;
 
-	/** Socket de comunicação em uso */
+	/* Socket de comunicação em uso */
 	private final DatagramSocket socket;
 	private final int port;
 
@@ -88,6 +88,15 @@ abstract class LspSocket {
 	 */
 	abstract boolean isActive();
 
+	final void close() {
+		socket.close();
+		connectExecutor.shutdown();
+
+		// Limpeza de memória
+		inputQueue.clear();
+		outputQueue.clear();
+	}
+
 	final LspConnection connect(SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers, long timeout) throws TimeoutException {
 		synchronized (connectExecutor) {
 			// Inicia uma nova tarefa de conexão
@@ -97,8 +106,12 @@ abstract class LspSocket {
 			try {
 				short connId = call.get(timeout, TimeUnit.MILLISECONDS);
 				return new LspConnection(connId, sockAddr, params, triggers);
-			} catch (InterruptedException | ExecutionException e) {
+			} catch (TimeoutException e) {
 				connTask.ack((short) 0);  // libera a thread
+				throw e;
+			} catch (InterruptedException e) {
+				return null;
+			} catch (ExecutionException e) {
 				throw new RuntimeException(e);
 			} finally {
 				connTask = null;
@@ -256,17 +269,16 @@ abstract class LspSocket {
 	}
 
 	/** Recebe um pacote da fila de entrada */
-	InternalPack receive() {
+	public InternalPack receive() {
 		try {
 			return inputQueue.take();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
 
 	/** Insere um pacote na fila de saída */
-	void send(InternalPack p) {
+	public void send(InternalPack p) {
 		if (!outputQueue.offer(p))
 			throw new IllegalStateException("Fila de saída cheia");;
 	}
@@ -294,11 +306,7 @@ abstract class LspSocket {
 		}
 
 		void ack(short connId) {
-			try {
-				result.put(connId);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			result.offer(connId);
 		}
 	}
 
@@ -314,7 +322,7 @@ abstract class LspSocket {
 				try {
 					dgramReceive(pack);
 				} catch (IOException e) {
-					e.printStackTrace();
+					return;
 				}
 			}
 		}
@@ -328,14 +336,17 @@ abstract class LspSocket {
 				try {
 					sendNextData();
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					return;
 				}
 			}
 		}
 
 		private void sendNextData() throws InterruptedException {
-			// Obtém o próximo pacote de dados da fila
-			final InternalPack p = outputQueue.take();
+			// Obtém o próximo pacote de dados da fila, se houver.
+			final InternalPack p = outputQueue.poll(1, TimeUnit.SECONDS);
+			if (p == null) {
+				return;
+			}
 
 			// Se já houver uma conexão associada ao pacote, envia-o e encerra
 			if (p.getConnection() != null) {
