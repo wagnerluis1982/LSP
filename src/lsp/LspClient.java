@@ -105,11 +105,17 @@ public class LspClient {
 		}
 
 		private void resendData() {
-			// TODO Auto-generated method stub
+			InternalPack pack = conn.sent();
+			if (pack != null) {
+				lspSocket.dgramSendData(pack);
+			}
 		}
 
 		private void resendAckData() {
-			// TODO Auto-generated method stub
+			short seqNum = conn.receivedSeqNum();
+			if (seqNum != -1) {
+				lspSocket.dgramSendAck(conn, seqNum);
+			}
 		}
 
 		private void sendAck0() {
