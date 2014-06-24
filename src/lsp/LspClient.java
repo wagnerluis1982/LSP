@@ -48,9 +48,15 @@ public class LspClient {
 	/**
 	 * Encerra a conexão.
 	 */
-	public void close() {
-		checkActive();
+	private void close(boolean checked) {
+		if (checked) {
+			checkActive();
+		}
 		this.active = false;
+	}
+
+	public void close() {
+		close(true);
 	}
 
 	private void checkActive() {
@@ -85,7 +91,7 @@ public class LspClient {
 
 		@Override
 		public void doCloseConnection() {
-			close();
+			close(false);
 		}
 
 		private void resendConnect() {
