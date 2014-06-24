@@ -18,6 +18,10 @@ class InternalPack extends Pack {
 		super(pack.getConnId(), pack.getPayload());
 	}
 
+	public InternalPack(short connId, byte[] payload) {
+		super(connId, payload);
+	}
+
 	LspConnection getConnection() {
 		return this.connection;
 	}

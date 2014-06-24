@@ -15,7 +15,12 @@ public class LspClient {
 		SocketAddress sockAddr = new InetSocketAddress(host, port);
 
 		lspSocket = new LspSocketImpl(0);
-		conn = lspSocket.connect(sockAddr, params, new ClientTriggers());
+		try {
+			conn = lspSocket.connect(sockAddr, params, new ClientTriggers());
+		} catch (TimeoutException e) {
+			lspSocket.close();
+			throw e;
+		}
 	}
 
 	/**
@@ -41,7 +46,7 @@ public class LspClient {
 	public void write(byte[] payload) {
 		checkActive();
 
-		InternalPack p = new InternalPack(conn, payload);
+		InternalPack p = new InternalPack(conn.getId(), payload);
 		lspSocket.send(p);
 	}
 
@@ -78,7 +83,11 @@ public class LspClient {
 
 		@Override
 		LspConnection usedConnection(short connId) {
-			return conn;
+			if (conn != null && conn.getId() == connId) {
+				return conn;
+			} else {
+				return null;
+			}
 		}
 	}
 

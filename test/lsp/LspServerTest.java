@@ -6,7 +6,6 @@ import static lsp.TestUtil.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -34,10 +33,10 @@ public class LspServerTest {
 	public void testAcceptingConnection() throws Exception {
 		DatagramSocket sock = new DatagramSocket();
 
-		ShortBuffer buf = connectServer(sock);
-		assertEquals(ACK, buf.get());
-		assertNotEquals(0, buf.get());
-		assertEquals(0, buf.get());
+		ByteBuffer buf = connectServer(sock);
+		assertEquals(ACK, buf.getShort());
+		assertNotEquals(0, buf.getShort());
+		assertEquals(0, buf.getShort());
 	}
 
 	@Test
