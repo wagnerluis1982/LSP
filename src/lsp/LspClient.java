@@ -94,7 +94,6 @@ public class LspClient {
 	private final class ClientTriggers implements ConnectionTriggers {
 		@Override
 		public void doEpochActions() {
-			resendConnect();
 			resendData();
 			resendAckData();
 			sendAck0();
@@ -103,10 +102,6 @@ public class LspClient {
 		@Override
 		public void doCloseConnection() {
 			close(false);
-		}
-
-		private void resendConnect() {
-			// TODO Auto-generated method stub
 		}
 
 		private void resendData() {

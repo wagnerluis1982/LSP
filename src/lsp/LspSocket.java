@@ -97,31 +97,37 @@ abstract class LspSocket {
 		outputQueue.clear();
 	}
 
-	final LspConnection connect(SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers, long timeout) throws TimeoutException {
+	/**
+	 * Tenta estabelecer conexão com um servidor LSP, reenviando solicitação a
+	 * cada época, até completar o limite da época.
+	 */
+	final LspConnection connect(SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers) throws TimeoutException {
 		synchronized (connectExecutor) {
 			// Inicia uma nova tarefa de conexão
 			connTask = new ConnectTask(sockAddr);
 			Future<Short> call = connectExecutor.submit(connTask);
 
 			try {
-				short connId = call.get(timeout, TimeUnit.MILLISECONDS);
-				return new LspConnection(connId, sockAddr, params, triggers);
-			} catch (TimeoutException e) {
-				connTask.ack((short) 0);  // libera a thread
-				throw e;
-			} catch (InterruptedException e) {
-				return null;
-			} catch (ExecutionException e) {
-				throw new RuntimeException(e);
+				int limit = params.getEpochLimit();
+				while (limit > 0) {
+					try {
+						short connId = call.get(params.getEpoch(), TimeUnit.MILLISECONDS);
+						return new LspConnection(connId, sockAddr, params, triggers);
+					} catch (TimeoutException e) {
+						--limit;
+					} catch (InterruptedException e) {
+						return null;
+					} catch (ExecutionException e) {
+						throw new RuntimeException(e);
+					}
+				}
 			} finally {
+				connTask.ack((short) 0);  // libera a thread
 				connTask = null;
 			}
-		}
-	}
 
-	/** Estabelece conexão com um servidor LSP aguardando até 10 segundos */
-	final LspConnection connect(SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers) throws TimeoutException {
-		return connect(sockAddr, params, triggers, 10000);
+			throw new TimeoutException("Servidor " + sockAddr + " não responde");
+		}
 	}
 
 	/**
