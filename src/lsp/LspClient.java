@@ -95,8 +95,7 @@ public class LspClient {
 		@Override
 		public void doEpochActions() {
 			resendData();
-			resendAckData();
-			sendAck0();
+			resendAck();
 		}
 
 		@Override
@@ -111,15 +110,18 @@ public class LspClient {
 			}
 		}
 
-		private void resendAckData() {
+		/*
+		 * Se foi recebida alguma mensagem de dados, então envia o ACK dessa
+		 * mensagem, senão envia ACK(seqNum=0)
+		 */
+		private void resendAck() {
 			short seqNum = conn.receivedSeqNum();
+
 			if (seqNum != -1) {
 				lspSocket.dgramSendAck(conn, seqNum);
+			} else {
+				lspSocket.dgramSendAck(conn, (short) 0);
 			}
-		}
-
-		private void sendAck0() {
-			// TODO Auto-generated method stub
 		}
 	}
 }
