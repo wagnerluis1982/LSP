@@ -135,6 +135,27 @@ public class LspServer {
 		return this.port;
 	}
 
+	private Short newConnId() {
+		synchronized (idCounter) {
+			// Se a quantidade de conexões já é o máximo suportado não vale a
+			// pena pesquisar por um id livre
+			if (connectionPool.size() == 65535) {
+				return null;
+			}
+
+			// Pesquisa por um id livre
+			while (true) {
+				final short id = (short) idCounter.incrementAndGet();
+				if (id == 0) {
+					continue;
+				}
+				if (!connectionPool.containsKey(id)) {
+					return id;
+				}
+			}
+		}
+	}
+
 	private final class LspSocketImpl extends LspSocket {
 		LspSocketImpl(final int port) throws IOException {
 			super(port);
@@ -145,11 +166,6 @@ public class LspServer {
 			return active;
 		}
 
-		/*
-		 * TODO: Considerando que pode haver buracos no contador de ID devido a
-		 * fechamentos da conexão, é preciso solucionar isso verificando antes
-		 * se a posição já existe.
-		 */
 		@Override
 		void dgramReceiveConnect(final SocketAddress sockAddr, final ByteBuffer buf) {
 			// Somente serão aceitos pedidos de conexão bem formados, isto é,
@@ -161,7 +177,12 @@ public class LspServer {
 				// garante não abrir nova conexão se esta já está aberta
 				LspConnection conn = connectedSockets.get(sockId);
 				if (conn == null) {
-					final short newId = (short) idCounter.incrementAndGet();
+					// Verifica se há espaço no pool para mais conexões
+					final Short newId = newConnId();
+					if (newId == null) {
+						return;
+					}
+
 					ServerTriggers triggers = new ServerTriggers();
 
 					// Adicionando a conexão ao pool de conexão
