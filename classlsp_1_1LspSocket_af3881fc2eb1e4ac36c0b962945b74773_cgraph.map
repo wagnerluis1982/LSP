@@ -1,0 +1,5 @@
+<map id="lsp.LspSocket.dgramSendData" name="lsp.LspSocket.dgramSendData">
+<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#a111cf8b4706364135aabd4c1280209ce" title="lsp.LspSocket.dgramSendData" alt="" coords="257,5,460,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1InternalPack.html#a3bdedf152e4822179605799575d6d693" title="lsp.InternalPack.getConnection" alt="" coords="257,59,460,88"/>
+<area shape="rect" id="node7" href="$classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568" title="lsp.Pack.getPayload" alt="" coords="288,112,429,141"/>
+</map>

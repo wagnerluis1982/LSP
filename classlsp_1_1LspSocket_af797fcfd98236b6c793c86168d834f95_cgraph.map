@@ -1,0 +1,6 @@
+<map id="lsp.LspSocket.dgramReceiveData" name="lsp.LspSocket.dgramReceiveData">
+<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#a080c414431aadd88d42a2588b465fa26" title="Obtém o objeto LspConnection em uso. " alt="" coords="275,5,477,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1LspConnection.html#af5f74e6664ed98e5738cfc57ba733647" title="lsp.LspConnection.isClosed" alt="" coords="284,59,468,88"/>
+<area shape="rect" id="node7" href="$classlsp_1_1LspSocket.html#ad95f2e86db9705071b6c8e8c2c6b24e4" title="Helper para obter um array de bytes com o resto do ByteBuffer. " alt="" coords="299,112,453,141"/>
+<area shape="rect" id="node9" href="$classlsp_1_1LspSocket.html#a78fd49be8d4bccd62b51d032eeb740a0" title="lsp.LspSocket.dgramSendAck" alt="" coords="277,165,475,195"/>
+</map>

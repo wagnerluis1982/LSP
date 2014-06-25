@@ -6,6 +6,8 @@ var searchData=
   ['getepochlimit',['getEpochLimit',['../classlsp_1_1LspParams.html#a03a814849b3599a918b171ca97aba3fe',1,'lsp::LspParams']]],
   ['getid',['getId',['../classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236',1,'lsp::LspConnection']]],
   ['getpayload',['getPayload',['../classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568',1,'lsp::Pack']]],
+  ['getport',['getPort',['../classlsp_1_1LspServer.html#ad5c3a0c608b23a90c9c346a20c35bb8f',1,'lsp.LspServer.getPort()'],['../classlsp_1_1LspSocket.html#a659ae35131e8d2c800fedda9a52d43a2',1,'lsp.LspSocket.getPort()']]],
+  ['getsendmissing',['getSendMissing',['../classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35',1,'lsp::LspConnection']]],
   ['getseqnum',['getSeqNum',['../classlsp_1_1InternalPack.html#a168af8de0bf028e718017fc3af550bc8',1,'lsp::InternalPack']]],
   ['getsockaddr',['getSockAddr',['../classlsp_1_1LspConnection.html#ac032cd5f729dca463cd4befd9b941eb3',1,'lsp::LspConnection']]],
   ['getsockid',['getSockId',['../classlsp_1_1LspConnection.html#a49e437af427f0aac30786f4473387535',1,'lsp::LspConnection']]]

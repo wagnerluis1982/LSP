@@ -1,0 +1,4 @@
+<map id="lsp.LspConnection.getSendMissing" name="lsp.LspConnection.getSendMissing">
+<area shape="rect" id="node3" href="$classlsp_1_1LspClient.html#a9059f8e3b0bc365b3c52b091c944732a" title="Encerra a conexão. " alt="" coords="255,5,388,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1LspServer.html#a80163b395c48f3ac974c9c5b7d5ab755" title="Encerra uma conexão com o identificador connId. " alt="" coords="237,59,405,88"/>
+</map>
