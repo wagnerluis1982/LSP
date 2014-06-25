@@ -126,17 +126,16 @@ class LspConnection {
 	 * @return Pacote com um novo número de sequência ou null se já há um pacote
 	 *         aguardando ACK
 	 */
-	boolean sent(InternalPack pack) {
+	InternalPack sent(Pack pack) {
 		synchronized (lock) {
+			InternalPack p = new InternalPack(this, ++seqNum, pack.getPayload());
 			if (this.dataMessage == null) {
-				pack.setConnection(this);
-				pack.setSeqNum(++seqNum);
-				this.dataMessage = pack;
-				return true;
+				this.dataMessage = p;
+				return p;
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 	/** Informa que o ACK do número de sequência informado foi recebido */

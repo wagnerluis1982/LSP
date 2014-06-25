@@ -70,7 +70,7 @@ public class LspServer {
 			throw new ClosedConnectionException(pack.getConnId());
 		}
 
-		lspSocket.send(new InternalPack(pack));
+		lspSocket.send(pack);
 		conn.incSendMissing();
 	}
 
@@ -110,6 +110,11 @@ public class LspServer {
 		connectedSockets.remove(conn.getSockId());
 	}
 
+	/*
+	 * TODO closeAll deve retornar depois que, para cada cliente, qualquer
+	 * mensagem pendente para o cliente tenha sido enviada e reconhecida ou a
+	 * conexão com o cliente tenha sido perdida.
+	 */
 	/**
 	 * Encerra todas as conexões ativas e a atividade do servidor. Isso inclui o
 	 * encerramento do processador de entradas.

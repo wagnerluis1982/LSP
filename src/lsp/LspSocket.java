@@ -35,7 +35,7 @@ abstract class LspSocket {
 
 	/* Filas de entrada e saída */
 	private final BlockingQueue<InternalPack> inputQueue;
-	private final BlockingDeque<InternalPack> outputQueue;
+	private final BlockingDeque<Pack> outputQueue;
 
 	/* Lock para garantir que apenas uma thread envie pacotes */
 	private final Object sendLock = new Object();
@@ -284,7 +284,7 @@ abstract class LspSocket {
 	}
 
 	/** Insere um pacote na fila de saída */
-	public void send(InternalPack p) {
+	public void send(Pack p) {
 		if (!outputQueue.offer(p))
 			throw new IllegalStateException("Fila de saída cheia");;
 	}
@@ -349,14 +349,8 @@ abstract class LspSocket {
 
 		private void sendNextData() throws InterruptedException {
 			// Obtém o próximo pacote de dados da fila, se houver.
-			final InternalPack p = outputQueue.poll(1, TimeUnit.SECONDS);
+			final Pack p = outputQueue.poll(1, TimeUnit.SECONDS);
 			if (p == null) {
-				return;
-			}
-
-			// Se já houver uma conexão associada ao pacote, envia-o e encerra
-			if (p.getConnection() != null) {
-				dgramSendData(p);
 				return;
 			}
 
@@ -367,15 +361,16 @@ abstract class LspSocket {
 			}
 
 			// Tenta associar o pacote à conexão. Se sucesso, envia esse pacote
-			if (conn.sent(p)) {
-				dgramSendData(p);
+			InternalPack sent = conn.sent(p);
+			if (sent != null) {
+				dgramSendData(sent);
 				return;
 			}
 
 			// Se não foi possível associar à conexão (já havia outro pacote em
 			// espera de um ACK) então devolve o pacote à fila (segunda posição)
 			synchronized (outputQueue) {
-				InternalPack first = outputQueue.poll();
+				Pack first = outputQueue.poll();
 				outputQueue.offerFirst(p);
 				if (first != null) {
 					outputQueue.offerFirst(first);

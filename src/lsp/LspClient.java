@@ -46,7 +46,7 @@ public class LspClient {
 	public void write(byte[] payload) {
 		checkActive();
 
-		InternalPack p = new InternalPack(conn.getId(), payload);
+		Pack p = new Pack(conn.getId(), payload);
 		lspSocket.send(p);
 		conn.incSendMissing();
 	}
