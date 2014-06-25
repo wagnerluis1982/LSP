@@ -73,6 +73,8 @@ public class LspClient {
 			try {
 				Thread.sleep(params.getEpoch());
 			} catch (InterruptedException e) {
+				realClose();
+				return;
 			}
 		}
 	}

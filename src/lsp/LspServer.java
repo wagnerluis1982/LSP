@@ -99,6 +99,15 @@ public class LspServer {
 		conn.close(false);
 		if (conn.getSendMissing() == 0) {
 			realCloseConn(connId, conn);
+			return;
+		}
+
+		while (!conn.isInterrupted()) {
+			try {
+				Thread.sleep(params.getEpoch());
+			} catch (InterruptedException e) {
+				return;
+			}
 		}
 	}
 
@@ -117,7 +126,7 @@ public class LspServer {
 		this.markClosed = true;
 
 		// Marca todas as conexões como fechadas (em paralelo)
-		for (final LspConnection conn : this.connectionPool.values()) {
+		for (final LspConnection conn : connectionPool.values()) {
 			new Thread() {
 				public void run() {
 					conn.close(false);
@@ -130,6 +139,15 @@ public class LspServer {
 			try {
 				Thread.sleep(params.getEpoch());
 			} catch (InterruptedException e) {
+				// Se ocorrer algum erro, realmente fecha todas as conexões
+				for (final LspConnection conn : connectionPool.values()) {
+					new Thread() {
+						public void run() {
+							conn.close();
+						};
+					}.start();
+				}
+				break;
 			}
 		}
 
