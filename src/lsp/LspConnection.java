@@ -15,6 +15,7 @@ class LspConnection {
 	private final ConnectionTriggers triggers;
 
 	private volatile boolean closed;
+	private volatile boolean markClosed;
 	private volatile short seqNum;
 	private volatile long receivedTime;
 	private volatile short receivedSeqNum;
@@ -183,9 +184,25 @@ class LspConnection {
 		this.receivedSeqNum = seqNum;
 	}
 
+	boolean isInterrupted() {
+		return this.closed;
+	}
+
+	boolean isClosed() {
+		return this.closed || this.markClosed;
+	}
+
 	void close() {
-		this.statusThread.interrupt();
-		this.closed = true;
+		close(true);
+	}
+
+	void close(boolean interrupt) {
+		if (interrupt) {
+			this.statusThread.interrupt();
+			this.closed = true;
+		} else {
+			this.markClosed = true;
+		}
 	}
 
 	/**

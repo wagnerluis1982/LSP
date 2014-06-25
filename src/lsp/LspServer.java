@@ -90,15 +90,24 @@ public class LspServer {
 		 */
 		checkActive();
 
-		// Encerra a conexão formalmente e remove da lista de conexões e do
-		// conjunto de sockets.
-		LspConnection conn = connectionPool.remove(connId);
-		if (conn != null) {
-			conn.close();
-			connectedSockets.remove(conn.getSockId());
-		} else {
+		final LspConnection conn = connectionPool.get(connId);
+		if (conn == null) {
 			throw new ClosedConnectionException(connId);
 		}
+
+		// Marca a conexão como fechada e se não há mensagens para serem
+		// enviadas, encerra a conexão formalmente e remove da lista de conexões
+		// e do conjunto de sockets.
+		conn.close(false);
+		if (conn.getSendMissing() == 0) {
+			realCloseConn(connId, conn);
+		}
+	}
+
+	private void realCloseConn(short connId, final LspConnection conn) {
+		conn.close();
+		connectionPool.remove(connId);
+		connectedSockets.remove(conn.getSockId());
 	}
 
 	/**
@@ -219,7 +228,7 @@ public class LspServer {
 
 		@Override
 		public void doCloseConnection() {
-			closeConn(bindedConn.getId());
+			realCloseConn(bindedConn.getId(), bindedConn);
 		}
 	}
 }
