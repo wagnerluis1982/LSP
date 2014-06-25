@@ -64,14 +64,14 @@ public class LspServer {
 	 */
 	public void write(Pack pack) {
 		checkActive();
-		final LspConnection conn = connectionPool.get(pack.getConnId());
 
+		final LspConnection conn = connectionPool.get(pack.getConnId());
 		if (conn == null) {
 			throw new ClosedConnectionException(pack.getConnId());
 		}
 
-		InternalPack p = new InternalPack(pack);
-		lspSocket.send(p);
+		lspSocket.send(new InternalPack(pack));
+		conn.incSendMissing();
 	}
 
 	/**

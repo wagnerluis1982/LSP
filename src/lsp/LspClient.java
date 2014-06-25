@@ -48,6 +48,7 @@ public class LspClient {
 
 		InternalPack p = new InternalPack(conn.getId(), payload);
 		lspSocket.send(p);
+		conn.incSendMissing();
 	}
 
 	/**

@@ -2,6 +2,7 @@ package lsp;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Representa uma conexão LSP.
@@ -17,7 +18,8 @@ class LspConnection {
 	private volatile short seqNum;
 	private volatile long receivedTime;
 	private volatile short receivedSeqNum;
-	private final Object lock = new Object();;
+	private final AtomicInteger sendMissing;
+	private final Object lock = new Object();
 
 	private volatile InternalPack dataMessage;
 	private final SocketAddress sockAddr;
@@ -47,6 +49,7 @@ class LspConnection {
 		this.seqNum = 0;
 		this.receivedTime = -1;
 		this.receivedSeqNum = -1;
+		this.sendMissing = new AtomicInteger(0);
 
 		this.statusThread = new Thread(new StatusChecker(params));
 		this.statusThread.start();
@@ -95,6 +98,22 @@ class LspConnection {
 		return this.sockAddr;
 	}
 
+	/**
+	 * Aumenta em um o número de mensagens na fila, mas faltam enviar. Isso é
+	 * controlado externamente.
+	 */
+	void incSendMissing() {
+		this.sendMissing.incrementAndGet();
+	}
+
+	/**
+	 * Número de mensagens na fila, mas faltam enviar. Valor controlado
+	 * externamente.
+	 */
+	int getSendMissing() {
+		return this.sendMissing.intValue();
+	}
+
 	/** Obtém a última mensagem de dados enviada (aguardando ACK) */
 	InternalPack sent() {
 		return this.dataMessage;
@@ -129,6 +148,9 @@ class LspConnection {
 			if (this.seqNum == seqNum) {
 				this.dataMessage = null;
 			}
+
+			// Diminuição da quantidade de mensagens faltando entregar.
+			this.sendMissing.decrementAndGet();
 		}
 	}
 
