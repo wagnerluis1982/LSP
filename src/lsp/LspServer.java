@@ -192,33 +192,13 @@ public class LspServer {
 
 		@Override
 		public void doEpochActions() {
-			resendData();
-			resendAck();
+			Helpers.resendData(lspSocket, bindedConn);
+			Helpers.resendAck(lspSocket, bindedConn);
 		}
 
 		@Override
 		public void doCloseConnection() {
 			closeConn(bindedConn.getId());
-		}
-
-		private void resendData() {
-			InternalPack pack = bindedConn.sent();
-			if (pack != null) {
-				lspSocket.dgramSendData(pack);
-			}
-		}
-
-		/*
-		 * Se foi recebida alguma mensagem de dados, então envia o ACK dessa
-		 * mensagem, senão envia envia ACK(seqNum=0)
-		 */
-		private void resendAck() {
-			short seqNum = bindedConn.receivedSeqNum();
-			if (seqNum != -1) {
-				lspSocket.dgramSendAck(bindedConn, seqNum);
-			} else {
-				lspSocket.dgramSendAck(bindedConn, (short) 0);
-			}
 		}
 	}
 }

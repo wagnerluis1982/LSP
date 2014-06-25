@@ -94,34 +94,13 @@ public class LspClient {
 	private final class ClientTriggers implements ConnectionTriggers {
 		@Override
 		public void doEpochActions() {
-			resendData();
-			resendAck();
+			Helpers.resendData(lspSocket, conn);
+			Helpers.resendAck(lspSocket, conn);
 		}
 
 		@Override
 		public void doCloseConnection() {
 			close(false);
-		}
-
-		private void resendData() {
-			InternalPack pack = conn.sent();
-			if (pack != null) {
-				lspSocket.dgramSendData(pack);
-			}
-		}
-
-		/*
-		 * Se foi recebida alguma mensagem de dados, então envia o ACK dessa
-		 * mensagem, senão envia ACK(seqNum=0)
-		 */
-		private void resendAck() {
-			short seqNum = conn.receivedSeqNum();
-
-			if (seqNum != -1) {
-				lspSocket.dgramSendAck(conn, seqNum);
-			} else {
-				lspSocket.dgramSendAck(conn, (short) 0);
-			}
 		}
 	}
 }
