@@ -1,3 +1,4 @@
 <map id="lsp.LspServer.closeConn" name="lsp.LspServer.closeConn">
-<area shape="rect" id="node3" href="$classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35" title="Número de mensagens na fila, mas faltam enviar. " alt="" coords="223,5,404,51"/>
+<area shape="rect" id="node3" href="$classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35" title="Número de mensagens na fila, mas faltam enviar. " alt="" coords="235,5,416,51"/>
+<area shape="rect" id="node5" href="$classlsp_1_1LspConnection.html#a3396395dd294328384db2e9c726117e2" title="lsp.LspConnection.isInterrupted" alt="" coords="223,75,428,104"/>
 </map>

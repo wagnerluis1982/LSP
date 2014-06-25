@@ -196,9 +196,11 @@ Métodos Públicos</h2></td></tr>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <span class="keywordflow">try</span> {</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                Thread.sleep(params.getEpoch());</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            } <span class="keywordflow">catch</span> (InterruptedException e) {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                realClose();</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            }</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
 <div class="ttc" id="classlsp_1_1LspConnection_html_ae87a1bdd8b1ac33741bc7d968b6e0a35"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35">lsp.LspConnection.getSendMissing</a></div><div class="ttdeci">int getSendMissing()</div><div class="ttdoc">Número de mensagens na fila, mas faltam enviar. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00114">LspConnection.java:114</a></div></div>
 <div class="ttc" id="classlsp_1_1LspConnection_html_a3396395dd294328384db2e9c726117e2"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a3396395dd294328384db2e9c726117e2">lsp.LspConnection.isInterrupted</a></div><div class="ttdeci">boolean isInterrupted()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00186">LspConnection.java:186</a></div></div>
 </div><!-- fragment -->
