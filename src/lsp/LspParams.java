@@ -1,8 +1,8 @@
 package lsp;
 
 public class LspParams {
-	private int epoch;
-	private int epochLimit;
+	private final int epoch;
+	private final int epochLimit;
 
 	public LspParams(int epoch, int epochLimit) {
 		this.epoch = epoch;

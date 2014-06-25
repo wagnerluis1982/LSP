@@ -2,7 +2,7 @@ package lsp;
 
 public class Pack {
 	private short connId;
-	private byte[] payload;
+	private final byte[] payload;
 
 	public Pack(short connId, byte[] payload) {
 		this.connId = connId;
