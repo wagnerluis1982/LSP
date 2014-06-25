@@ -42,11 +42,15 @@ abstract class LspSocket {
 
 	/* Usados no pedido de conexão a um servidor LSP partindo desse socket */
 	private final ExecutorService connectExecutor;
-	private ConnectTask connTask;
+	private volatile ConnectTask connTask;
 
 	/* Socket de comunicação em uso */
 	private final DatagramSocket socket;
 	private final int port;
+
+	/* Threads processando entradas e saídas */
+	private final Thread inputThread;
+	private final Thread outputThread;
 
 	/**
 	 * Inicia um LspSocket
@@ -65,9 +69,10 @@ abstract class LspSocket {
 		// Inicializa atributos para uso na conexão a um servidor LSP
 		this.connectExecutor = Executors.newSingleThreadExecutor();
 
-		// Inicia as threads
-		new Thread(new InputTask()).start();
-		new Thread(new OutputTask()).start();
+		inputThread = new Thread(new InputTask());
+		inputThread.start();
+		outputThread = new Thread(new OutputTask());
+		outputThread.start();
 	}
 
 	/**
@@ -90,7 +95,11 @@ abstract class LspSocket {
 
 	final void close() {
 		socket.close();
+
+		// Para todas as threads
 		connectExecutor.shutdown();
+		inputThread.interrupt();
+		outputThread.interrupt();
 
 		// Limpeza de memória
 		inputQueue.clear();
