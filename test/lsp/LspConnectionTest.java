@@ -43,7 +43,7 @@ public class LspConnectionTest {
 		conn.received();
 
 		// Ao finalizar...
-		Thread.sleep(8);
+		Thread.sleep(9);
 		assertEquals(0, epoch);	// garante não haver mais decrementos
 		assertTrue(closed);		// garante que a "conexão" foi fechada
 	}

@@ -30,6 +30,10 @@ abstract class LspSocket {
 
 	private static final byte[] PAYLOAD_NIL = new byte[0];
 
+	private static final short LEN_PACKAGE = 1024;
+	private static final byte LEN_HEADER = 6;
+	private static final short LEN_PAYLOAD = LEN_PACKAGE - LEN_HEADER;
+
 	/** Capacidade das filas de entrada e saída em termos de pacotes de 1KB */
 	private static final byte QUEUE_ZISE = 50;
 
@@ -219,7 +223,7 @@ abstract class LspSocket {
 
 	private void dgramSend(final SocketAddress sockAddr, final short msgType,
 			final short connId, final short seqNum, final byte[] payload) {
-		ByteBuffer buf = ByteBuffer.allocate(6 + payload.length);
+		ByteBuffer buf = ByteBuffer.allocate(LEN_HEADER + payload.length);
 		buf.putShort(msgType).putShort(connId).putShort(seqNum).put(payload);
 
 		DatagramPacket packet = new DatagramPacket(buf.array(), buf.capacity());
@@ -239,6 +243,10 @@ abstract class LspSocket {
 	}
 
 	final void dgramSendData(final LspConnection conn, final short seqNum, final byte[] payload) {
+		if (payload.length > LEN_PAYLOAD) {
+			throw new IllegalArgumentException("Payload não pode ser maior que " + LEN_PAYLOAD);
+		}
+
 		dgramSend(DATA, conn, seqNum, payload);
 	}
 
@@ -296,8 +304,13 @@ abstract class LspSocket {
 
 	/** Insere um pacote na fila de saída */
 	public void send(Pack p) {
-		if (!outputQueue.offer(p))
-			throw new IllegalStateException("Fila de saída cheia");;
+		if (p.getPayload().length > LEN_PAYLOAD) {
+			throw new IllegalArgumentException("Payload não pode ser maior que " + LEN_PAYLOAD);
+		}
+
+		if (!outputQueue.offer(p)) {
+			throw new IllegalStateException("Fila de saída cheia");
+		}
 	}
 
 	int getPort() {
@@ -331,7 +344,7 @@ abstract class LspSocket {
 		@Override
 		public void run() {
 			// Configuração do pacote de entrada
-			byte[] bs = new byte[1024];
+			byte[] bs = new byte[LEN_PACKAGE];
 			DatagramPacket pack = new DatagramPacket(bs, bs.length);
 
 			// Recebe pacotes até o servidor ser encerrado
