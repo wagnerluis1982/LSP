@@ -27,6 +27,7 @@ public class LspServer {
 	// Variáveis de controle do servidor
 	private final AtomicInteger idCounter = new AtomicInteger();
 	private volatile boolean active = true;
+	private volatile boolean markClosed;
 
 	/* Parâmetros do servidor */
 	private final LspParams params;
@@ -34,6 +35,7 @@ public class LspServer {
 	/* Socket LSP */
 	private final LspSocket lspSocket;
 	private final int port;
+
 
 	public LspServer(int port, LspParams params) throws IOException {
 		this.lspSocket = new LspSocketImpl(port);
@@ -84,10 +86,6 @@ public class LspServer {
 	 *             se a conexão estiver encerrada.
 	 */
 	public void closeConn(short connId) {
-		/* FIXME: O encerramento da conexão deve ser em duas partes
-		 *     1) Bloquear a conexão para recebimentos
-		 *     2) Aguardar a fila de saída da conexão se esvaziar
-		 */
 		checkActive();
 
 		final LspConnection conn = connectionPool.get(connId);
@@ -110,29 +108,33 @@ public class LspServer {
 		connectedSockets.remove(conn.getSockId());
 	}
 
-	/*
-	 * TODO closeAll deve retornar depois que, para cada cliente, qualquer
-	 * mensagem pendente para o cliente tenha sido enviada e reconhecida ou a
-	 * conexão com o cliente tenha sido perdida.
-	 */
 	/**
 	 * Encerra todas as conexões ativas e a atividade do servidor. Isso inclui o
 	 * encerramento do processador de entradas.
 	 */
 	public void closeAll() {
-		// Marca servidor como desligado
-		this.active = false;
+		// Marca servidor como fechado para novas entradas
+		this.markClosed = true;
 
-		// Fecha todas as conexões (em paralelo)
+		// Marca todas as conexões como fechadas (em paralelo)
 		for (final LspConnection conn : this.connectionPool.values()) {
 			new Thread() {
 				public void run() {
-					conn.close();
+					conn.close(false);
 				};
 			}.start();
 		}
 
-		// Fecha socket lsp
+		// Aguarda o pool de conexão se esvaziar
+		while (!connectionPool.isEmpty()) {
+			try {
+				Thread.sleep(params.getEpoch());
+			} catch (InterruptedException e) {
+			}
+		}
+
+		// Marca servidor como inativo e fecha socket lsp
+		this.active = false;
 		this.lspSocket.close();
 
 		// Limpeza de memória
@@ -141,7 +143,7 @@ public class LspServer {
 	}
 
 	private void checkActive() {
-		if (!active)
+		if (!active || markClosed)
 			throw new ClosedConnectionException();
 	}
 

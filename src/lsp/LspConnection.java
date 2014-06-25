@@ -227,6 +227,12 @@ class LspConnection {
 			// Monitora a conexão continuamente até que o limite de épocas seja
 			// atingido ou a conexão seja fechada
 			while (!closed && limit-- > 0) {
+				// ..ou quando a conexão está no estado de encerramento, até que
+				// não haja mais mensagens para enviar.
+				if (markClosed && sendMissing.get() <= 0) {
+					break;
+				}
+
 				try {
 					Thread.sleep(epoch);
 				} catch (InterruptedException e) {

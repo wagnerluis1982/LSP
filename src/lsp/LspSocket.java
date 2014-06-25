@@ -166,7 +166,9 @@ abstract class LspSocket {
 	/** Tratamento de um pacote do tipo DATA recebido */
 	void dgramReceiveData(final SocketAddress sockAddr, final ByteBuffer buf) {
 		LspConnection conn = usedConnection(sockAddr, buf.getShort());
-		if (conn != null) {
+
+		// Só continua se a conexão é válida e não estiver fechada
+		if (conn != null && !conn.isClosed()) {
 			short seqNum = buf.getShort();
 			byte[] payload = payload(buf);
 			InternalPack pack = new InternalPack(conn, seqNum, payload);
