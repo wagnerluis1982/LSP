@@ -1,0 +1,5 @@
+class ClosedConnectionException
+!!!128002.java!!!	ClosedConnectionException(in connId : short)
+		super("Conexão id=" + connId + " não está aberta");
+!!!128130.java!!!	ClosedConnectionException()
+		super();

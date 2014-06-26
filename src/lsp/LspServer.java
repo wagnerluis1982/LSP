@@ -36,7 +36,6 @@ public class LspServer {
 	private final LspSocket lspSocket;
 	private final int port;
 
-
 	public LspServer(int port, LspParams params) throws IOException {
 		this.lspSocket = new LspSocketImpl(port);
 		this.port = this.lspSocket.getPort();

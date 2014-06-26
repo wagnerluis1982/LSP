@@ -1,0 +1,6 @@
+class ClientTriggers
+!!!134530.java!!!	doEpochActions() : void
+			Helpers.resendData(lspSocket, conn);
+			Helpers.resendAck(lspSocket, conn);
+!!!134658.java!!!	doCloseConnection() : void
+			realClose();

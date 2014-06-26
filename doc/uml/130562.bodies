@@ -1,0 +1,6 @@
+class ServerTriggers
+!!!139394.java!!!	doEpochActions() : void
+			Helpers.resendData(lspSocket, bindedConn);
+			Helpers.resendAck(lspSocket, bindedConn);
+!!!139522.java!!!	doCloseConnection() : void
+			realCloseConn(bindedConn.getId(), bindedConn);

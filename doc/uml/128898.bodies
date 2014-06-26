@@ -1,0 +1,10 @@
+class Pack
+!!!128898.java!!!	Pack(in connId : short, inout payload : byte)
+		this.connId = connId;
+		this.payload = payload;
+!!!129026.java!!!	getConnId() : short
+		return connId;
+!!!129154.java!!!	setConnId(in connId : short) : void
+		this.connId = connId;
+!!!129282.java!!!	getPayload() : byte
+		return payload;

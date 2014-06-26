@@ -1,0 +1,11 @@
+class LspSocketImpl
+!!!134146.java!!!	LspSocketImpl(in port : int)
+			super(port);
+!!!134274.java!!!	isActive() : boolean
+			return active;
+!!!134402.java!!!	usedConnection(in connId : short) : LspConnection
+			if (conn != null && conn.getId() == connId) {
+				return conn;
+			} else {
+				return null;
+			}

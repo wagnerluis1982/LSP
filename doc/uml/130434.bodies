@@ -1,0 +1,41 @@
+class LspSocketImpl
+!!!138882.java!!!	LspSocketImpl(in port : int)
+			super(port);
+!!!139010.java!!!	isActive() : boolean
+			return active;
+!!!139138.java!!!	dgramReceiveConnect(in sockAddr : SocketAddress, in buf : ByteBuffer) : void
+			// Somente serão aceitos pedidos de conexão bem formados, isto é,
+			// aqueles em que Connection ID e Sequence Number são iguais a zero
+			if (buf.getInt() == 0) {
+				final long sockId = LspConnection.uniqueSockId(sockAddr);
+
+				// A abertura de novas conexões é feita a seguir. A condição
+				// garante não abrir nova conexão se esta já está aberta
+				LspConnection conn = connectedSockets.get(sockId);
+				if (conn == null) {
+					// Verifica se há espaço no pool para mais conexões
+					final Short newId = newConnId();
+					if (newId == null) {
+						return;
+					}
+
+					ServerTriggers triggers = new ServerTriggers();
+
+					// Adicionando a conexão ao pool de conexão
+					conn = new LspConnection(newId, sockId, sockAddr, params, triggers);
+					connectionPool.put(newId, conn);
+					connectedSockets.put(sockId, conn);
+					dgramSendAck(conn, (short) 0);
+
+					// Adicionando referência da conexão associada a triggers
+					triggers.bindedConn = conn;
+				}
+
+				// Mesmo recebendo o pedido de conexão do mesmo socket remoto,
+				// deve ser avisado que a conexão recebeu uma mensagem.
+				else {
+					conn.received();
+				}
+			}
+!!!139266.java!!!	usedConnection(in connId : short) : LspConnection
+			return connectionPool.get(connId);

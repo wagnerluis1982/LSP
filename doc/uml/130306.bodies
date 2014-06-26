@@ -1,0 +1,107 @@
+class LspServer
+!!!137730.java!!!	LspServer(in port : int, inout params : LspParams)
+		this.lspSocket = new LspSocketImpl(port);
+		this.port = this.lspSocket.getPort();
+		this.params = params;
+!!!137858.java!!!	read() : Pack
+		checkActive();
+		return lspSocket.receive();
+!!!137986.java!!!	write(inout pack : Pack) : void
+		checkActive();
+
+		final LspConnection conn = connectionPool.get(pack.getConnId());
+		if (conn == null) {
+			throw new ClosedConnectionException(pack.getConnId());
+		}
+
+		lspSocket.send(pack);
+		conn.incSendMissing();
+!!!138114.java!!!	closeConn(in connId : short) : void
+		checkActive();
+
+		final LspConnection conn = connectionPool.get(connId);
+		if (conn == null) {
+			throw new ClosedConnectionException(connId);
+		}
+
+		// Marca a conexão como fechada e se não há mensagens para serem
+		// enviadas, encerra a conexão formalmente e remove da lista de conexões
+		// e do conjunto de sockets.
+		conn.close(false);
+		if (conn.getSendMissing() == 0) {
+			realCloseConn(connId, conn);
+			return;
+		}
+
+		while (!conn.isInterrupted()) {
+			try {
+				Thread.sleep(params.getEpoch());
+			} catch (InterruptedException e) {
+				return;
+			}
+		}
+!!!138242.java!!!	realCloseConn(in connId : short, in conn : LspConnection) : void
+		conn.close();
+		connectionPool.remove(connId);
+		connectedSockets.remove(conn.getSockId());
+!!!138370.java!!!	closeAll() : void
+		// Marca servidor como fechado para novas entradas
+		this.markClosed = true;
+
+		// Marca todas as conexões como fechadas (em paralelo)
+		for (final LspConnection conn : connectionPool.values()) {
+			new Thread() {
+				public void run() {
+					conn.close(false);
+				};
+			}.start();
+		}
+
+		// Aguarda o pool de conexão se esvaziar
+		while (!connectionPool.isEmpty()) {
+			try {
+				Thread.sleep(params.getEpoch());
+			} catch (InterruptedException e) {
+				// Se ocorrer algum erro, realmente fecha todas as conexões
+				for (final LspConnection conn : connectionPool.values()) {
+					new Thread() {
+						public void run() {
+							conn.close();
+						};
+					}.start();
+				}
+				break;
+			}
+		}
+
+		// Marca servidor como inativo e fecha socket lsp
+		this.active = false;
+		this.lspSocket.close();
+
+		// Limpeza de memória
+		this.connectionPool.clear();
+		this.connectedSockets.clear();
+!!!138498.java!!!	checkActive() : void
+		if (!active || markClosed)
+			throw new ClosedConnectionException();
+!!!138626.java!!!	getPort() : int
+		return this.port;
+!!!138754.java!!!	newConnId() : Short
+		synchronized (idCounter) {
+			// Se a quantidade de conexões já é o máximo suportado não vale a
+			// pena pesquisar por um id livre
+			if (connectionPool.size() == 65535) {
+				return null;
+			}
+
+			// Pesquisa por um id livre
+			while (true) {
+				final short id = (short) idCounter.incrementAndGet();
+				if (id == 0) {
+					continue;
+				}
+				if (!connectionPool.containsKey(id)) {
+					return id;
+				}
+			}
+		}

@@ -1,0 +1,14 @@
+class InputTask
+!!!133762.java!!!	run() : void
+			// Configuração do pacote de entrada
+			byte[] bs = new byte[LEN_PACKAGE];
+			DatagramPacket pack = new DatagramPacket(bs, bs.length);
+
+			// Recebe pacotes até o servidor ser encerrado
+			while (isActive()) {
+				try {
+					dgramReceive(pack);
+				} catch (IOException e) {
+					return;
+				}
+			}

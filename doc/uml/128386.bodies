@@ -1,0 +1,13 @@
+class Helpers
+!!!128642.java!!!	resendData(in sock : LspSocket, in conn : LspConnection) : void
+			InternalPack pack = conn.sent();
+			if (pack != null) {
+				sock.dgramSendData(pack);
+			}
+!!!128770.java!!!	resendAck(in sock : LspSocket, in conn : LspConnection) : void
+			short seqNum = conn.receivedSeqNum();
+			if (seqNum != -1) {
+				sock.dgramSendAck(conn, seqNum);
+			} else {
+				sock.dgramSendAck(conn, (short) 0);
+			}

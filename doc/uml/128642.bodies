@@ -1,0 +1,81 @@
+class LspConnection
+!!!134786.java!!!	LspConnection(in id : short, in sockId : long, inout sockAddr : SocketAddress, inout params : LspParams, inout triggers : ConnectionTriggers)
+		if (sockAddr == null || params == null)
+			throw new NullPointerException("Nenhum parâmetro pode ser nulo");
+
+		this.id = id;
+		this.sockId = sockId;
+		this.sockAddr = sockAddr;
+		this.triggers = triggers;
+		this.closed = false;
+		this.seqNum = 0;
+		this.receivedTime = -1;
+		this.receivedSeqNum = -1;
+		this.sendMissing = new AtomicInteger(0);
+
+		this.statusThread = new Thread(new StatusChecker(params));
+		this.statusThread.start();
+!!!134914.java!!!	LspConnection(in id : short, inout sockAddr : SocketAddress, inout params : LspParams, inout triggers : ConnectionTriggers)
+		this(id, uniqueSockId(sockAddr), sockAddr, params, triggers);
+!!!135042.java!!!	getId() : short
+		return this.id;
+!!!135170.java!!!	uniqueSockId(inout sockAddr : SocketAddress) : long
+		final InetSocketAddress addr = (InetSocketAddress) sockAddr;
+		final int ip = addr.getAddress().hashCode();
+		final int port = addr.getPort();
+		return (ip & 0xffff_ffffL) << 16 | (short) port;
+!!!135298.java!!!	getSockId() : long
+		return this.sockId;
+!!!135426.java!!!	getSockAddr() : SocketAddress
+		return this.sockAddr;
+!!!135554.java!!!	incSendMissing() : void
+		this.sendMissing.incrementAndGet();
+!!!135682.java!!!	getSendMissing() : int
+		return this.sendMissing.intValue();
+!!!135810.java!!!	sent() : InternalPack
+		return this.dataMessage;
+!!!135938.java!!!	sent(inout pack : Pack) : InternalPack
+		synchronized (lock) {
+			InternalPack p = new InternalPack(this, ++seqNum, pack.getPayload());
+			if (this.dataMessage == null) {
+				this.dataMessage = p;
+				return p;
+			}
+		}
+
+		return null;
+!!!136066.java!!!	ack(in seqNum : short) : void
+		// Atualiza o momento de recebimento
+		received();
+
+		synchronized (lock) {
+			// Marca dados como recebidos, se o número de sequência é igual ao atual
+			if (this.seqNum == seqNum) {
+				this.dataMessage = null;
+			}
+
+			// Diminuição da quantidade de mensagens faltando entregar.
+			this.sendMissing.decrementAndGet();
+		}
+!!!136194.java!!!	receivedSeqNum() : short
+		return receivedSeqNum;
+!!!136322.java!!!	received() : void
+		this.receivedTime = System.currentTimeMillis();
+!!!136450.java!!!	received(in seqNum : short) : void
+		// Atualiza o momento de recebimento
+		received();
+		// Altera o número de sequência atual
+		this.receivedSeqNum = seqNum;
+!!!136578.java!!!	isInterrupted() : boolean
+		return this.closed;
+!!!136706.java!!!	isClosed() : boolean
+		return this.closed || this.markClosed;
+!!!136834.java!!!	close() : void
+		close(true);
+!!!136962.java!!!	close(inout interrupt : boolean) : void
+		if (interrupt) {
+			this.statusThread.interrupt();
+			this.closed = true;
+		} else {
+			this.markClosed = true;
+		}

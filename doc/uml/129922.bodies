@@ -1,0 +1,39 @@
+class OutputTask
+!!!133890.java!!!	run() : void
+			// Envia pacotes até o servidor ser encerrado
+			while (isActive()) {
+				try {
+					sendNextData();
+				} catch (InterruptedException e) {
+					return;
+				}
+			}
+!!!134018.java!!!	sendNextData() : void
+			// Obtém o próximo pacote de dados da fila, se houver.
+			final Pack p = outputQueue.poll(1, TimeUnit.SECONDS);
+			if (p == null) {
+				return;
+			}
+
+			// Se o id de conexão é diferente da conexão em uso, encerra
+			LspConnection conn = usedConnection(p.getConnId());
+			if (conn == null) {
+				return;
+			}
+
+			// Tenta associar o pacote à conexão. Se sucesso, envia esse pacote
+			InternalPack sent = conn.sent(p);
+			if (sent != null) {
+				dgramSendData(sent);
+				return;
+			}
+
+			// Se não foi possível associar à conexão (já havia outro pacote em
+			// espera de um ACK) então devolve o pacote à fila (segunda posição)
+			synchronized (outputQueue) {
+				Pack first = outputQueue.poll();
+				outputQueue.offerFirst(p);
+				if (first != null) {
+					outputQueue.offerFirst(first);
+				}
+			}

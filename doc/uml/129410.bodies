@@ -1,0 +1,12 @@
+class ConnectTask
+!!!133378.java!!!	ConnectTask(inout sockAddr : SocketAddress)
+			this.sockAddr = sockAddr;
+			this.result = new SynchronousQueue<>();
+!!!133506.java!!!	call() : Short
+			// Envia requisição de conexão
+			dgramSend(sockAddr, CONNECT, (short) 0, (short) 0, PAYLOAD_NIL);
+
+			// Retorna connId quando retornar o ACK da conexão
+			return result.take();
+!!!133634.java!!!	ack(in connId : short) : void
+			result.offer(connId);

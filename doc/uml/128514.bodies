@@ -1,0 +1,179 @@
+class LspSocket
+!!!130690.java!!!	LspSocket(in port : int, in queueSize : int)
+		// Cria o socket e as filas
+		this.socket = new DatagramSocket(port);
+		this.port = this.socket.getLocalPort();
+		this.inputQueue = new LinkedBlockingQueue<>(queueSize);
+		this.outputQueue = new LinkedBlockingDeque<>(queueSize);
+
+		// Inicializa atributos para uso na conexão a um servidor LSP
+		this.connectExecutor = Executors.newSingleThreadExecutor();
+
+		inputThread = new Thread(new InputTask());
+		inputThread.start();
+		outputThread = new Thread(new OutputTask());
+		outputThread.start();
+!!!130818.java!!!	LspSocket(in port : int)
+		this(port, QUEUE_ZISE);
+!!!131074.java!!!	close() : void
+		socket.close();
+
+		// Para todas as threads
+		connectExecutor.shutdown();
+		inputThread.interrupt();
+		outputThread.interrupt();
+
+		// Limpeza de memória
+		inputQueue.clear();
+		outputQueue.clear();
+!!!131202.java!!!	connect(inout sockAddr : SocketAddress, inout params : LspParams, inout triggers : ConnectionTriggers) : LspConnection
+		synchronized (connectExecutor) {
+			// Inicia uma nova tarefa de conexão
+			connTask = new ConnectTask(sockAddr);
+			Future<Short> call = connectExecutor.submit(connTask);
+
+			try {
+				int limit = params.getEpochLimit();
+				while (limit > 0) {
+					try {
+						short connId = call.get(params.getEpoch(), TimeUnit.MILLISECONDS);
+						return new LspConnection(connId, sockAddr, params, triggers);
+					} catch (TimeoutException e) {
+						--limit;
+					} catch (InterruptedException e) {
+						return null;
+					} catch (ExecutionException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			} finally {
+				connTask.ack((short) 0);  // libera a thread
+				connTask = null;
+			}
+
+			throw new TimeoutException("Servidor " + sockAddr + " não responde");
+		}
+!!!131330.java!!!	dgramReceive(in pack : DatagramPacket) : void
+		this.socket.receive(pack);
+		final ByteBuffer buf = ByteBuffer.wrap(pack.getData(), 0,
+				pack.getLength()).asReadOnlyBuffer();
+		final short msgType = buf.getShort();
+
+		switch (msgType) {
+		case CONNECT:
+			dgramReceiveConnect(pack.getSocketAddress(), buf.slice());
+			break;
+		case DATA:
+			dgramReceiveData(pack.getSocketAddress(), buf.slice());
+			break;
+		case ACK:
+			dgramReceiveAck(pack.getSocketAddress(), buf.slice());
+			break;
+		}
+!!!131586.java!!!	dgramReceiveData(in sockAddr : SocketAddress, in buf : ByteBuffer) : void
+		LspConnection conn = usedConnection(sockAddr, buf.getShort());
+
+		// Só continua se a conexão é válida e não estiver fechada
+		if (conn != null && !conn.isClosed()) {
+			short seqNum = buf.getShort();
+			byte[] payload = payload(buf);
+			InternalPack pack = new InternalPack(conn, seqNum, payload);
+
+			// Se a mensagem foi enfileirada, envia o ACK e informa o número
+			// de sequência à conexão (usado nos disparos da época).
+			if (inputQueue.offer(pack)) {
+				dgramSendAck(pack);
+				conn.received(seqNum);
+			}
+
+			// Caso contrário, mesmo que a mensagem não possa ser lida,
+			// atualiza o momento da última mensagem recebida
+			else {
+				conn.received();
+			}
+		}
+!!!131714.java!!!	dgramReceiveAck(in sockAddr : SocketAddress, in buf : ByteBuffer) : void
+		final short connId = buf.getShort();
+		final LspConnection conn = usedConnection(sockAddr, connId);
+
+		// Se o connId é válido, reconhece a mensagem
+		if (conn != null) {
+			final short seqNum = buf.getShort();
+			conn.ack(seqNum);
+		}
+
+		// Senão verifica se há uma tentativa de conexão em curso. Caso
+		// positivo, verifica também se id não é 0, número de sequência é 0,
+		// conferindo antes se o ACK vem do socket remoto correto
+		else if (connTask != null && connId != 0 && buf.getShort() == 0
+				&& sockAddr.equals(connTask.sockAddr)) {
+			connTask.ack(connId);
+		}
+!!!131842.java!!!	dgramSend(in sockAddr : SocketAddress, in msgType : short, in connId : short, in seqNum : short, in payload : byte) : void
+		ByteBuffer buf = ByteBuffer.allocate(LEN_HEADER + payload.length);
+		buf.putShort(msgType).putShort(connId).putShort(seqNum).put(payload);
+
+		DatagramPacket packet = new DatagramPacket(buf.array(), buf.capacity());
+		packet.setSocketAddress(sockAddr);
+		try {
+			synchronized (sendLock) {
+				socket.send(packet);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+!!!131970.java!!!	dgramSend(in msgType : short, in conn : LspConnection, in seqNum : short, in payload : byte) : void
+		dgramSend(conn.getSockAddr(), msgType, conn.getId(), seqNum, payload);
+!!!132098.java!!!	dgramSendData(in conn : LspConnection, in seqNum : short, in payload : byte) : void
+		if (payload.length > LEN_PAYLOAD) {
+			throw new IllegalArgumentException("Payload não pode ser maior que " + LEN_PAYLOAD);
+		}
+
+		dgramSend(DATA, conn, seqNum, payload);
+!!!132226.java!!!	dgramSendData(in p : InternalPack) : void
+		dgramSendData(p.getConnection(), p.getSeqNum(), p.getPayload());
+!!!132354.java!!!	dgramSendAck(in conn : LspConnection, in seqNum : short) : void
+		dgramSend(ACK, conn, seqNum, PAYLOAD_NIL);
+!!!132482.java!!!	dgramSendAck(in p : InternalPack) : void
+		dgramSendAck(p.getConnection(), p.getSeqNum());
+!!!132610.java!!!	payload(in buf : ByteBuffer) : byte
+		byte[] bs = new byte[buf.remaining()];
+		for (int i = 0; i < bs.length; i++) {
+			bs[i] = buf.get();
+		}
+
+		return bs;
+!!!132866.java!!!	usedConnection(in sockAddr : SocketAddress, in connId : short) : LspConnection
+		final LspConnection conn = usedConnection(connId);
+
+		// Descarta o pacote se não há conexão aberta com o remetente ou se
+		// o id recebido não corresponde ao id registrado com a conexão.
+		if (conn != null && conn.getId() == connId
+				&& sockAddr.equals(conn.getSockAddr())) {
+			return conn;
+		}
+
+		return null;
+!!!132994.java!!!	receive() : InternalPack
+		while (isActive()) {
+			try {
+				InternalPack nextPack = inputQueue.poll(1, TimeUnit.SECONDS);
+				if (nextPack != null) {
+					return nextPack;
+				}
+			} catch (InterruptedException e) {
+				break;
+			}
+		}
+
+		return null;
+!!!133122.java!!!	send(inout p : Pack) : void
+		if (p.getPayload().length > LEN_PAYLOAD) {
+			throw new IllegalArgumentException("Payload não pode ser maior que " + LEN_PAYLOAD);
+		}
+
+		if (!outputQueue.offer(p)) {
+			throw new IllegalStateException("Fila de saída cheia");
+		}
+!!!133250.java!!!	getPort() : int
+		return this.port;

@@ -1,0 +1,93 @@
+format 74
+
+classcanvas 136962 class_ref 129154 // LspParams
+  draw_all_relations default hide_attributes default hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyz 434.633 4.4529 3005
+end
+classcanvas 137602 class_ref 128514 // LspSocket
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  hidden_attributes
+    attribute_ref 128642 // CONNECT
+    attribute_ref 128770 // DATA
+    attribute_ref 128898 // ACK
+    attribute_ref 129026 // PAYLOAD_NIL
+    attribute_ref 129154 // LEN_PACKAGE
+    attribute_ref 129282 // LEN_HEADER
+    attribute_ref 129410 // LEN_PAYLOAD
+    attribute_ref 129538 // QUEUE_ZISE
+    attribute_ref 129666 // sendLock
+    attribute_ref 129794 // connectExecutor
+    attribute_ref 130050 // port
+  hidden_operations
+    operation_ref 130690 // LspSocket
+    operation_ref 131074 // close
+    operation_ref 131202 // connect
+    operation_ref 131458 // dgramReceiveConnect
+    operation_ref 131586 // dgramReceiveData
+    operation_ref 131714 // dgramReceiveAck
+    operation_ref 131970 // dgramSend
+    operation_ref 132098 // dgramSendData
+    operation_ref 132226 // dgramSendData
+    operation_ref 132354 // dgramSendAck
+    operation_ref 132482 // dgramSendAck
+    operation_ref 132610 // payload
+    operation_ref 132738 // usedConnection
+    operation_ref 132866 // usedConnection
+    operation_ref 133250 // getPort
+  xyz 437.905 97.44 3005
+end
+classcanvas 137858 class_ref 128642 // LspConnection
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  hidden_attributes
+    attribute_ref 130818 // sockId
+    attribute_ref 131074 // markClosed
+    attribute_ref 131202 // seqNum
+    attribute_ref 131330 // receivedTime
+    attribute_ref 131458 // receivedSeqNum
+    attribute_ref 131586 // sendMissing
+    attribute_ref 131714 // lock
+  hidden_operations
+    operation_ref 134914 // LspConnection
+    operation_ref 135042 // getId
+    operation_ref 135170 // uniqueSockId
+    operation_ref 135298 // getSockId
+    operation_ref 135426 // getSockAddr
+    operation_ref 136578 // isInterrupted
+    operation_ref 136962 // close
+  xyz 23.2836 329.836 3010
+end
+classcanvas 138114 class_ref 128258 // ConnectionTriggers
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  xyz 270.077 690.142 3016
+end
+classcanvas 138370 class_ref 129026 // LspClient
+  draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+  hidden_attributes
+    attribute_ref 128514 // markClosed
+  hidden_operations
+    operation_ref 130434 // realClose
+    operation_ref 130562 // checkActive
+  xyz 15 53 3016
+end
+relationcanvas 138242 relation_ref 129794 // <unidirectional association>
+  from ref 137858 z 3017 to ref 138114
+  role_a_pos 364 668 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 138498 relation_ref 128386 // <unidirectional association>
+  from ref 138370 z 3017 to ref 137602
+  role_a_pos 373 130 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 138626 relation_ref 128514 // <unidirectional association>
+  from ref 138370 z 3017 to ref 137858
+  role_a_pos 284 307 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 138754 relation_ref 128642 // <unidirectional association>
+  from ref 138370 z 3017 to ref 136962
+  role_a_pos 382 26 3000 no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+preferred_whz 1040 514 1
+end

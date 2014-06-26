@@ -1,0 +1,54 @@
+class LspClient
+!!!129794.java!!!	LspClient(in host : String, in port : int, inout params : LspParams)
+		SocketAddress sockAddr = new InetSocketAddress(host, port);
+
+		lspSocket = new LspSocketImpl(0);
+		try {
+			conn = lspSocket.connect(sockAddr, params, new ClientTriggers());
+			this.params = params;
+		} catch (TimeoutException e) {
+			lspSocket.close();
+			throw e;
+		}
+!!!129922.java!!!	getConnId() : short
+		return conn.getId();
+!!!130050.java!!!	read() : byte
+		try {
+			checkActive();
+			return lspSocket.receive().getPayload();
+		} catch (ClosedConnectionException | NullPointerException e) {
+			return null;
+		}
+!!!130178.java!!!	write(inout payload : byte) : void
+		checkActive();
+
+		Pack p = new Pack(conn.getId(), payload);
+		lspSocket.send(p);
+		conn.incSendMissing();
+!!!130306.java!!!	close() : void
+		checkActive();
+
+		// Marca a conexão como fechada e se não há mensagens para serem
+		// enviadas, encerra realmente a conexão.
+		conn.close(false);
+		markClosed = true;
+		if (conn.getSendMissing() == 0) {
+			realClose();
+			return;
+		}
+
+		while (!conn.isInterrupted()) {
+			try {
+				Thread.sleep(params.getEpoch());
+			} catch (InterruptedException e) {
+				realClose();
+				return;
+			}
+		}
+!!!130434.java!!!	realClose() : void
+		this.active = false;
+		this.conn.close();
+		this.lspSocket.close();
+!!!130562.java!!!	checkActive() : void
+		if (!active || markClosed)
+			throw new ClosedConnectionException();

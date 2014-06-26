@@ -1,0 +1,8 @@
+class LspParams
+!!!137346.java!!!	LspParams(in epoch : int, in epochLimit : int)
+		this.epoch = epoch;
+		this.epochLimit = epochLimit;
+!!!137474.java!!!	getEpoch() : int
+		return epoch;
+!!!137602.java!!!	getEpochLimit() : int
+		return epochLimit;

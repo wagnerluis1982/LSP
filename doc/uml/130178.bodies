@@ -1,0 +1,40 @@
+class StatusChecker
+!!!137090.java!!!	StatusChecker(inout params : LspParams)
+			this.params = params;
+!!!137218.java!!!	run() : void
+			// Obtém o horário da última mensagem recebida em milisegundos
+			long lastTime = receivedTime;
+
+			// Obtém parâmetros da conexão
+			int limit = params.getEpochLimit();
+			final int epoch = params.getEpoch();
+
+			// Monitora a conexão continuamente até que o limite de épocas seja
+			// atingido ou a conexão seja fechada
+			while (!closed && limit-- > 0) {
+				// ..ou quando a conexão está no estado de encerramento, até que
+				// não haja mais mensagens para enviar.
+				if (markClosed && sendMissing.get() <= 0) {
+					break;
+				}
+
+				try {
+					Thread.sleep(epoch);
+				} catch (InterruptedException e) {
+					return;
+				}
+
+				// Dispara as ações da época
+				triggers.doEpochActions();
+
+				// Reinicia contagem de épocas se houve mensagens recebidas
+				// desde a última época
+				final long time = receivedTime;
+				if (time != lastTime) {
+					lastTime = time;
+					limit = params.getEpochLimit();
+				}
+			}
+
+			// Encerra formalmente a conexão
+			triggers.doCloseConnection();

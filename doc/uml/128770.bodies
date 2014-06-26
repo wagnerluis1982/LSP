@@ -1,0 +1,9 @@
+class InternalPack
+!!!129410.java!!!	InternalPack(inout conn : LspConnection, in seqNum : short, inout payload : byte)
+		super(conn.getId(), payload);
+		this.connection = conn;
+		this.seqNum = seqNum;
+!!!129538.java!!!	getConnection() : LspConnection
+		return this.connection;
+!!!129666.java!!!	getSeqNum() : short
+		return this.seqNum;
