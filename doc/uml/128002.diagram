@@ -71,7 +71,7 @@ classcanvas 137858 class_ref 128642 // LspConnection
 end
 classcanvas 138114 class_ref 128258 // ConnectionTriggers
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
-  xyz 788.077 433.142 3016
+  xyz 270.077 690.142 3016
 end
 relationcanvas 137090 relation_ref 130562 // <unidirectional association>
   from ref 136834 z 3006 to ref 136962
@@ -90,7 +90,7 @@ relationcanvas 137986 relation_ref 130306 // <unidirectional association>
 end
 relationcanvas 138242 relation_ref 129794 // <unidirectional association>
   from ref 137858 z 3017 to ref 138114
-  role_a_pos 736 455 3000 no_role_b
+  role_a_pos 364 668 3000 no_role_b
   no_multiplicity_a no_multiplicity_b
 end
 preferred_whz 1040 514 1

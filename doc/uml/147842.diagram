@@ -4,12 +4,12 @@ classinstance 128770 class_ref 129026 // LspClient
   name ""   xyz 189 4 2000 life_line_z 2000
 classinstance 128898 class_ref 128514 // LspSocket
   name ""   xyz 340 4 2000 life_line_z 2000
-classinstance 130306 class_ref 137090 // Cliente
+classinstance 130306 class_ref 137090 // Client
   name ""   xyz 7 4 2000 life_line_z 2000
 classinstance 132994 class_ref 128642 // LspConnection
   name ""   xyz 462 4 2000 life_line_z 2000
-durationcanvas 131330 classinstance_ref 130306 // :Cliente
-  xyzwh 24 51 2010 11 25
+durationcanvas 131330 classinstance_ref 130306 // :Client
+  xyzwh 21 51 2010 11 25
 end
 durationcanvas 132482 classinstance_ref 128770 // :LspClient
   xyzwh 217 63 2010 11 25

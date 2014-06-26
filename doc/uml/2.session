@@ -1,17 +1,16 @@
-window_sizes 1366 708 320 1040 514 120
+window_sizes 1358 701 320 1032 497 120
+windows_style
 diagrams
-  active  classdiagram_ref 128002 // LspServer relationships
+  classdiagram_ref 128002 // LspServer relationships
     1040 514 100 18 0 0
-  classdiagram_ref 134530 // LspClient relationships
+  active  classdiagram_ref 134530 // LspClient relationships
     1040 514 100 18 0 0
-  sequencediagram_ref 141314 // Client connecting
-    1037 495 100 4 0 0
 end
 show_stereotypes
-selected activity_ref 134530 // teste
+selected activity_ref 134530 // Activities
 open
-  classview_ref 128002 // Live Sequence Protocol
-  usecaseview_ref 134530 // Use case
+  usecaseview_ref 141314 // Class diagrams
+  activity_ref 134530 // Activities
   classview_ref 128130 // j2se
 end
 end
