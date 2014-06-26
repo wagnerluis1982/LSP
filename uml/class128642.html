@@ -1,0 +1,67 @@
+<!-- Documentation produced by the Html generator of Bouml (http://bouml.free.fr) -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Class LspConnection</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body bgcolor="#ffffff">
+
+<div class = "title">Class LspConnection</div>
+<p></p>
+
+<!-- ============================================================= -->
+
+<a name="refclass128642"></a>
+<p>Representa uma conexão LSP.<br /><br />@author Wagner Macedo<br /></p>
+<p>Declaration :</p><ul>
+<li>Java : package class LspConnection </li></ul><div class="sub">
+<a name="refattribute130690"></a>
+<table><tr><td><div class="element">Attribute <b>id</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - id : short, read only</li><li>Java : private final short id</li></ul><a name="refattribute130818"></a>
+<table><tr><td><div class="element">Attribute <b>sockId</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - sockId : long, read only</li><li>Java : private final long sockId</li></ul><a name="refrelation129794"></a>
+<table><tr><td><div class="element">Relation <b>triggers (&lt;unidirectional association&gt;)</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - triggers : <a href="class128258.html#refclass128258"><b>ConnectionTriggers</b></a>, read only</li><li>Java : private final <a href="class128258.html#refclass128258"><b>ConnectionTriggers</b></a> triggers</li></ul><a name="refattribute130946"></a>
+<table><tr><td><div class="element">Attribute <b>closed</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - closed : boolean</li><li>Java : private volatile boolean closed</li></ul><a name="refattribute131074"></a>
+<table><tr><td><div class="element">Attribute <b>markClosed</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - markClosed : boolean</li><li>Java : private volatile boolean markClosed</li></ul><a name="refattribute131202"></a>
+<table><tr><td><div class="element">Attribute <b>seqNum</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - seqNum : short</li><li>Java : private volatile short seqNum</li></ul><a name="refattribute131330"></a>
+<table><tr><td><div class="element">Attribute <b>receivedTime</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - receivedTime : long</li><li>Java : private volatile long receivedTime</li></ul><a name="refattribute131458"></a>
+<table><tr><td><div class="element">Attribute <b>receivedSeqNum</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - receivedSeqNum : short</li><li>Java : private volatile short receivedSeqNum</li></ul><a name="refattribute131586"></a>
+<table><tr><td><div class="element">Attribute <b>sendMissing</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - sendMissing : AtomicInteger, read only</li><li>Java : private final AtomicInteger sendMissing</li></ul><a name="refattribute131714"></a>
+<table><tr><td><div class="element">Attribute <b>lock</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - lock : Object =  new Object(), read only</li><li>Java : private final Object lock</li></ul><a name="refrelation129922"></a>
+<table><tr><td><div class="element">Relation <b>dataMessage (&lt;unidirectional association&gt;)</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - dataMessage : <a href="class128770.html#refclass128770"><b>InternalPack</b></a></li><li>Java : private volatile <a href="class128770.html#refclass128770"><b>InternalPack</b></a> dataMessage</li></ul><a name="refattribute131842"></a>
+<table><tr><td><div class="element">Attribute <b>sockAddr</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - sockAddr : SocketAddress, read only</li><li>Java : private final SocketAddress sockAddr</li></ul><a name="refattribute131970"></a>
+<table><tr><td><div class="element">Attribute <b>statusThread</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - statusThread : Thread, read only</li><li>Java : private final Thread statusThread</li></ul><a name="refoperation134786"></a>
+<table><tr><td><div class="element">Operation <b>LspConnection</b></div></td></tr></table><p>Constrói um objeto {@link LspConnection}<br /><br />@param id<br />           Identificador da conexão<br />@param sockId<br />           Número IP e porta associados à conexão<br />@param sockAddr<br />           IP e porta vinculados à essa conexão<br />@param params<br />           Parâmetros de temporização da conexão<br /></p><p>Declaration :</p><ul><li>Uml : ~ LspConnection(in id : short, in sockId : long, inout sockAddr : SocketAddress, inout params : <a href="class129154.html#refclass129154"><b>LspParams</b></a>, inout triggers : <a href="class128258.html#refclass128258"><b>ConnectionTriggers</b></a>) : </li><li>Java : package  LspConnection(short id, long sockId, SocketAddress sockAddr, <a href="class129154.html#refclass129154"><b>LspParams</b></a> params, <a href="class128258.html#refclass128258"><b>ConnectionTriggers</b></a> triggers)</li></ul><a name="refoperation134914"></a>
+<table><tr><td><div class="element">Operation <b>LspConnection</b></div></td></tr></table><p>Constrói um objeto {@link LspConnection}<br /><br />@param id<br />           Identificador da conexão<br />@param sockAddr<br />           IP e porta vinculados à essa conexão<br />@param params<br />           Parâmetros de temporização da conexão<br /></p><p>Declaration :</p><ul><li>Uml : ~ LspConnection(in id : short, inout sockAddr : SocketAddress, inout params : <a href="class129154.html#refclass129154"><b>LspParams</b></a>, inout triggers : <a href="class128258.html#refclass128258"><b>ConnectionTriggers</b></a>) : </li><li>Java : package  LspConnection(short id, SocketAddress sockAddr, <a href="class129154.html#refclass129154"><b>LspParams</b></a> params, <a href="class128258.html#refclass128258"><b>ConnectionTriggers</b></a> triggers)</li></ul><a name="refoperation135042"></a>
+<table><tr><td><div class="element">Operation <b>getId</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ getId() : short</li><li>Java : package short getId()</li></ul><a name="refoperation135170"></a>
+<table><tr><td><div class="element">Operation <b>uniqueSockId</b></div></td></tr></table><p>Número único gerado a partir de um endereço IP e uma porta<br /><br />Esse método só é usado pelo servidor<br /></p><p>Declaration :</p><ul><li>Uml : static, ~ uniqueSockId(inout sockAddr : SocketAddress) : long</li><li>Java : package static long uniqueSockId(SocketAddress sockAddr)</li></ul><a name="refoperation135298"></a>
+<table><tr><td><div class="element">Operation <b>getSockId</b></div></td></tr></table><p>Número único gerado a partir de um endereço IP e uma porta<br /><br />Esse atributo só é usado pelo servidor<br /></p><p>Declaration :</p><ul><li>Uml : ~ getSockId() : long</li><li>Java : package long getSockId()</li></ul><a name="refoperation135426"></a>
+<table><tr><td><div class="element">Operation <b>getSockAddr</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ getSockAddr() : SocketAddress</li><li>Java : package SocketAddress getSockAddr()</li></ul><a name="refoperation135554"></a>
+<table><tr><td><div class="element">Operation <b>incSendMissing</b></div></td></tr></table><p>Aumenta em um o número de mensagens na fila, mas faltam enviar. Isso é<br />controlado externamente.<br /></p><p>Declaration :</p><ul><li>Uml : ~ incSendMissing() : void</li><li>Java : package void incSendMissing()</li></ul><a name="refoperation135682"></a>
+<table><tr><td><div class="element">Operation <b>getSendMissing</b></div></td></tr></table><p>Número de mensagens na fila, mas faltam enviar. Valor controlado<br />externamente.<br /></p><p>Declaration :</p><ul><li>Uml : ~ getSendMissing() : int</li><li>Java : package int getSendMissing()</li></ul><a name="refoperation135810"></a>
+<table><tr><td><div class="element">Operation <b>sent</b></div></td></tr></table><p>Obtém a última mensagem de dados enviada (aguardando ACK) <br /></p><p>Declaration :</p><ul><li>Uml : ~ sent() : <a href="class128770.html#refclass128770"><b>InternalPack</b></a></li><li>Java : package <a href="class128770.html#refclass128770"><b>InternalPack</b></a> sent()</li></ul><a name="refoperation135938"></a>
+<table><tr><td><div class="element">Operation <b>sent</b></div></td></tr></table><p>Informa o payload da última mensagem enviada<br /><br />@return Pacote com um novo número de sequência ou null se já há um pacote<br />        aguardando ACK<br /></p><p>Declaration :</p><ul><li>Uml : ~ sent(inout pack : <a href="class128898.html#refclass128898"><b>Pack</b></a>) : <a href="class128770.html#refclass128770"><b>InternalPack</b></a></li><li>Java : package <a href="class128770.html#refclass128770"><b>InternalPack</b></a> sent(<a href="class128898.html#refclass128898"><b>Pack</b></a> pack)</li></ul><a name="refoperation136066"></a>
+<table><tr><td><div class="element">Operation <b>ack</b></div></td></tr></table><p>Informa que o ACK do número de sequência informado foi recebido <br /></p><p>Declaration :</p><ul><li>Uml : ~ ack(in seqNum : short) : void</li><li>Java : package void ack(short seqNum)</li></ul><a name="refoperation136194"></a>
+<table><tr><td><div class="element">Operation <b>receivedSeqNum</b></div></td></tr></table><p>Número de sequência da última mensagem DATA recebida por essa conexão.<br />Esse número é gerenciado externamente através do método received(short).<br />Se receber -1, quer dizer que não chegou nenhuma mensagem depois do<br />pedido de conexão.<br /></p><p>Declaration :</p><ul><li>Uml : ~ receivedSeqNum() : short</li><li>Java : package short receivedSeqNum()</li></ul><a name="refoperation136322"></a>
+<table><tr><td><div class="element">Operation <b>received</b></div></td></tr></table><p>Informa que houve uma mensagem recebida por essa conexão. Esse método<br />tem como único propósito a atualização do momento de recebimento.<br /></p><p>Declaration :</p><ul><li>Uml : ~ received() : void</li><li>Java : package void received()</li></ul><a name="refoperation136450"></a>
+<table><tr><td><div class="element">Operation <b>received</b></div></td></tr></table><p>Informa o número de sequência em que uma mensagem DATA foi recebida. Esse<br />método atualiza o último momento de recebimento<br /></p><p>Declaration :</p><ul><li>Uml : ~ received(in seqNum : short) : void</li><li>Java : package void received(short seqNum)</li></ul><a name="refoperation136578"></a>
+<table><tr><td><div class="element">Operation <b>isInterrupted</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ isInterrupted() : boolean</li><li>Java : package boolean isInterrupted()</li></ul><a name="refoperation136706"></a>
+<table><tr><td><div class="element">Operation <b>isClosed</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ isClosed() : boolean</li><li>Java : package boolean isClosed()</li></ul><a name="refoperation136834"></a>
+<table><tr><td><div class="element">Operation <b>close</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ close() : void</li><li>Java : package void close()</li></ul><a name="refoperation136962"></a>
+<table><tr><td><div class="element">Operation <b>close</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ close(inout interrupt : boolean) : void</li><li>Java : package void close(boolean interrupt)</li></ul><table><tr><td><div class="element">Class <b><a href="class130178.html#refclass130178"><b>StatusChecker</b></a></b></div></td></tr></table>
+</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!-- Documentation produced by the Html generator of Bouml (http://bouml.free.fr) -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Class LspClient</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body bgcolor="#ffffff">
+
+<div class = "title">Class LspClient</div>
+<p></p>
+
+<!-- ============================================================= -->
+
+<a name="refclass129026"></a>
+<p>Declaration :</p><ul>
+<li>Java : public class LspClient </li></ul><div class="sub">
+<a name="refrelation128386"></a>
+<table><tr><td><div class="element">Relation <b>lspSocket (&lt;unidirectional association&gt;)</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - lspSocket : <a href="class128514.html#refclass128514"><b>LspSocket</b></a>, read only</li><li>Java : private final <a href="class128514.html#refclass128514"><b>LspSocket</b></a> lspSocket</li></ul><a name="refrelation128514"></a>
+<table><tr><td><div class="element">Relation <b>conn (&lt;unidirectional association&gt;)</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - conn : <a href="class128642.html#refclass128642"><b>LspConnection</b></a>, read only</li><li>Java : private final <a href="class128642.html#refclass128642"><b>LspConnection</b></a> conn</li></ul><a name="refrelation128642"></a>
+<table><tr><td><div class="element">Relation <b>params (&lt;unidirectional association&gt;)</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - params : <a href="class129154.html#refclass129154"><b>LspParams</b></a>, read only</li><li>Java : private final <a href="class129154.html#refclass129154"><b>LspParams</b></a> params</li></ul><a name="refattribute128386"></a>
+<table><tr><td><div class="element">Attribute <b>active</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - active : boolean =  true</li><li>Java : private volatile boolean active</li></ul><a name="refattribute128514"></a>
+<table><tr><td><div class="element">Attribute <b>markClosed</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - markClosed : boolean =  false</li><li>Java : private volatile boolean markClosed</li></ul><a name="refoperation129794"></a>
+<table><tr><td><div class="element">Operation <b>LspClient</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : + LspClient(in host : String, in port : int, inout params : <a href="class129154.html#refclass129154"><b>LspParams</b></a>) : ,  exceptions : IOException, TimeoutException</li><li>Java : public  LspClient(String host, int port, <a href="class129154.html#refclass129154"><b>LspParams</b></a> params) throws IOException, TimeoutException</li></ul><a name="refoperation129922"></a>
+<table><tr><td><div class="element">Operation <b>getConnId</b></div></td></tr></table><p>Devolve o Id da conexão<br /></p><p>Declaration :</p><ul><li>Uml : + getConnId() : short</li><li>Java : public short getConnId()</li></ul><a name="refoperation130050"></a>
+<table><tr><td><div class="element">Operation <b>read</b></div></td></tr></table><p>Devolve um vetor de bytes de uma mensagem enviada pelo lado servidor.<br />Devolve null se a conexão for perdida.<br /></p><p>Declaration :</p><ul><li>Uml : + read() : byte[]</li><li>Java : public byte[] read()</li></ul><a name="refoperation130178"></a>
+<table><tr><td><div class="element">Operation <b>write</b></div></td></tr></table><p>Envia uma mensagen para o lado servidor como um vetor de bytes. Devolve<br />exceção se a conexão for perdida.<br /></p><p>Declaration :</p><ul><li>Uml : + write(inout payload : byte[]) : void</li><li>Java : public void write(byte[] payload)</li></ul><a name="refoperation130306"></a>
+<table><tr><td><div class="element">Operation <b>close</b></div></td></tr></table><p>Encerra a conexão.<br /></p><p>Declaration :</p><ul><li>Uml : + close() : void</li><li>Java : public void close()</li></ul><a name="refoperation130434"></a>
+<table><tr><td><div class="element">Operation <b>realClose</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - realClose() : void</li><li>Java : private void realClose()</li></ul><a name="refoperation130562"></a>
+<table><tr><td><div class="element">Operation <b>checkActive</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - checkActive() : void</li><li>Java : private void checkActive()</li></ul><table><tr><td><div class="element">Class <b><a href="class129282.html#refclass129282"><b>LspSocketImpl</b></a></b></div></td></tr></table>
+<table><tr><td><div class="element">Class <b><a href="class130050.html#refclass130050"><b>ClientTriggers</b></a></b></div></td></tr></table>
+</div>
+<p>All public operations : <a href="class129026.html#refoperation130306"><b>close</b></a> , <a href="class129026.html#refoperation129922"><b>getConnId</b></a> , <a href="class129026.html#refoperation130050"><b>read</b></a> , <a href="class129026.html#refoperation130178"><b>write</b></a> </p>
+</body>
+</html>

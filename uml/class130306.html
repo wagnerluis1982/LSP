@@ -1,0 +1,48 @@
+<!-- Documentation produced by the Html generator of Bouml (http://bouml.free.fr) -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Class LspServer</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body bgcolor="#ffffff">
+
+<div class = "title">Class LspServer</div>
+<p></p>
+
+<!-- ============================================================= -->
+
+<a name="refclass130306"></a>
+<p>Servidor LSP.<br /><br />@author Wagner Macedo<br /></p>
+<p>Declaration :</p><ul>
+<li>Java : public class LspServer </li></ul><div class="sub">
+<a name="refrelation130306"></a>
+<table><tr><td><div class="element">Relation <b>connectionPool (&lt;unidirectional association&gt;)</b></div></td></tr></table><p>Pool de conexões inicialmente com capacidade para 16 conexões <br /></p><p>Declaration :</p><ul><li>Uml : - connectionPool : <a href="class128642.html#refclass128642"><b>LspConnection</b></a> =  new ConcurrentHashMap&lt;&gt;(16), read only</li><li>Java : private final <a href="class128642.html#refclass128642"><b>LspConnection</b></a> connectionPool</li></ul><p>Stereotype: map</p>
+<a name="refattribute132354"></a>
+<table><tr><td><div class="element">Attribute <b>idCounter</b></div></td></tr></table>
+<p>Variáveis de controle do servidor<br /></p><p>Declaration :</p><ul><li>Uml : - idCounter : AtomicInteger =  new AtomicInteger(), read only</li><li>Java : private final AtomicInteger idCounter</li></ul><a name="refattribute132482"></a>
+<table><tr><td><div class="element">Attribute <b>active</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - active : boolean =  true</li><li>Java : private volatile boolean active</li></ul><a name="refattribute132610"></a>
+<table><tr><td><div class="element">Attribute <b>markClosed</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - markClosed : boolean</li><li>Java : private volatile boolean markClosed</li></ul><a name="refrelation130562"></a>
+<table><tr><td><div class="element">Relation <b>params (&lt;unidirectional association&gt;)</b></div></td></tr></table><p>Parâmetros do servidor <br /><br /></p><p>Declaration :</p><ul><li>Uml : - params : <a href="class129154.html#refclass129154"><b>LspParams</b></a>, read only</li><li>Java : private final <a href="class129154.html#refclass129154"><b>LspParams</b></a> params</li></ul><a name="refrelation130690"></a>
+<table><tr><td><div class="element">Relation <b>lspSocket (&lt;unidirectional association&gt;)</b></div></td></tr></table><p>Socket LSP <br /><br /></p><p>Declaration :</p><ul><li>Uml : - lspSocket : <a href="class128514.html#refclass128514"><b>LspSocket</b></a>, read only</li><li>Java : private final <a href="class128514.html#refclass128514"><b>LspSocket</b></a> lspSocket</li></ul><a name="refattribute132738"></a>
+<table><tr><td><div class="element">Attribute <b>port</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - port : int, read only</li><li>Java : private final int port</li></ul><a name="refoperation137730"></a>
+<table><tr><td><div class="element">Operation <b>LspServer</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : + LspServer(in port : int, inout params : <a href="class129154.html#refclass129154"><b>LspParams</b></a>) : ,  exceptions : IOException</li><li>Java : public  LspServer(int port, <a href="class129154.html#refclass129154"><b>LspParams</b></a> params) throws IOException</li></ul><a name="refoperation137858"></a>
+<table><tr><td><div class="element">Operation <b>read</b></div></td></tr></table><p>Lê dados da fila de entrada do servidor. Se não houver dados recebidos,<br />bloqueia o chamador até que dados sejam recebidos. Os dados estão<br />encapsulados pela classe Pack.<br /><br />@throws ClosedConnectionException<br />            se o servidor não estiver ativo<br />@throws IllegalStateException<br />            se a fila de saída estiver cheia<br /></p><p>Declaration :</p><ul><li>Uml : + read() : <a href="class128898.html#refclass128898"><b>Pack</b></a></li><li>Java : public <a href="class128898.html#refclass128898"><b>Pack</b></a> read()</li></ul><a name="refoperation137986"></a>
+<table><tr><td><div class="element">Operation <b>write</b></div></td></tr></table><p>Envia dados para um determinado cliente.<br /><br />@throws ClosedConnectionException<br />            se a conexão estiver encerrada<br /></p><p>Declaration :</p><ul><li>Uml : + write(inout pack : <a href="class128898.html#refclass128898"><b>Pack</b></a>) : void</li><li>Java : public void write(<a href="class128898.html#refclass128898"><b>Pack</b></a> pack)</li></ul><a name="refoperation138114"></a>
+<table><tr><td><div class="element">Operation <b>closeConn</b></div></td></tr></table><p>Encerra uma conexão com o identificador connId.<br /><br />Não é possível chamar read, write ou closeConn para a mesma connId depois<br />de chamar esse método.<br /><br />@throws ClosedConnectionException<br />            se a conexão estiver encerrada.<br /></p><p>Declaration :</p><ul><li>Uml : + closeConn(in connId : short) : void</li><li>Java : public void closeConn(short connId)</li></ul><a name="refoperation138242"></a>
+<table><tr><td><div class="element">Operation <b>realCloseConn</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - realCloseConn(in connId : short, in conn : <a href="class128642.html#refclass128642"><b>LspConnection</b></a>) : void</li><li>Java : private void realCloseConn(short connId, <a href="class128642.html#refclass128642"><b>LspConnection</b></a> conn)</li></ul><a name="refoperation138370"></a>
+<table><tr><td><div class="element">Operation <b>closeAll</b></div></td></tr></table><p>Encerra todas as conexões ativas e a atividade do servidor. Isso inclui o<br />encerramento do processador de entradas.<br /></p><p>Declaration :</p><ul><li>Uml : + closeAll() : void</li><li>Java : public void closeAll()</li></ul><a name="refoperation138498"></a>
+<table><tr><td><div class="element">Operation <b>checkActive</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - checkActive() : void</li><li>Java : private void checkActive()</li></ul><a name="refoperation138626"></a>
+<table><tr><td><div class="element">Operation <b>getPort</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : + getPort() : int</li><li>Java : public int getPort()</li></ul><a name="refoperation138754"></a>
+<table><tr><td><div class="element">Operation <b>newConnId</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - newConnId() : Short</li><li>Java : private Short newConnId()</li></ul><table><tr><td><div class="element">Class <b><a href="class130434.html#refclass130434"><b>LspSocketImpl</b></a></b></div></td></tr></table>
+<table><tr><td><div class="element">Class <b><a href="class130562.html#refclass130562"><b>ServerTriggers</b></a></b></div></td></tr></table>
+</div>
+<p>All public operations : <a href="class130306.html#refoperation138370"><b>closeAll</b></a> , <a href="class130306.html#refoperation138114"><b>closeConn</b></a> , <a href="class130306.html#refoperation138626"><b>getPort</b></a> , <a href="class130306.html#refoperation137858"><b>read</b></a> , <a href="class130306.html#refoperation137986"><b>write</b></a> </p>
+</body>
+</html>

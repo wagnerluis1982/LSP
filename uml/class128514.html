@@ -1,0 +1,83 @@
+<!-- Documentation produced by the Html generator of Bouml (http://bouml.free.fr) -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>Class LspSocket</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body bgcolor="#ffffff">
+
+<div class = "title">Class LspSocket</div>
+<p></p>
+
+<!-- ============================================================= -->
+
+<a name="refclass128514"></a>
+<p>Serviço de entrada e saída de pacotes. Classe abstrata.<br /><br />@author Wagner Macedo<br /></p>
+<p>Declaration :</p><ul>
+<li>Java : package abstract class LspSocket </li></ul><p>Directly inherited by : <a href="class129282.html#refclass129282"><b>LspSocketImpl</b></a> <a href="class130434.html#refclass130434"><b>LspSocketImpl</b></a> </p>
+<div class="sub">
+<a name="refattribute128642"></a>
+<table><tr><td><div class="element">Attribute <b>CONNECT</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : static, # CONNECT : byte =  0, read only</li><li>Java : protected static final byte CONNECT</li></ul><a name="refattribute128770"></a>
+<table><tr><td><div class="element">Attribute <b>DATA</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : static, # DATA : byte =  1, read only</li><li>Java : protected static final byte DATA</li></ul><a name="refattribute128898"></a>
+<table><tr><td><div class="element">Attribute <b>ACK</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : static, # ACK : byte =  2, read only</li><li>Java : protected static final byte ACK</li></ul><a name="refattribute129026"></a>
+<table><tr><td><div class="element">Attribute <b>PAYLOAD_NIL</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : static, - PAYLOAD_NIL : byte =  new byte[0], multiplicity : [], read only</li><li>Java : private static final byte[] PAYLOAD_NIL</li></ul><a name="refattribute129154"></a>
+<table><tr><td><div class="element">Attribute <b>LEN_PACKAGE</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : static, - LEN_PACKAGE : short =  1024, read only</li><li>Java : private static final short LEN_PACKAGE</li></ul><a name="refattribute129282"></a>
+<table><tr><td><div class="element">Attribute <b>LEN_HEADER</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : static, - LEN_HEADER : byte =  6, read only</li><li>Java : private static final byte LEN_HEADER</li></ul><a name="refattribute129410"></a>
+<table><tr><td><div class="element">Attribute <b>LEN_PAYLOAD</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : static, - LEN_PAYLOAD : short =  LEN_PACKAGE - LEN_HEADER, read only</li><li>Java : private static final short LEN_PAYLOAD</li></ul><a name="refattribute129538"></a>
+<table><tr><td><div class="element">Attribute <b>QUEUE_ZISE</b></div></td></tr></table>
+<p>Capacidade das filas de entrada e saída em termos de pacotes de 1KB <br /></p><p>Declaration :</p><ul><li>Uml : static, - QUEUE_ZISE : byte =  50, read only</li><li>Java : private static final byte QUEUE_ZISE</li></ul><a name="refrelation128770"></a>
+<table><tr><td><div class="element">Relation <b>inputQueue (&lt;unidirectional association&gt;)</b></div></td></tr></table><p>Filas de entrada e saída <br /></p><p>Declaration :</p><ul><li>Uml : - inputQueue : <a href="class128770.html#refclass128770"><b>InternalPack</b></a>, read only</li><li>Java : private final <a href="class128770.html#refclass128770"><b>InternalPack</b></a> inputQueue</li></ul><p>Stereotype: BlockingQueue</p>
+<a name="refrelation128898"></a>
+<table><tr><td><div class="element">Relation <b>outputQueue (&lt;unidirectional association&gt;)</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - outputQueue : <a href="class128898.html#refclass128898"><b>Pack</b></a>, read only</li><li>Java : private final <a href="class128898.html#refclass128898"><b>Pack</b></a> outputQueue</li></ul><p>Stereotype: BlockingDeque</p>
+<a name="refattribute129666"></a>
+<table><tr><td><div class="element">Attribute <b>sendLock</b></div></td></tr></table>
+<p>Lock para garantir que apenas uma thread envie pacotes <br /></p><p>Declaration :</p><ul><li>Uml : - sendLock : Object =  new Object(), read only</li><li>Java : private final Object sendLock</li></ul><a name="refattribute129794"></a>
+<table><tr><td><div class="element">Attribute <b>connectExecutor</b></div></td></tr></table>
+<p>Usados no pedido de conexão a um servidor LSP partindo desse socket <br /></p><p>Declaration :</p><ul><li>Uml : - connectExecutor : ExecutorService, read only</li><li>Java : private final ExecutorService connectExecutor</li></ul><a name="refrelation129026"></a>
+<table><tr><td><div class="element">Relation <b>connTask (&lt;unidirectional association&gt;)</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - connTask : <a href="class129410.html#refclass129410"><b>ConnectTask</b></a></li><li>Java : private volatile <a href="class129410.html#refclass129410"><b>ConnectTask</b></a> connTask</li></ul><a name="refattribute129922"></a>
+<table><tr><td><div class="element">Attribute <b>socket</b></div></td></tr></table>
+<p>Socket de comunicação em uso <br /></p><p>Declaration :</p><ul><li>Uml : - socket : DatagramSocket, read only</li><li>Java : private final DatagramSocket socket</li></ul><a name="refattribute130050"></a>
+<table><tr><td><div class="element">Attribute <b>port</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - port : int, read only</li><li>Java : private final int port</li></ul><a name="refattribute130178"></a>
+<table><tr><td><div class="element">Attribute <b>inputThread</b></div></td></tr></table>
+<p>Threads processando entradas e saídas <br /></p><p>Declaration :</p><ul><li>Uml : - inputThread : Thread, read only</li><li>Java : private final Thread inputThread</li></ul><a name="refattribute130306"></a>
+<table><tr><td><div class="element">Attribute <b>outputThread</b></div></td></tr></table>
+<p>Declaration :</p><ul><li>Uml : - outputThread : Thread, read only</li><li>Java : private final Thread outputThread</li></ul><a name="refoperation130690"></a>
+<table><tr><td><div class="element">Operation <b>LspSocket</b></div></td></tr></table><p>Inicia um LspSocket<br /><br />@param port Porta onde o socket estará vinculado<br />@param queueSize Tamanho inicial das filas de entrada e saída<br />@throws SocketException<br /></p><p>Declaration :</p><ul><li>Uml : ~ LspSocket(in port : int, in queueSize : int) : ,  exceptions : IOException</li><li>Java : package  LspSocket(int port, int queueSize) throws IOException</li></ul><a name="refoperation130818"></a>
+<table><tr><td><div class="element">Operation <b>LspSocket</b></div></td></tr></table><p>Inicia um LspSocket<br /><br />@param port Porta onde o socket estará vinculado<br />@throws SocketException<br /></p><p>Declaration :</p><ul><li>Uml : ~ LspSocket(in port : int) : ,  exceptions : IOException</li><li>Java : package  LspSocket(int port) throws IOException</li></ul><a name="refoperation130946"></a>
+<table><tr><td><div class="element">Operation <b>isActive</b></div></td></tr></table><p>Indica até quando o serviço será executado. Esse método deve ser<br />implementado em uma subclasse.<br /><br />@return false para parar o serviço<br /></p><p>Declaration :</p><ul><li>Uml : abstract, ~ isActive() : boolean</li><li>Java : package abstract boolean isActive()</li></ul><a name="refoperation131074"></a>
+<table><tr><td><div class="element">Operation <b>close</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ close() : void</li><li>Java : package final void close()</li></ul><a name="refoperation131202"></a>
+<table><tr><td><div class="element">Operation <b>connect</b></div></td></tr></table><p>Tenta estabelecer conexão com um servidor LSP, reenviando solicitação a<br />cada época, até completar o limite da época.<br /></p><p>Declaration :</p><ul><li>Uml : ~ connect(inout sockAddr : SocketAddress, inout params : <a href="class129154.html#refclass129154"><b>LspParams</b></a>, inout triggers : <a href="class128258.html#refclass128258"><b>ConnectionTriggers</b></a>) : <a href="class128642.html#refclass128642"><b>LspConnection</b></a>,  exceptions : TimeoutException</li><li>Java : package final <a href="class128642.html#refclass128642"><b>LspConnection</b></a> connect(SocketAddress sockAddr, <a href="class129154.html#refclass129154"><b>LspParams</b></a> params, <a href="class128258.html#refclass128258"><b>ConnectionTriggers</b></a> triggers) throws TimeoutException</li></ul><a name="refoperation131330"></a>
+<table><tr><td><div class="element">Operation <b>dgramReceive</b></div></td></tr></table><p>Processamento de cada pacote UDP recebido.<br /><br />@param pack Pacote enviado pelo serviço<br />@throws IOException<br /></p><p>Declaration :</p><ul><li>Uml : - dgramReceive(in pack : DatagramPacket) : void,  exceptions : IOException</li><li>Java : private void dgramReceive(DatagramPacket pack) throws IOException</li></ul><a name="refoperation131458"></a>
+<table><tr><td><div class="element">Operation <b>dgramReceiveConnect</b></div></td></tr></table><p>Tratamento de um pacote do tipo CONNECT recebido<br /><br />Esse método deve ser sobrescrito pelo servidor<br /></p><p>Declaration :</p><ul><li>Uml : ~ dgramReceiveConnect(in sockAddr : SocketAddress, in buf : ByteBuffer) : void</li><li>Java : package void dgramReceiveConnect(SocketAddress sockAddr, ByteBuffer buf)</li></ul><a name="refoperation131586"></a>
+<table><tr><td><div class="element">Operation <b>dgramReceiveData</b></div></td></tr></table><p>Tratamento de um pacote do tipo DATA recebido <br /></p><p>Declaration :</p><ul><li>Uml : ~ dgramReceiveData(in sockAddr : SocketAddress, in buf : ByteBuffer) : void</li><li>Java : package void dgramReceiveData(SocketAddress sockAddr, ByteBuffer buf)</li></ul><a name="refoperation131714"></a>
+<table><tr><td><div class="element">Operation <b>dgramReceiveAck</b></div></td></tr></table><p>Tratamento de um pacote do tipo ACK recebido <br /></p><p>Declaration :</p><ul><li>Uml : ~ dgramReceiveAck(in sockAddr : SocketAddress, in buf : ByteBuffer) : void</li><li>Java : package void dgramReceiveAck(SocketAddress sockAddr, ByteBuffer buf)</li></ul><a name="refoperation131842"></a>
+<table><tr><td><div class="element">Operation <b>dgramSend</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - dgramSend(in sockAddr : SocketAddress, in msgType : short, in connId : short, in seqNum : short, in payload : byte[]) : void</li><li>Java : private void dgramSend(SocketAddress sockAddr, short msgType, short connId, short seqNum, byte[] payload)</li></ul><a name="refoperation131970"></a>
+<table><tr><td><div class="element">Operation <b>dgramSend</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - dgramSend(in msgType : short, in conn : <a href="class128642.html#refclass128642"><b>LspConnection</b></a>, in seqNum : short, in payload : byte) : void</li><li>Java : private void dgramSend(short msgType, <a href="class128642.html#refclass128642"><b>LspConnection</b></a> conn, short seqNum, byte payload)</li></ul><a name="refoperation132098"></a>
+<table><tr><td><div class="element">Operation <b>dgramSendData</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ dgramSendData(in conn : <a href="class128642.html#refclass128642"><b>LspConnection</b></a>, in seqNum : short, in payload : byte) : void</li><li>Java : package final void dgramSendData(<a href="class128642.html#refclass128642"><b>LspConnection</b></a> conn, short seqNum, byte payload)</li></ul><a name="refoperation132226"></a>
+<table><tr><td><div class="element">Operation <b>dgramSendData</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ dgramSendData(in p : <a href="class128770.html#refclass128770"><b>InternalPack</b></a>) : void</li><li>Java : package final void dgramSendData(<a href="class128770.html#refclass128770"><b>InternalPack</b></a> p)</li></ul><a name="refoperation132354"></a>
+<table><tr><td><div class="element">Operation <b>dgramSendAck</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ dgramSendAck(in conn : <a href="class128642.html#refclass128642"><b>LspConnection</b></a>, in seqNum : short) : void</li><li>Java : package final void dgramSendAck(<a href="class128642.html#refclass128642"><b>LspConnection</b></a> conn, short seqNum)</li></ul><a name="refoperation132482"></a>
+<table><tr><td><div class="element">Operation <b>dgramSendAck</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ dgramSendAck(in p : <a href="class128770.html#refclass128770"><b>InternalPack</b></a>) : void</li><li>Java : package final void dgramSendAck(<a href="class128770.html#refclass128770"><b>InternalPack</b></a> p)</li></ul><a name="refoperation132610"></a>
+<table><tr><td><div class="element">Operation <b>payload</b></div></td></tr></table><p>Helper para obter um array de bytes com o resto do {@link ByteBuffer} <br /></p><p>Declaration :</p><ul><li>Uml : static, ~ payload(in buf : ByteBuffer) : byte</li><li>Java : package final static byte payload(ByteBuffer buf)</li></ul><a name="refoperation132738"></a>
+<table><tr><td><div class="element">Operation <b>usedConnection</b></div></td></tr></table><p>Obtém o objeto {@link LspConnection} em uso<br /><br />@param connId Id de conexão para validar/pesquisar<br />@return Uma instância de {@link LspConnection} ou null<br /></p><p>Declaration :</p><ul><li>Uml : abstract, ~ usedConnection(in connId : short) : <a href="class128642.html#refclass128642"><b>LspConnection</b></a></li><li>Java : package abstract <a href="class128642.html#refclass128642"><b>LspConnection</b></a> usedConnection(short connId)</li></ul><a name="refoperation132866"></a>
+<table><tr><td><div class="element">Operation <b>usedConnection</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : - usedConnection(in sockAddr : SocketAddress, in connId : short) : <a href="class128642.html#refclass128642"><b>LspConnection</b></a></li><li>Java : private <a href="class128642.html#refclass128642"><b>LspConnection</b></a> usedConnection(SocketAddress sockAddr, short connId)</li></ul><a name="refoperation132994"></a>
+<table><tr><td><div class="element">Operation <b>receive</b></div></td></tr></table><p>Recebe um pacote da fila de entrada <br /></p><p>Declaration :</p><ul><li>Uml : + receive() : <a href="class128770.html#refclass128770"><b>InternalPack</b></a></li><li>Java : public <a href="class128770.html#refclass128770"><b>InternalPack</b></a> receive()</li></ul><a name="refoperation133122"></a>
+<table><tr><td><div class="element">Operation <b>send</b></div></td></tr></table><p>Insere um pacote na fila de saída <br /></p><p>Declaration :</p><ul><li>Uml : + send(inout p : <a href="class128898.html#refclass128898"><b>Pack</b></a>) : void</li><li>Java : public void send(<a href="class128898.html#refclass128898"><b>Pack</b></a> p)</li></ul><a name="refoperation133250"></a>
+<table><tr><td><div class="element">Operation <b>getPort</b></div></td></tr></table><p>Declaration :</p><ul><li>Uml : ~ getPort() : int</li><li>Java : package int getPort()</li></ul><table><tr><td><div class="element">Class <b><a href="class129410.html#refclass129410"><b>ConnectTask</b></a></b></div></td></tr></table>
+<table><tr><td><div class="element">Class <b><a href="class129666.html#refclass129666"><b>InputTask</b></a></b></div></td></tr></table>
+<table><tr><td><div class="element">Class <b><a href="class129922.html#refclass129922"><b>OutputTask</b></a></b></div></td></tr></table>
+</div>
+<p>All public operations : <a href="class128514.html#refoperation132994"><b>receive</b></a> , <a href="class128514.html#refoperation133122"><b>send</b></a> </p>
+</body>
+</html>
