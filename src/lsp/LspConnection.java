@@ -53,6 +53,7 @@ class LspConnection {
 		this.sendMissing = new AtomicInteger(0);
 
 		this.statusThread = new Thread(new StatusChecker(params));
+		this.statusThread.setDaemon(true);
 		this.statusThread.start();
 	}
 

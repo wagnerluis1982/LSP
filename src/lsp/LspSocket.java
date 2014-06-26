@@ -73,10 +73,15 @@ abstract class LspSocket {
 		// Inicializa atributos para uso na conexão a um servidor LSP
 		this.connectExecutor = Executors.newSingleThreadExecutor();
 
-		inputThread = new Thread(new InputTask());
-		inputThread.start();
-		outputThread = new Thread(new OutputTask());
-		outputThread.start();
+		// Inicializa thread de entradas
+		this.inputThread = new Thread(new InputTask());
+		this.inputThread.setDaemon(true);
+		this.inputThread.start();
+
+		// Inicializa thread de saídas
+		this.outputThread = new Thread(new OutputTask());
+		this.outputThread.setDaemon(true);
+		this.outputThread.start();
 	}
 
 	/**
