@@ -38,8 +38,12 @@ public class LspClient {
 	 * Devolve null se a conexão for perdida.
 	 */
 	public byte[] read() {
-		checkActive();
-		return lspSocket.receive().getPayload();
+		try {
+			checkActive();
+			return lspSocket.receive().getPayload();
+		} catch (ClosedConnectionException | NullPointerException e) {
+			return null;
+		}
 	}
 
 	/**

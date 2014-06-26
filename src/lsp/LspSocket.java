@@ -295,11 +295,18 @@ abstract class LspSocket {
 
 	/** Recebe um pacote da fila de entrada */
 	public InternalPack receive() {
-		try {
-			return inputQueue.take();
-		} catch (InterruptedException e) {
-			return null;
+		while (isActive()) {
+			try {
+				InternalPack nextPack = inputQueue.poll(1, TimeUnit.SECONDS);
+				if (nextPack != null) {
+					return nextPack;
+				}
+			} catch (InterruptedException e) {
+				break;
+			}
 		}
+
+		return null;
 	}
 
 	/** Insere um pacote na fila de saída */
