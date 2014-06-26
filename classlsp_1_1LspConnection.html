@@ -237,8 +237,9 @@ Funções Estáticas do Pacote</h2></td></tr>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        this.sendMissing = <span class="keyword">new</span> AtomicInteger(0);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        this.statusThread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> StatusChecker(params));</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        this.statusThread.start();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        this.statusThread.setDaemon(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        this.statusThread.start();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -296,11 +297,11 @@ Funções Estáticas do Pacote</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00069">69</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                                                                                                   {</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keyword">this</span>(id, <a class="code" href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">uniqueSockId</a>(sockAddr), sockAddr, params, triggers);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_ac7f30bb81ea1f85a4981f21fbab35cc9"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">lsp.LspConnection.uniqueSockId</a></div><div class="ttdeci">static long uniqueSockId(SocketAddress sockAddr)</div><div class="ttdoc">Número único gerado a partir de um endereço IP e uma porta. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00082">LspConnection.java:82</a></div></div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00070">70</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                                                                                                   {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">this</span>(id, <a class="code" href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">uniqueSockId</a>(sockAddr), sockAddr, params, triggers);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_ac7f30bb81ea1f85a4981f21fbab35cc9"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">lsp.LspConnection.uniqueSockId</a></div><div class="ttdeci">static long uniqueSockId(SocketAddress sockAddr)</div><div class="ttdoc">Número único gerado a partir de um endereço IP e uma porta. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00083">LspConnection.java:83</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Este é o diagrama das funções utilizadas por esta função:</div>
@@ -338,22 +339,22 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 
 <p>Informa que o ACK do número de sequência informado foi recebido. </p>
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00142">142</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;                           {</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="comment">// Atualiza o momento de recebimento</span></div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">received</a>();</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            <span class="comment">// Marca dados como recebidos, se o número de sequência é igual ao atual</span></div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="keywordflow">if</span> (this.seqNum == seqNum) {</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                this.dataMessage = null;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            }</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            <span class="comment">// Diminuição da quantidade de mensagens faltando entregar.</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            this.sendMissing.decrementAndGet();</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        }</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    }</div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a7c726038b9be57026448e724e965bd25"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">lsp.LspConnection.received</a></div><div class="ttdeci">void received()</div><div class="ttdoc">Informa que houve uma mensagem recebida por essa conexão. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00171">LspConnection.java:171</a></div></div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00143">143</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                           {</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <span class="comment">// Atualiza o momento de recebimento</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">received</a>();</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="comment">// Marca dados como recebidos, se o número de sequência é igual ao atual</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">if</span> (this.seqNum == seqNum) {</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                this.dataMessage = null;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            }</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            <span class="comment">// Diminuição da quantidade de mensagens faltando entregar.</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            this.sendMissing.decrementAndGet();</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        }</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    }</div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a7c726038b9be57026448e724e965bd25"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">lsp.LspConnection.received</a></div><div class="ttdeci">void received()</div><div class="ttdoc">Informa que houve uma mensagem recebida por essa conexão. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00172">LspConnection.java:172</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Este é o diagrama das funções utilizadas por esta função:</div>
@@ -387,11 +388,11 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00194">194</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;                 {</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">close</a>(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    }</div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a43ad1c065f552c879a3b8b2c6ce8f73f"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">lsp.LspConnection.close</a></div><div class="ttdeci">void close()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00194">LspConnection.java:194</a></div></div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00195">195</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;                 {</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">close</a>(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    }</div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a43ad1c065f552c879a3b8b2c6ce8f73f"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">lsp.LspConnection.close</a></div><div class="ttdeci">void close()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00195">LspConnection.java:195</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -417,15 +418,15 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00198">198</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;                                  {</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        <span class="keywordflow">if</span> (interrupt) {</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;            this.statusThread.interrupt();</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            this.closed = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            this.markClosed = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        }</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00199">199</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;                                  {</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        <span class="keywordflow">if</span> (interrupt) {</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            this.statusThread.interrupt();</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            this.closed = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            this.markClosed = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        }</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -450,10 +451,10 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00073">73</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                  {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> this.id;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00074">74</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                  {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordflow">return</span> this.id;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Este é o diagrama das funções que utilizam esta função:</div>
@@ -490,10 +491,10 @@ Este é o diagrama das funções que utilizam esta função:</div>
 <p>Número de mensagens na fila, mas faltam enviar. </p>
 <p>Valor controlado externamente. </p>
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00114">114</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                         {</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keywordflow">return</span> this.sendMissing.intValue();</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00115">115</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                         {</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keywordflow">return</span> this.sendMissing.intValue();</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    }</div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Este é o diagrama das funções que utilizam esta função:</div>
@@ -527,10 +528,10 @@ Este é o diagrama das funções que utilizam esta função:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00098">98</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                                {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">return</span> this.sockAddr;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00099">99</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                                {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordflow">return</span> this.sockAddr;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -558,10 +559,10 @@ Este é o diagrama das funções que utilizam esta função:</div>
 <p>Número único gerado a partir de um endereço IP e uma porta. </p>
 <p>Esse atributo só é usado pelo servidor </p>
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00094">94</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                     {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keywordflow">return</span> this.sockId;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00095">95</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                     {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keywordflow">return</span> this.sockId;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -589,10 +590,10 @@ Este é o diagrama das funções que utilizam esta função:</div>
 <p>Aumenta em um o número de mensagens na fila, mas faltam enviar. </p>
 <p>Isso é controlado externamente. </p>
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00106">106</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                          {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        this.sendMissing.incrementAndGet();</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00107">107</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                          {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        this.sendMissing.incrementAndGet();</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -617,10 +618,10 @@ Este é o diagrama das funções que utilizam esta função:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00190">190</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;                       {</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        <span class="keywordflow">return</span> this.closed || this.markClosed;</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00191">191</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;                       {</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        <span class="keywordflow">return</span> this.closed || this.markClosed;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    }</div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Este é o diagrama das funções que utilizam esta função:</div>
@@ -654,10 +655,10 @@ Este é o diagrama das funções que utilizam esta função:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00186">186</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;                            {</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        <span class="keywordflow">return</span> this.closed;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00187">187</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;                            {</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        <span class="keywordflow">return</span> this.closed;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    }</div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Este é o diagrama das funções que utilizam esta função:</div>
@@ -694,10 +695,10 @@ Este é o diagrama das funções que utilizam esta função:</div>
 <p>Informa que houve uma mensagem recebida por essa conexão. </p>
 <p>Esse método tem como único propósito a atualização do momento de recebimento. </p>
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00171">171</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;                    {</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        this.receivedTime = System.currentTimeMillis();</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00172">172</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;                    {</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        this.receivedTime = System.currentTimeMillis();</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    }</div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Este é o diagrama das funções que utilizam esta função:</div>
@@ -735,14 +736,14 @@ Este é o diagrama das funções que utilizam esta função:</div>
 <p>Informa o número de sequência em que uma mensagem DATA foi recebida. </p>
 <p>Esse método atualiza o último momento de recebimento </p>
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00179">179</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;                                {</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <span class="comment">// Atualiza o momento de recebimento</span></div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">received</a>();</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <span class="comment">// Altera o número de sequência atual</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        this.receivedSeqNum = seqNum;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    }</div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a7c726038b9be57026448e724e965bd25"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">lsp.LspConnection.received</a></div><div class="ttdeci">void received()</div><div class="ttdoc">Informa que houve uma mensagem recebida por essa conexão. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00171">LspConnection.java:171</a></div></div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00180">180</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;                                {</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <span class="comment">// Atualiza o momento de recebimento</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">received</a>();</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="comment">// Altera o número de sequência atual</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        this.receivedSeqNum = seqNum;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    }</div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a7c726038b9be57026448e724e965bd25"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">lsp.LspConnection.received</a></div><div class="ttdeci">void received()</div><div class="ttdoc">Informa que houve uma mensagem recebida por essa conexão. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00172">LspConnection.java:172</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Este é o diagrama das funções utilizadas por esta função:</div>
@@ -779,11 +780,11 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 <p>Número de sequência da última mensagem DATA recebida por essa conexão. </p>
 <p>Esse número é gerenciado externamente através do método <a class="el" href="classlsp_1_1LspConnection.html#af5b616c9b7d6b019f21ce87312e81636" title="Informa o número de sequência em que uma mensagem DATA foi recebida. ">received(short)</a>. Se receber -1, quer dizer que não chegou nenhuma mensagem depois do pedido de conexão. </p>
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00163">163</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                           {</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">receivedSeqNum</a>;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    }</div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_ae65123af7019ed6af549d728f151bec1"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">lsp.LspConnection.receivedSeqNum</a></div><div class="ttdeci">short receivedSeqNum()</div><div class="ttdoc">Número de sequência da última mensagem DATA recebida por essa conexão. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00163">LspConnection.java:163</a></div></div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00164">164</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                           {</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">receivedSeqNum</a>;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    }</div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_ae65123af7019ed6af549d728f151bec1"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">lsp.LspConnection.receivedSeqNum</a></div><div class="ttdeci">short receivedSeqNum()</div><div class="ttdoc">Número de sequência da última mensagem DATA recebida por essa conexão. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00164">LspConnection.java:164</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -810,10 +811,10 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 
 <p>Obtém a última mensagem de dados enviada (aguardando ACK) </p>
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00119">119</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                        {</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">return</span> this.dataMessage;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00120">120</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                        {</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keywordflow">return</span> this.dataMessage;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -842,18 +843,18 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 <p>Informa o payload da última mensagem enviada. </p>
 <dl class="section return"><dt>Retorna</dt><dd>Pacote com um novo número de sequência ou null se já há um pacote aguardando ACK </dd></dl>
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00129">129</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                                 {</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            InternalPack p = <span class="keyword">new</span> InternalPack(<span class="keyword">this</span>, ++seqNum, pack.getPayload());</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="keywordflow">if</span> (this.dataMessage == null) {</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                this.dataMessage = p;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                <span class="keywordflow">return</span> p;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            }</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        }</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="keywordflow">return</span> null;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00130">130</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                                 {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            InternalPack p = <span class="keyword">new</span> InternalPack(<span class="keyword">this</span>, ++seqNum, pack.getPayload());</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="keywordflow">if</span> (this.dataMessage == null) {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                this.dataMessage = p;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                <span class="keywordflow">return</span> p;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        }</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <span class="keywordflow">return</span> null;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    }</div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Este é o diagrama das funções utilizadas por esta função:</div>
@@ -891,13 +892,13 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 <p>Número único gerado a partir de um endereço IP e uma porta. </p>
 <p>Esse método só é usado pelo servidor </p>
 
-<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00082">82</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                                                     {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">final</span> InetSocketAddress addr = (InetSocketAddress) sockAddr;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">final</span> <span class="keywordtype">int</span> ip = addr.getAddress().hashCode();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keyword">final</span> <span class="keywordtype">int</span> port = addr.getPort();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keywordflow">return</span> (ip &amp; 0xffff_ffffL) &lt;&lt; 16 | (short) port;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00083">83</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                                                     {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">final</span> InetSocketAddress addr = (InetSocketAddress) sockAddr;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keyword">final</span> <span class="keywordtype">int</span> ip = addr.getAddress().hashCode();</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keyword">final</span> <span class="keywordtype">int</span> port = addr.getPort();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordflow">return</span> (ip &amp; 0xffff_ffffL) &lt;&lt; 16 | (short) port;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
 </div><!-- fragment -->
 <p><div class="dynheader">
 Este é o diagrama das funções que utilizam esta função:</div>

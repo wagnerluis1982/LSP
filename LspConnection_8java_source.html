@@ -126,179 +126,180 @@ var searchBox = new SearchBox("searchBox", "search",false,'Busca');
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        this.sendMissing = <span class="keyword">new</span> AtomicInteger(0);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        this.statusThread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> StatusChecker(params));</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        this.statusThread.start();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a07fc604284845d11e193c59ad63e91f0">   69</a></span>&#160;    <a class="code" href="classlsp_1_1LspConnection.html#a07fc604284845d11e193c59ad63e91f0">LspConnection</a>(<span class="keywordtype">short</span> <span class="keywordtype">id</span>, SocketAddress sockAddr, <a class="code" href="classlsp_1_1LspParams.html">LspParams</a> params, <a class="code" href="interfacelsp_1_1ConnectionTriggers.html">ConnectionTriggers</a> triggers) {</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keyword">this</span>(id, <a class="code" href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">uniqueSockId</a>(sockAddr), sockAddr, params, triggers);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236">   73</a></span>&#160;    <span class="keywordtype">short</span> <a class="code" href="classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236">getId</a>() {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> this.id;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">   82</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">long</span> <a class="code" href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">uniqueSockId</a>(SocketAddress sockAddr) {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">final</span> InetSocketAddress addr = (InetSocketAddress) sockAddr;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">final</span> <span class="keywordtype">int</span> ip = addr.getAddress().hashCode();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keyword">final</span> <span class="keywordtype">int</span> port = addr.getPort();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keywordflow">return</span> (ip &amp; 0xffff_ffffL) &lt;&lt; 16 | (short) port;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a49e437af427f0aac30786f4473387535">   94</a></span>&#160;    <span class="keywordtype">long</span> <a class="code" href="classlsp_1_1LspConnection.html#a49e437af427f0aac30786f4473387535">getSockId</a>() {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keywordflow">return</span> this.sockId;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#ac032cd5f729dca463cd4befd9b941eb3">   98</a></span>&#160;    SocketAddress <a class="code" href="classlsp_1_1LspConnection.html#ac032cd5f729dca463cd4befd9b941eb3">getSockAddr</a>() {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">return</span> this.sockAddr;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a3e55ece7779a78f6bda1ae2287cc181e">  106</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#a3e55ece7779a78f6bda1ae2287cc181e">incSendMissing</a>() {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        this.sendMissing.incrementAndGet();</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35">  114</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35">getSendMissing</a>() {</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keywordflow">return</span> this.sendMissing.intValue();</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    }</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#af8473bc5a9579672d11aea7a36f290ac">  119</a></span>&#160;    <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a> <a class="code" href="classlsp_1_1LspConnection.html#af8473bc5a9579672d11aea7a36f290ac">sent</a>() {</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">return</span> this.dataMessage;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    }</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a33e3b98829b6adfb024ee4339c9e6bce">  129</a></span>&#160;    <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a> <a class="code" href="classlsp_1_1LspConnection.html#a33e3b98829b6adfb024ee4339c9e6bce">sent</a>(<a class="code" href="classlsp_1_1Pack.html">Pack</a> pack) {</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a> p = <span class="keyword">new</span> <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a>(<span class="keyword">this</span>, ++seqNum, pack.<a class="code" href="classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568">getPayload</a>());</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="keywordflow">if</span> (this.dataMessage == null) {</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                this.dataMessage = p;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                <span class="keywordflow">return</span> p;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            }</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        }</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="keywordflow">return</span> null;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    }</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#abac47a33d19ce3006d7882b9d90bce07">  142</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#abac47a33d19ce3006d7882b9d90bce07">ack</a>(<span class="keywordtype">short</span> seqNum) {</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="comment">// Atualiza o momento de recebimento</span></div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">received</a>();</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            <span class="comment">// Marca dados como recebidos, se o número de sequência é igual ao atual</span></div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="keywordflow">if</span> (this.seqNum == seqNum) {</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                this.dataMessage = null;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            }</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            <span class="comment">// Diminuição da quantidade de mensagens faltando entregar.</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            this.sendMissing.decrementAndGet();</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        }</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    }</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
-<div class="line"><a name="l00163"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">  163</a></span>&#160;    <span class="keywordtype">short</span> <a class="code" href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">receivedSeqNum</a>() {</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">receivedSeqNum</a>;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    }</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
-<div class="line"><a name="l00171"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">  171</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">received</a>() {</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        this.receivedTime = System.currentTimeMillis();</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    }</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
-<div class="line"><a name="l00179"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#af5b616c9b7d6b019f21ce87312e81636">  179</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#af5b616c9b7d6b019f21ce87312e81636">received</a>(<span class="keywordtype">short</span> seqNum) {</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <span class="comment">// Atualiza o momento de recebimento</span></div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">received</a>();</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <span class="comment">// Altera o número de sequência atual</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        this.receivedSeqNum = seqNum;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    }</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;</div>
-<div class="line"><a name="l00186"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a3396395dd294328384db2e9c726117e2">  186</a></span>&#160;    <span class="keywordtype">boolean</span> <a class="code" href="classlsp_1_1LspConnection.html#a3396395dd294328384db2e9c726117e2">isInterrupted</a>() {</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        <span class="keywordflow">return</span> this.closed;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    }</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;</div>
-<div class="line"><a name="l00190"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#af5f74e6664ed98e5738cfc57ba733647">  190</a></span>&#160;    <span class="keywordtype">boolean</span> <a class="code" href="classlsp_1_1LspConnection.html#af5f74e6664ed98e5738cfc57ba733647">isClosed</a>() {</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        <span class="keywordflow">return</span> this.closed || this.markClosed;</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    }</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;</div>
-<div class="line"><a name="l00194"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">  194</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">close</a>() {</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">close</a>(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    }</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div>
-<div class="line"><a name="l00198"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a26714d5097e382235f9fbd6cb074238b">  198</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#a26714d5097e382235f9fbd6cb074238b">close</a>(<span class="keywordtype">boolean</span> interrupt) {</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        <span class="keywordflow">if</span> (interrupt) {</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;            this.statusThread.interrupt();</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            this.closed = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            this.markClosed = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        }</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    }</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">class </span>StatusChecker <span class="keyword">implements</span> Runnable {</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        <span class="keyword">private</span> <span class="keyword">final</span> <a class="code" href="classlsp_1_1LspParams.html">LspParams</a> params;</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        <span class="keyword">private</span> StatusChecker(<a class="code" href="classlsp_1_1LspParams.html">LspParams</a> params) {</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            this.params = params;</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        }</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;        @Override</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        <span class="keyword">public</span> <span class="keywordtype">void</span> run() {</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            <span class="comment">// Obtém o horário da última mensagem recebida em milisegundos</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            <span class="keywordtype">long</span> lastTime = receivedTime;</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;            <span class="comment">// Obtém parâmetros da conexão</span></div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            <span class="keywordtype">int</span> limit = params.getEpochLimit();</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            <span class="keyword">final</span> <span class="keywordtype">int</span> epoch = params.getEpoch();</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            <span class="comment">// Monitora a conexão continuamente até que o limite de épocas seja</span></div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            <span class="comment">// atingido ou a conexão seja fechada</span></div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;            <span class="keywordflow">while</span> (!closed &amp;&amp; limit-- &gt; 0) {</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;                <span class="comment">// ..ou quando a conexão está no estado de encerramento, até que</span></div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;                <span class="comment">// não haja mais mensagens para enviar.</span></div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;                <span class="keywordflow">if</span> (markClosed &amp;&amp; sendMissing.get() &lt;= 0) {</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;                }</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;                <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;                    Thread.sleep(epoch);</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;                } <span class="keywordflow">catch</span> (InterruptedException e) {</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;                }</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                <span class="comment">// Dispara as ações da época</span></div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                triggers.doEpochActions();</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;                <span class="comment">// Reinicia contagem de épocas se houve mensagens recebidas</span></div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;                <span class="comment">// desde a última época</span></div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;                <span class="keyword">final</span> <span class="keywordtype">long</span> time = receivedTime;</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                <span class="keywordflow">if</span> (time != lastTime) {</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                    lastTime = time;</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;                    limit = params.getEpochLimit();</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;                }</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            }</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            <span class="comment">// Encerra formalmente a conexão</span></div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;            triggers.doCloseConnection();</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;        }</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    }</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;}</div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a33e3b98829b6adfb024ee4339c9e6bce"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a33e3b98829b6adfb024ee4339c9e6bce">lsp.LspConnection.sent</a></div><div class="ttdeci">InternalPack sent(Pack pack)</div><div class="ttdoc">Informa o payload da última mensagem enviada. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00129">LspConnection.java:129</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_af5f74e6664ed98e5738cfc57ba733647"><div class="ttname"><a href="classlsp_1_1LspConnection.html#af5f74e6664ed98e5738cfc57ba733647">lsp.LspConnection.isClosed</a></div><div class="ttdeci">boolean isClosed()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00190">LspConnection.java:190</a></div></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        this.statusThread.setDaemon(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        this.statusThread.start();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a07fc604284845d11e193c59ad63e91f0">   70</a></span>&#160;    <a class="code" href="classlsp_1_1LspConnection.html#a07fc604284845d11e193c59ad63e91f0">LspConnection</a>(<span class="keywordtype">short</span> <span class="keywordtype">id</span>, SocketAddress sockAddr, <a class="code" href="classlsp_1_1LspParams.html">LspParams</a> params, <a class="code" href="interfacelsp_1_1ConnectionTriggers.html">ConnectionTriggers</a> triggers) {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">this</span>(id, <a class="code" href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">uniqueSockId</a>(sockAddr), sockAddr, params, triggers);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236">   74</a></span>&#160;    <span class="keywordtype">short</span> <a class="code" href="classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236">getId</a>() {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordflow">return</span> this.id;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">   83</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">long</span> <a class="code" href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">uniqueSockId</a>(SocketAddress sockAddr) {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">final</span> InetSocketAddress addr = (InetSocketAddress) sockAddr;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keyword">final</span> <span class="keywordtype">int</span> ip = addr.getAddress().hashCode();</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keyword">final</span> <span class="keywordtype">int</span> port = addr.getPort();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordflow">return</span> (ip &amp; 0xffff_ffffL) &lt;&lt; 16 | (short) port;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a49e437af427f0aac30786f4473387535">   95</a></span>&#160;    <span class="keywordtype">long</span> <a class="code" href="classlsp_1_1LspConnection.html#a49e437af427f0aac30786f4473387535">getSockId</a>() {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keywordflow">return</span> this.sockId;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#ac032cd5f729dca463cd4befd9b941eb3">   99</a></span>&#160;    SocketAddress <a class="code" href="classlsp_1_1LspConnection.html#ac032cd5f729dca463cd4befd9b941eb3">getSockAddr</a>() {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordflow">return</span> this.sockAddr;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    }</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a3e55ece7779a78f6bda1ae2287cc181e">  107</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#a3e55ece7779a78f6bda1ae2287cc181e">incSendMissing</a>() {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        this.sendMissing.incrementAndGet();</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35">  115</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35">getSendMissing</a>() {</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keywordflow">return</span> this.sendMissing.intValue();</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    }</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#af8473bc5a9579672d11aea7a36f290ac">  120</a></span>&#160;    <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a> <a class="code" href="classlsp_1_1LspConnection.html#af8473bc5a9579672d11aea7a36f290ac">sent</a>() {</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keywordflow">return</span> this.dataMessage;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a33e3b98829b6adfb024ee4339c9e6bce">  130</a></span>&#160;    <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a> <a class="code" href="classlsp_1_1LspConnection.html#a33e3b98829b6adfb024ee4339c9e6bce">sent</a>(<a class="code" href="classlsp_1_1Pack.html">Pack</a> pack) {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a> p = <span class="keyword">new</span> <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a>(<span class="keyword">this</span>, ++seqNum, pack.<a class="code" href="classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568">getPayload</a>());</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="keywordflow">if</span> (this.dataMessage == null) {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                this.dataMessage = p;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                <span class="keywordflow">return</span> p;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            }</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        }</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <span class="keywordflow">return</span> null;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    }</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
+<div class="line"><a name="l00143"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#abac47a33d19ce3006d7882b9d90bce07">  143</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#abac47a33d19ce3006d7882b9d90bce07">ack</a>(<span class="keywordtype">short</span> seqNum) {</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <span class="comment">// Atualiza o momento de recebimento</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">received</a>();</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="comment">// Marca dados como recebidos, se o número de sequência é igual ao atual</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">if</span> (this.seqNum == seqNum) {</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                this.dataMessage = null;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            }</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            <span class="comment">// Diminuição da quantidade de mensagens faltando entregar.</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            this.sendMissing.decrementAndGet();</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        }</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    }</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
+<div class="line"><a name="l00164"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">  164</a></span>&#160;    <span class="keywordtype">short</span> <a class="code" href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">receivedSeqNum</a>() {</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">receivedSeqNum</a>;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    }</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
+<div class="line"><a name="l00172"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">  172</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">received</a>() {</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        this.receivedTime = System.currentTimeMillis();</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    }</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00180"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#af5b616c9b7d6b019f21ce87312e81636">  180</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#af5b616c9b7d6b019f21ce87312e81636">received</a>(<span class="keywordtype">short</span> seqNum) {</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <span class="comment">// Atualiza o momento de recebimento</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">received</a>();</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="comment">// Altera o número de sequência atual</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        this.receivedSeqNum = seqNum;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    }</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;</div>
+<div class="line"><a name="l00187"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a3396395dd294328384db2e9c726117e2">  187</a></span>&#160;    <span class="keywordtype">boolean</span> <a class="code" href="classlsp_1_1LspConnection.html#a3396395dd294328384db2e9c726117e2">isInterrupted</a>() {</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        <span class="keywordflow">return</span> this.closed;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    }</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
+<div class="line"><a name="l00191"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#af5f74e6664ed98e5738cfc57ba733647">  191</a></span>&#160;    <span class="keywordtype">boolean</span> <a class="code" href="classlsp_1_1LspConnection.html#af5f74e6664ed98e5738cfc57ba733647">isClosed</a>() {</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        <span class="keywordflow">return</span> this.closed || this.markClosed;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;    }</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;</div>
+<div class="line"><a name="l00195"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">  195</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">close</a>() {</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        <a class="code" href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">close</a>(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    }</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
+<div class="line"><a name="l00199"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a26714d5097e382235f9fbd6cb074238b">  199</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classlsp_1_1LspConnection.html#a26714d5097e382235f9fbd6cb074238b">close</a>(<span class="keywordtype">boolean</span> interrupt) {</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        <span class="keywordflow">if</span> (interrupt) {</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            this.statusThread.interrupt();</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            this.closed = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            this.markClosed = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        }</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    }</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">class </span>StatusChecker <span class="keyword">implements</span> Runnable {</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;        <span class="keyword">private</span> <span class="keyword">final</span> <a class="code" href="classlsp_1_1LspParams.html">LspParams</a> params;</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;        <span class="keyword">private</span> StatusChecker(<a class="code" href="classlsp_1_1LspParams.html">LspParams</a> params) {</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            this.params = params;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;        }</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        @Override</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        <span class="keyword">public</span> <span class="keywordtype">void</span> run() {</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            <span class="comment">// Obtém o horário da última mensagem recebida em milisegundos</span></div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            <span class="keywordtype">long</span> lastTime = receivedTime;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            <span class="comment">// Obtém parâmetros da conexão</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            <span class="keywordtype">int</span> limit = params.getEpochLimit();</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            <span class="keyword">final</span> <span class="keywordtype">int</span> epoch = params.getEpoch();</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            <span class="comment">// Monitora a conexão continuamente até que o limite de épocas seja</span></div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;            <span class="comment">// atingido ou a conexão seja fechada</span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;            <span class="keywordflow">while</span> (!closed &amp;&amp; limit-- &gt; 0) {</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;                <span class="comment">// ..ou quando a conexão está no estado de encerramento, até que</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;                <span class="comment">// não haja mais mensagens para enviar.</span></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;                <span class="keywordflow">if</span> (markClosed &amp;&amp; sendMissing.get() &lt;= 0) {</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;                }</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;                <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;                    Thread.sleep(epoch);</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                } <span class="keywordflow">catch</span> (InterruptedException e) {</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;                    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;                }</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                <span class="comment">// Dispara as ações da época</span></div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                triggers.doEpochActions();</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;                <span class="comment">// Reinicia contagem de épocas se houve mensagens recebidas</span></div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;                <span class="comment">// desde a última época</span></div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                <span class="keyword">final</span> <span class="keywordtype">long</span> time = receivedTime;</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                <span class="keywordflow">if</span> (time != lastTime) {</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;                    lastTime = time;</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;                    limit = params.getEpochLimit();</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;                }</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            }</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;            <span class="comment">// Encerra formalmente a conexão</span></div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;            triggers.doCloseConnection();</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        }</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    }</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;}</div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a33e3b98829b6adfb024ee4339c9e6bce"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a33e3b98829b6adfb024ee4339c9e6bce">lsp.LspConnection.sent</a></div><div class="ttdeci">InternalPack sent(Pack pack)</div><div class="ttdoc">Informa o payload da última mensagem enviada. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00130">LspConnection.java:130</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_af5f74e6664ed98e5738cfc57ba733647"><div class="ttname"><a href="classlsp_1_1LspConnection.html#af5f74e6664ed98e5738cfc57ba733647">lsp.LspConnection.isClosed</a></div><div class="ttdeci">boolean isClosed()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00191">LspConnection.java:191</a></div></div>
 <div class="ttc" id="classlsp_1_1LspConnection_html_ae6f7552d5c2911e7218efc33dbf92d29"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ae6f7552d5c2911e7218efc33dbf92d29">lsp.LspConnection.LspConnection</a></div><div class="ttdeci">LspConnection(short id, long sockId, SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers)</div><div class="ttdoc">Constrói um objeto LspConnection. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00041">LspConnection.java:41</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_ac7f30bb81ea1f85a4981f21fbab35cc9"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">lsp.LspConnection.uniqueSockId</a></div><div class="ttdeci">static long uniqueSockId(SocketAddress sockAddr)</div><div class="ttdoc">Número único gerado a partir de um endereço IP e uma porta. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00082">LspConnection.java:82</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_ac7f30bb81ea1f85a4981f21fbab35cc9"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ac7f30bb81ea1f85a4981f21fbab35cc9">lsp.LspConnection.uniqueSockId</a></div><div class="ttdeci">static long uniqueSockId(SocketAddress sockAddr)</div><div class="ttdoc">Número único gerado a partir de um endereço IP e uma porta. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00083">LspConnection.java:83</a></div></div>
 <div class="ttc" id="classlsp_1_1InternalPack_html"><div class="ttname"><a href="classlsp_1_1InternalPack.html">lsp.InternalPack</a></div><div class="ttdef"><b>Definition:</b> <a href="InternalPack_8java_source.html#l00003">InternalPack.java:3</a></div></div>
 <div class="ttc" id="classlsp_1_1LspConnection_html"><div class="ttname"><a href="classlsp_1_1LspConnection.html">lsp.LspConnection</a></div><div class="ttdoc">Representa uma conexão LSP. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00012">LspConnection.java:12</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_abac47a33d19ce3006d7882b9d90bce07"><div class="ttname"><a href="classlsp_1_1LspConnection.html#abac47a33d19ce3006d7882b9d90bce07">lsp.LspConnection.ack</a></div><div class="ttdeci">void ack(short seqNum)</div><div class="ttdoc">Informa que o ACK do número de sequência informado foi recebido. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00142">LspConnection.java:142</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_ac032cd5f729dca463cd4befd9b941eb3"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ac032cd5f729dca463cd4befd9b941eb3">lsp.LspConnection.getSockAddr</a></div><div class="ttdeci">SocketAddress getSockAddr()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00098">LspConnection.java:98</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_af8473bc5a9579672d11aea7a36f290ac"><div class="ttname"><a href="classlsp_1_1LspConnection.html#af8473bc5a9579672d11aea7a36f290ac">lsp.LspConnection.sent</a></div><div class="ttdeci">InternalPack sent()</div><div class="ttdoc">Obtém a última mensagem de dados enviada (aguardando ACK) </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00119">LspConnection.java:119</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a49e437af427f0aac30786f4473387535"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a49e437af427f0aac30786f4473387535">lsp.LspConnection.getSockId</a></div><div class="ttdeci">long getSockId()</div><div class="ttdoc">Número único gerado a partir de um endereço IP e uma porta. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00094">LspConnection.java:94</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_abac47a33d19ce3006d7882b9d90bce07"><div class="ttname"><a href="classlsp_1_1LspConnection.html#abac47a33d19ce3006d7882b9d90bce07">lsp.LspConnection.ack</a></div><div class="ttdeci">void ack(short seqNum)</div><div class="ttdoc">Informa que o ACK do número de sequência informado foi recebido. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00143">LspConnection.java:143</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_ac032cd5f729dca463cd4befd9b941eb3"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ac032cd5f729dca463cd4befd9b941eb3">lsp.LspConnection.getSockAddr</a></div><div class="ttdeci">SocketAddress getSockAddr()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00099">LspConnection.java:99</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_af8473bc5a9579672d11aea7a36f290ac"><div class="ttname"><a href="classlsp_1_1LspConnection.html#af8473bc5a9579672d11aea7a36f290ac">lsp.LspConnection.sent</a></div><div class="ttdeci">InternalPack sent()</div><div class="ttdoc">Obtém a última mensagem de dados enviada (aguardando ACK) </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00120">LspConnection.java:120</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a49e437af427f0aac30786f4473387535"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a49e437af427f0aac30786f4473387535">lsp.LspConnection.getSockId</a></div><div class="ttdeci">long getSockId()</div><div class="ttdoc">Número único gerado a partir de um endereço IP e uma porta. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00095">LspConnection.java:95</a></div></div>
 <div class="ttc" id="classlsp_1_1LspParams_html"><div class="ttname"><a href="classlsp_1_1LspParams.html">lsp.LspParams</a></div><div class="ttdef"><b>Definition:</b> <a href="LspParams_8java_source.html#l00003">LspParams.java:3</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_af5b616c9b7d6b019f21ce87312e81636"><div class="ttname"><a href="classlsp_1_1LspConnection.html#af5b616c9b7d6b019f21ce87312e81636">lsp.LspConnection.received</a></div><div class="ttdeci">void received(short seqNum)</div><div class="ttdoc">Informa o número de sequência em que uma mensagem DATA foi recebida. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00179">LspConnection.java:179</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_af5b616c9b7d6b019f21ce87312e81636"><div class="ttname"><a href="classlsp_1_1LspConnection.html#af5b616c9b7d6b019f21ce87312e81636">lsp.LspConnection.received</a></div><div class="ttdeci">void received(short seqNum)</div><div class="ttdoc">Informa o número de sequência em que uma mensagem DATA foi recebida. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00180">LspConnection.java:180</a></div></div>
 <div class="ttc" id="classlsp_1_1Pack_html_a91469830a667f9b9b7277854778cb568"><div class="ttname"><a href="classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568">lsp.Pack.getPayload</a></div><div class="ttdeci">byte[] getPayload()</div><div class="ttdef"><b>Definition:</b> <a href="Pack_8java_source.html#l00020">Pack.java:20</a></div></div>
 <div class="ttc" id="classlsp_1_1Pack_html"><div class="ttname"><a href="classlsp_1_1Pack.html">lsp.Pack</a></div><div class="ttdef"><b>Definition:</b> <a href="Pack_8java_source.html#l00003">Pack.java:3</a></div></div>
 <div class="ttc" id="interfacelsp_1_1ConnectionTriggers_html"><div class="ttname"><a href="interfacelsp_1_1ConnectionTriggers.html">lsp.ConnectionTriggers</a></div><div class="ttdef"><b>Definition:</b> <a href="ConnectionTriggers_8java_source.html#l00003">ConnectionTriggers.java:3</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a3e55ece7779a78f6bda1ae2287cc181e"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a3e55ece7779a78f6bda1ae2287cc181e">lsp.LspConnection.incSendMissing</a></div><div class="ttdeci">void incSendMissing()</div><div class="ttdoc">Aumenta em um o número de mensagens na fila, mas faltam enviar. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00106">LspConnection.java:106</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a43ad1c065f552c879a3b8b2c6ce8f73f"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">lsp.LspConnection.close</a></div><div class="ttdeci">void close()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00194">LspConnection.java:194</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a7c726038b9be57026448e724e965bd25"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">lsp.LspConnection.received</a></div><div class="ttdeci">void received()</div><div class="ttdoc">Informa que houve uma mensagem recebida por essa conexão. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00171">LspConnection.java:171</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_ae87a1bdd8b1ac33741bc7d968b6e0a35"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35">lsp.LspConnection.getSendMissing</a></div><div class="ttdeci">int getSendMissing()</div><div class="ttdoc">Número de mensagens na fila, mas faltam enviar. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00114">LspConnection.java:114</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a3396395dd294328384db2e9c726117e2"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a3396395dd294328384db2e9c726117e2">lsp.LspConnection.isInterrupted</a></div><div class="ttdeci">boolean isInterrupted()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00186">LspConnection.java:186</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a07fc604284845d11e193c59ad63e91f0"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a07fc604284845d11e193c59ad63e91f0">lsp.LspConnection.LspConnection</a></div><div class="ttdeci">LspConnection(short id, SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers)</div><div class="ttdoc">Constrói um objeto LspConnection. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00069">LspConnection.java:69</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a25375fd27202bff226292fd15524a236"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236">lsp.LspConnection.getId</a></div><div class="ttdeci">short getId()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00073">LspConnection.java:73</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_ae65123af7019ed6af549d728f151bec1"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">lsp.LspConnection.receivedSeqNum</a></div><div class="ttdeci">short receivedSeqNum()</div><div class="ttdoc">Número de sequência da última mensagem DATA recebida por essa conexão. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00163">LspConnection.java:163</a></div></div>
-<div class="ttc" id="classlsp_1_1LspConnection_html_a26714d5097e382235f9fbd6cb074238b"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a26714d5097e382235f9fbd6cb074238b">lsp.LspConnection.close</a></div><div class="ttdeci">void close(boolean interrupt)</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00198">LspConnection.java:198</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a3e55ece7779a78f6bda1ae2287cc181e"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a3e55ece7779a78f6bda1ae2287cc181e">lsp.LspConnection.incSendMissing</a></div><div class="ttdeci">void incSendMissing()</div><div class="ttdoc">Aumenta em um o número de mensagens na fila, mas faltam enviar. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00107">LspConnection.java:107</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a43ad1c065f552c879a3b8b2c6ce8f73f"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a43ad1c065f552c879a3b8b2c6ce8f73f">lsp.LspConnection.close</a></div><div class="ttdeci">void close()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00195">LspConnection.java:195</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a7c726038b9be57026448e724e965bd25"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a7c726038b9be57026448e724e965bd25">lsp.LspConnection.received</a></div><div class="ttdeci">void received()</div><div class="ttdoc">Informa que houve uma mensagem recebida por essa conexão. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00172">LspConnection.java:172</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_ae87a1bdd8b1ac33741bc7d968b6e0a35"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35">lsp.LspConnection.getSendMissing</a></div><div class="ttdeci">int getSendMissing()</div><div class="ttdoc">Número de mensagens na fila, mas faltam enviar. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00115">LspConnection.java:115</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a3396395dd294328384db2e9c726117e2"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a3396395dd294328384db2e9c726117e2">lsp.LspConnection.isInterrupted</a></div><div class="ttdeci">boolean isInterrupted()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00187">LspConnection.java:187</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a07fc604284845d11e193c59ad63e91f0"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a07fc604284845d11e193c59ad63e91f0">lsp.LspConnection.LspConnection</a></div><div class="ttdeci">LspConnection(short id, SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers)</div><div class="ttdoc">Constrói um objeto LspConnection. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00070">LspConnection.java:70</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a25375fd27202bff226292fd15524a236"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236">lsp.LspConnection.getId</a></div><div class="ttdeci">short getId()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00074">LspConnection.java:74</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_ae65123af7019ed6af549d728f151bec1"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ae65123af7019ed6af549d728f151bec1">lsp.LspConnection.receivedSeqNum</a></div><div class="ttdeci">short receivedSeqNum()</div><div class="ttdoc">Número de sequência da última mensagem DATA recebida por essa conexão. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00164">LspConnection.java:164</a></div></div>
+<div class="ttc" id="classlsp_1_1LspConnection_html_a26714d5097e382235f9fbd6cb074238b"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a26714d5097e382235f9fbd6cb074238b">lsp.LspConnection.close</a></div><div class="ttdeci">void close(boolean interrupt)</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00199">LspConnection.java:199</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
