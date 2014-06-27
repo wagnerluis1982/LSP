@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
@@ -14,7 +15,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -44,9 +44,9 @@ abstract class LspSocket {
 	/* Lock para garantir que apenas uma thread envie pacotes */
 	private final Object sendLock = new Object();
 
-	/* Usados no pedido de conexão a um servidor LSP partindo desse socket */
-	private final ExecutorService connectExecutor;
-	private volatile ConnectTask connTask;
+	/* Usado no pedido de conexão a um servidor LSP partindo desse socket */
+	private volatile ConnectTask connectTask;
+	private final Object connectLock = new Object();
 
 	/* Socket de comunicação em uso */
 	private final DatagramSocket socket;
@@ -69,9 +69,6 @@ abstract class LspSocket {
 		this.port = this.socket.getLocalPort();
 		this.inputQueue = new LinkedBlockingQueue<>(queueSize);
 		this.outputQueue = new LinkedBlockingDeque<>(queueSize);
-
-		// Inicializa atributos para uso na conexão a um servidor LSP
-		this.connectExecutor = Executors.newSingleThreadExecutor();
 
 		// Inicializa thread de entradas
 		this.inputThread = new Thread(new InputTask());
@@ -106,7 +103,6 @@ abstract class LspSocket {
 		socket.close();
 
 		// Para todas as threads
-		connectExecutor.shutdown();
 		inputThread.interrupt();
 		outputThread.interrupt();
 
@@ -120,32 +116,54 @@ abstract class LspSocket {
 	 * cada época, até completar o limite da época.
 	 */
 	final LspConnection connect(SocketAddress sockAddr, LspParams params, ConnectionTriggers triggers) throws TimeoutException {
-		synchronized (connectExecutor) {
-			// Inicia uma nova tarefa de conexão
-			connTask = new ConnectTask(sockAddr);
-			Future<Short> call = connectExecutor.submit(connTask);
+		// Novo processo de conexão
+		final ConnectTask task = new ConnectTask(sockAddr, params);
 
-			try {
-				int limit = params.getEpochLimit();
-				while (limit > 0) {
-					try {
-						short connId = call.get(params.getEpoch(), TimeUnit.MILLISECONDS);
-						return new LspConnection(connId, sockAddr, params, triggers);
-					} catch (TimeoutException e) {
-						--limit;
-					} catch (InterruptedException e) {
-						return null;
-					} catch (ExecutionException e) {
+		try {
+			while (isActive()) {
+				synchronized (connectLock) {
+					// Se não há um processo de conexão em curso, registra um
+					if (this.connectTask == null) {
+						this.connectTask = task;
+					}
+
+					// Havendo um processo de conexão em curso, aguarda uma
+					// época e tenta se conectar novamente
+					else {
+						Thread.sleep(params.getEpoch());
+						continue;
+					}
+				}
+
+				// Executa o processo de conexão
+				final ExecutorService exec = Executors.newSingleThreadExecutor();
+				final Future<Short> id = exec.submit(task);
+
+				// Se o processo concluir corretamente, uma nova conexão será gerada
+				try {
+					final short connId = id.get();
+					return new LspConnection(connId, sockAddr, params, triggers);
+				}
+
+				// Se uma exceção foi lançada, então relança-a contextualmente
+				catch (ExecutionException e) {
+					if (e.getCause() instanceof TimeoutException) {
+						throw (TimeoutException) e.getCause().fillInStackTrace();
+					} else {
 						throw new RuntimeException(e);
 					}
 				}
-			} finally {
-				connTask.ack((short) 0);  // libera a thread
-				connTask = null;
-			}
 
-			throw new TimeoutException("Servidor " + sockAddr + " não responde");
-		}
+				// Garante a liberação da thread de requisição de conexão e
+				// registra que o processo de conexão se encerrou
+				finally {
+					exec.shutdown();
+					this.connectTask = null;
+				}
+			}
+		} catch (InterruptedException e) {}
+
+		return null;
 	}
 
 	/**
@@ -220,9 +238,12 @@ abstract class LspSocket {
 		// Senão verifica se há uma tentativa de conexão em curso. Caso
 		// positivo, verifica também se id não é 0, número de sequência é 0,
 		// conferindo antes se o ACK vem do socket remoto correto
-		else if (connTask != null && connId != 0 && buf.getShort() == 0
-				&& sockAddr.equals(connTask.sockAddr)) {
-			connTask.ack(connId);
+		else {
+			final ConnectTask task = connectTask;
+			if (task != null && connId > 0 && buf.getShort() == 0
+					&& sockAddr.equals(task.sockAddr)) {
+				task.ack(connId);
+			}
 		}
 	}
 
@@ -330,21 +351,35 @@ abstract class LspSocket {
 	}
 
 	private final class ConnectTask implements Callable<Short> {
-		private SocketAddress sockAddr;
-		private SynchronousQueue<Short> result;
+		private final SocketAddress sockAddr;
+		private final BlockingQueue<Short> result;
+		private final LspParams params;
 
-		ConnectTask(SocketAddress sockAddr) {
+		ConnectTask(SocketAddress sockAddr, LspParams params) {
 			this.sockAddr = sockAddr;
-			this.result = new SynchronousQueue<>();
+			this.params = params;
+			this.result = new ArrayBlockingQueue<>(1);
 		}
 
 		@Override
-		public Short call() throws Exception {
-			// Envia requisição de conexão
-			dgramSend(sockAddr, CONNECT, (short) 0, (short) 0, PAYLOAD_NIL);
+		public Short call() throws TimeoutException {
+			// Envia e aguarda, durante o tempo das épocas, o ACK da conexão
+			int limit = params.getEpochLimit();
+			while (isActive() && limit-- > 0) {
+				try {
+					dgramSend(sockAddr, CONNECT, (short) 0, (short) 0, PAYLOAD_NIL);
+					Short id = result.poll(params.getEpoch(), TimeUnit.MILLISECONDS);
+					if (id != null) {
+						return id;
+					}
+				} catch (InterruptedException e) {
+					return null;
+				}
+			}
 
-			// Retorna connId quando retornar o ACK da conexão
-			return result.take();
+			// Como já passou o tempo definido nos params, então considera
+			// que o servidor não está disponível
+			throw new TimeoutException("Servidor " + sockAddr + " não responde");
 		}
 
 		void ack(short connId) {
