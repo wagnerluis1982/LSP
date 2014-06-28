@@ -15,6 +15,8 @@ public class LspClient {
 
 	public LspClient(String host, int port, LspParams params) throws IOException, TimeoutException {
 		SocketAddress sockAddr = new InetSocketAddress(host, port);
+		params = (params == null) ? LspParams.defaultParams() : params;
+
 
 		lspSocket = new LspSocketImpl(0);
 		try {

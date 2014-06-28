@@ -39,7 +39,7 @@ public class LspServer {
 	public LspServer(int port, LspParams params) throws IOException {
 		this.lspSocket = new LspSocketImpl(port);
 		this.port = this.lspSocket.getPort();
-		this.params = params;
+		this.params = params == null ? LspParams.defaultParams() : params;
 	}
 
 	/**

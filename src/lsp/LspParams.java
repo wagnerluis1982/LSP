@@ -16,4 +16,10 @@ public class LspParams {
 	public int getEpochLimit() {
 		return epochLimit;
 	}
+
+	private static final LspParams DEFAULT_PARAMS = new LspParams(2000, 5);
+
+	static final LspParams defaultParams() {
+		return DEFAULT_PARAMS;
+	}
 }
