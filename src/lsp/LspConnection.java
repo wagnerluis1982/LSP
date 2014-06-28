@@ -22,7 +22,7 @@ class LspConnection {
 	private final AtomicInteger sendMissing;
 	private final Object lock = new Object();
 
-	private volatile InternalPack dataMessage;
+	private volatile InternalPack sentMessage;
 	private final SocketAddress sockAddr;
 	private final Thread statusThread;
 
@@ -118,7 +118,7 @@ class LspConnection {
 
 	/** Obtém a última mensagem de dados enviada (aguardando ACK) */
 	InternalPack sent() {
-		return this.dataMessage;
+		return this.sentMessage;
 	}
 
 	/**
@@ -130,8 +130,8 @@ class LspConnection {
 	InternalPack sent(Pack pack) {
 		synchronized (lock) {
 			InternalPack p = new InternalPack(this, ++seqNum, pack.getPayload());
-			if (this.dataMessage == null) {
-				this.dataMessage = p;
+			if (this.sentMessage == null) {
+				this.sentMessage = p;
 				return p;
 			}
 		}
@@ -147,7 +147,7 @@ class LspConnection {
 		synchronized (lock) {
 			// Marca dados como recebidos, se o número de sequência é igual ao atual
 			if (this.seqNum == seqNum) {
-				this.dataMessage = null;
+				this.sentMessage = null;
 			}
 
 			// Diminuição da quantidade de mensagens faltando entregar.

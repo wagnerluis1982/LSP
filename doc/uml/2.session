@@ -1,4 +1,4 @@
-window_sizes 1358 701 320 1032 497 120
+window_sizes 1358 701 320 1032 507 120
 windows_style
 diagrams
   classdiagram_ref 128002 // LspServer relationships
@@ -7,10 +7,10 @@ diagrams
     1040 514 100 18 0 0
 end
 show_stereotypes
-selected activity_ref 134530 // Activities
+selected activitydiagram_ref 154882 // Monitoring connection
 open
-  usecaseview_ref 141314 // Class diagrams
   activity_ref 134530 // Activities
+  classview_ref 128002 // LSP classes
   classview_ref 128130 // j2se
 end
 end

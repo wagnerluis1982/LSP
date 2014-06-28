@@ -8,19 +8,19 @@ classinstance 130306 class_ref 137090 // Client
   name ""   xyz 7 4 2000 life_line_z 2000
 classinstance 132994 class_ref 128642 // LspConnection
   name ""   xyz 462 4 2000 life_line_z 2000
-textcanvas 136706 "Aguarda fechamento terminar"
-  xyzwh 42 182 2000 170 21
+textcanvas 136962 "Aguarda fechamento concluir"
+  xyzwh 43 200 2015 161 16
 durationcanvas 131330 classinstance_ref 130306 // :Client
-  xyzwh 21 51 2010 11 151
+  xyzwh 21 51 2010 11 162
 end
 durationcanvas 135298 classinstance_ref 128770 // :LspClient
-  xyzwh 217 58 2010 11 143
+  xyzwh 217 58 2010 11 155
 end
 durationcanvas 136194 classinstance_ref 128898 // :LspSocket
-  xyzwh 369 92 2010 11 25
+  xyzwh 369 98 2010 11 25
 end
 durationcanvas 136450 classinstance_ref 132994 // :LspConnection
-  xyzwh 505 148 2010 11 25
+  xyzwh 505 154 2010 11 25
 end
 msg 135426 synchronous
   from durationcanvas_ref 131330
@@ -31,13 +31,13 @@ msg 135426 synchronous
 msg 136322 asynchronous
   from durationcanvas_ref 135298
   to durationcanvas_ref 136194
-  yz 93 2015 msg operation_ref 131074 // "close() : void"
+  yz 99 2015 msg operation_ref 131074 // "close() : void"
   show_full_operations_definition default drawing_language default show_context_mode default
-  label_xy 288 77
+  label_xy 288 83
 msg 136578 asynchronous
   from durationcanvas_ref 135298
   to durationcanvas_ref 136450
-  yz 149 2015 msg operation_ref 136834 // "close() : void"
+  yz 155 2015 msg operation_ref 136834 // "close() : void"
   show_full_operations_definition default drawing_language default show_context_mode default
-  label_xy 331 136
+  label_xy 331 142
 end

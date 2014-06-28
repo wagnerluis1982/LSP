@@ -1,6 +1,6 @@
 format 74
 "lsp" // lsp
-  revision 13
+  revision 24
   modified_by 2 "wagner"
   // class settings
   //class diagram settings
@@ -125,9 +125,159 @@ format 74
       end
 
       activitydiagram 154882 "Monitoring connection"
-	package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
+	package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations no shadow default
 	show_infonote default drawing_language default show_stereotype_properties default
 	size A3
+      end
+
+      activitynode 128002 initial_node ""
+	flow 147842 "Conexão está ativa?"
+	  on activitynode_ref 141186 // decision
+	end
+      end
+
+      activityaction 134530 "Aguardar uma época"
+	opaque_action
+	flow 168066 "<flow>"
+	  on activityaction_ref 141186 // activity action Reenviar última mensagem de dados
+	end
+      end
+
+      activitynode 141186 decision ""
+	flow 147714 "Sim"
+	  on activityaction_ref 134530 // activity action Aguardar uma época
+	end
+
+	flow 169474 "Não"
+	  on activitynode_ref 154498 // activity_final
+	end
+      end
+
+      activityaction 141186 "Reenviar última mensagem de dados"
+	call_operation_action
+	synchronous operation_ref 132226 // dgramSendData
+	pin 141058 "sock.dgramSendData()" type class_ref 128514 // LspSocket
+	  unordered 
+	  out
+	end
+
+	flow 161282 "<flow>"
+	  on activityaction_ref 147714 // activity action Obter último número de sequência recebido
+	end
+
+	pin 154242 "conn.sent()" explicit_type ""
+	  unordered 
+	  in
+	end
+      end
+
+      activityaction 147714 "Obter último número de sequência recebido"
+	opaque_action
+	pin 147586 "conn.receivedSeqNum()" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	flow 161410 "A conexão já recebeu alguma mensagem?"
+	  on activitynode_ref 147714 // decision
+	end
+      end
+
+      activitynode 147714 decision ""
+	flow 161538 "Sim"
+	  on activityaction_ref 154242 // activity action Reenviar ACK da última mensagem
+	end
+
+	flow 168194 "Não"
+	  on activityaction_ref 160770 // activity action Reenviar ACK inicial
+	end
+      end
+
+      activityaction 154242 "Reenviar ACK da última mensagem"
+	opaque_action
+	pin 147714 "sock.dgramSendAck(id, sn)" explicit_type "void"
+	  unordered 
+	  out
+	end
+
+	flow 168322 ""
+	  on activitynode_ref 154242 // merge
+	end
+      end
+
+      activityaction 160770 "Reenviar ACK inicial"
+	opaque_action
+	pin 154370 "sock.dgramSendAck(id, 0)" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	flow 168450 "<flow>"
+	  on activitynode_ref 154242 // merge
+	end
+      end
+
+      activitynode 154242 merge ""
+	ncouples 2
+	key "" value ""
+	key "" value ""
+	flow 168706 "Recebeu alguma mensagem desde a última época?"
+	  on activitynode_ref 154370 // decision
+	end
+      end
+
+      activitynode 154370 decision ""
+	flow 168962 "Sim"
+	  on activityaction_ref 160898 // activity action Zerar o contador de épocas
+	end
+
+	flow 169858 "Não"
+	  on activityaction_ref 161154 // activity action Conta uma época
+	end
+      end
+
+      activityaction 160898 "Zerar o contador de épocas"
+	opaque_action
+	flow 169090 "<flow>"
+	  on activitynode_ref 141186 // decision
+	end
+      end
+
+      activityaction 161026 "Fechar a conexão"
+	opaque_action
+	pin 154498 "conn.close()" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	pin 154626 "sock.close()" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	flow 169602 "<flow>"
+	  on activitynode_ref 154498 // activity_final
+	end
+      end
+
+      activitynode 154498 activity_final ""
+      end
+
+      activityaction 161154 "Conta uma época"
+	opaque_action
+	flow 169986 "<flow>"
+	  on activitynode_ref 154626 // decision
+	end
+      end
+
+      activitynode 154626 decision ""
+	flow 170114 "Chegou ao limite de épocas"
+	  on activityaction_ref 161026 // activity action Fechar a conexão
+	end
+
+	flow 170370 "Ainda não chegou ao limite de épocas"
+	  on activitynode_ref 141186 // decision
+	end
       end
     end
   end
@@ -1091,12 +1241,12 @@ ${members}}
 	idl_decl ""
       end
 
-      classrelation 129922 // dataMessage (<unidirectional association>)
+      classrelation 129922 // sentMessage (<unidirectional association>)
 	relation 129922 --->
-	  a role_name "dataMessage" volatile private
+	  a role_name "sentMessage" volatile private
 	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
 "
-	    classrelation_ref 129922 // dataMessage (<unidirectional association>)
+	    classrelation_ref 129922 // sentMessage (<unidirectional association>)
 	  b parent class_ref 128770 // InternalPack
       end
 
