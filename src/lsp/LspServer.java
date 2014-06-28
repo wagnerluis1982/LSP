@@ -138,14 +138,6 @@ public class LspServer {
 			try {
 				Thread.sleep(params.getEpoch());
 			} catch (InterruptedException e) {
-				// Se ocorrer algum erro, realmente fecha todas as conexões
-				for (final LspConnection conn : connectionPool.values()) {
-					new Thread() {
-						public void run() {
-							conn.close();
-						};
-					}.start();
-				}
 				break;
 			}
 		}
