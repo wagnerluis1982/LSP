@@ -1,3 +1,4 @@
 <map id="lsp.LspSocket.isActive" name="lsp.LspSocket.isActive">
-<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#aa080b82202e08294ff80c42d2d0aa057" title="Recebe um pacote da fila de entrada. " alt="" coords="212,5,361,35"/>
+<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#a27fcf12e3beed70d124a193c3c839b6c" title="Tenta estabelecer conexão com um servidor LSP, reenviando solicitação a cada época, até completar o limite da época. " alt="" coords="211,5,365,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1LspSocket.html#aa080b82202e08294ff80c42d2d0aa057" title="Recebe um pacote da fila de entrada. " alt="" coords="213,59,363,88"/>
 </map>

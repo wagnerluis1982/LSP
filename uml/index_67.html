@@ -21,6 +21,7 @@
 <tr bgcolor=#f0f0f0><td><a href="class129538.html#refclass129538" target = "projectFrame"><b>Callable</b></a></td><td>class</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation130562" target = "projectFrame"><b>checkActive</b></a></td><td>operation</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation138498" target = "projectFrame"><b>checkActive</b></a></td><td>operation</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition170114" target = "projectFrame"><b>Chegou ao limite de �pocas</b></a></td><td>transition</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refuse case view141314" target = "projectFrame"><b>Class diagrams</b></a></td><td>use case view</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="class137090.html#refclass137090" target = "projectFrame"><b>Client</b></a></td><td>class</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refsequence diagram148098" target = "projectFrame"><b>Client closing connection</b></a></td><td>sequence diagram</td><td></td></tr>
@@ -29,18 +30,23 @@
 <tr bgcolor=#f0f0f0><td><a href="index.html#refsequence diagram147842" target = "projectFrame"><b>Client sending message</b></a></td><td>sequence diagram</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="class130050.html#refclass130050" target = "projectFrame"><b>ClientTriggers</b></a></td><td>class</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation130306" target = "projectFrame"><b>close</b></a></td><td>operation</td><td>Encerra a conexão.</td></tr>
-<tr bgcolor=#f0f0f0><td><a href="index.html#refoperation136834" target = "projectFrame"><b>close</b></a></td><td>operation</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation136962" target = "projectFrame"><b>close</b></a></td><td>operation</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refoperation136834" target = "projectFrame"><b>close</b></a></td><td>operation</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation131074" target = "projectFrame"><b>close</b></a></td><td>operation</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation138370" target = "projectFrame"><b>closeAll</b></a></td><td>operation</td><td>Encerra todas as conexões ativas e a atividade do servidor. Isso inclui o<br />encerramento do processador de entradas.</td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation138114" target = "projectFrame"><b>closeConn</b></a></td><td>operation</td><td>Encerra uma conexão com o identificador connId.<br /><br />Não é possível chamar read, write ou closeConn para a mesma connId depois<br />de chamar esse método.<br /><br />@throws ClosedConnectionException<br />            se a conexão estiver encerrada.</td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute130946" target = "projectFrame"><b>closed</b></a></td><td>attribute</td><td></td></tr>
-<tr bgcolor=#f0f0f0><td><a href="index.html#refoperation128130" target = "projectFrame"><b>ClosedConnectionException</b></a></td><td>operation</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation128002" target = "projectFrame"><b>ClosedConnectionException</b></a></td><td>operation</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refoperation128130" target = "projectFrame"><b>ClosedConnectionException</b></a></td><td>operation</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="class128002.html#refclass128002" target = "projectFrame"><b>ClosedConnectionException</b></a></td><td>class</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition147714" target = "projectFrame"><b>Conex�o est� ativa</b></a></td><td>transition</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition169474" target = "projectFrame"><b>Conex�o inativa</b></a></td><td>transition</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refrelation128514" target = "projectFrame"><b>conn</b></a></td><td>relation</td><td></td></tr>
-<tr bgcolor=#f0f0f0><td><a href="index.html#refoperation131202" target = "projectFrame"><b>connect</b></a></td><td>operation</td><td>Tenta estabelecer conexão com um servidor LSP, reenviando solicitação a<br />cada época, até completar o limite da época.</td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin154498" target = "projectFrame"><b>conn.close()</b></a></td><td>activity action pin</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin147586" target = "projectFrame"><b>conn.receivedSeqNum()</b></a></td><td>activity action pin</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin154242" target = "projectFrame"><b>conn.sent()</b></a></td><td>activity action pin</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute128642" target = "projectFrame"><b>CONNECT</b></a></td><td>attribute</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refoperation131202" target = "projectFrame"><b>connect</b></a></td><td>operation</td><td>Tenta estabelecer conexão com um servidor LSP, reenviando solicitação a<br />cada época, até completar o limite da época.</td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute129794" target = "projectFrame"><b>connectExecutor</b></a></td><td>attribute</td><td> Usados no pedido de conexão a um servidor LSP partindo desse socket </td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refrelation128258" target = "projectFrame"><b>connection</b></a></td><td>relation</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refrelation130306" target = "projectFrame"><b>connectionPool</b></a></td><td>relation</td><td> Pool de conexões inicialmente com capacidade para 16 conexões </td></tr>
@@ -49,6 +55,7 @@
 <tr bgcolor=#f0f0f0><td><a href="class129410.html#refclass129410" target = "projectFrame"><b>ConnectTask</b></a></td><td>class</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute128002" target = "projectFrame"><b>connId</b></a></td><td>attribute</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refrelation129026" target = "projectFrame"><b>connTask</b></a></td><td>relation</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refopaque activity action161154" target = "projectFrame"><b>Conta uma �poca</b></a></td><td>opaque activity action</td><td></td></tr>
 </table>
 </body>
 </html>

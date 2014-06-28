@@ -107,7 +107,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Busca');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> AtomicInteger sendMissing;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> Object lock = <span class="keyword">new</span> Object();</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">private</span> <span class="keyword">volatile</span> <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a> dataMessage;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">private</span> <span class="keyword">volatile</span> <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a> sentMessage;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> SocketAddress sockAddr;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">private</span> <span class="keyword">final</span> Thread statusThread;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
@@ -162,14 +162,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Busca');
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    }</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
 <div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#af8473bc5a9579672d11aea7a36f290ac">  120</a></span>&#160;    <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a> <a class="code" href="classlsp_1_1LspConnection.html#af8473bc5a9579672d11aea7a36f290ac">sent</a>() {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keywordflow">return</span> this.dataMessage;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keywordflow">return</span> this.sentMessage;</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    }</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
 <div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="classlsp_1_1LspConnection.html#a33e3b98829b6adfb024ee4339c9e6bce">  130</a></span>&#160;    <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a> <a class="code" href="classlsp_1_1LspConnection.html#a33e3b98829b6adfb024ee4339c9e6bce">sent</a>(<a class="code" href="classlsp_1_1Pack.html">Pack</a> pack) {</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a> p = <span class="keyword">new</span> <a class="code" href="classlsp_1_1InternalPack.html">InternalPack</a>(<span class="keyword">this</span>, ++seqNum, pack.<a class="code" href="classlsp_1_1Pack.html#a91469830a667f9b9b7277854778cb568">getPayload</a>());</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="keywordflow">if</span> (this.dataMessage == null) {</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                this.dataMessage = p;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="keywordflow">if</span> (this.sentMessage == null) {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                this.sentMessage = p;</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                <span class="keywordflow">return</span> p;</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            }</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        }</div>
@@ -184,7 +184,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Busca');
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="comment">// Marca dados como recebidos, se o número de sequência é igual ao atual</span></div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">if</span> (this.seqNum == seqNum) {</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                this.dataMessage = null;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                this.sentMessage = null;</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            }</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            <span class="comment">// Diminuição da quantidade de mensagens faltando entregar.</span></div>

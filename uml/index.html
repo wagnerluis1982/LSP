@@ -66,6 +66,89 @@ Documentation</title>
 <a name="refactivity diagram154882"></a>
 <p align="center"><img src="fig154882.png" alt="" /></p>
  <p align="center"><b>Monitoring connection</b></p><p><br /></p><p><br /></p>
+<a name="refinitial activity node128002"></a>
+<a name="refinitial activity node128002"></a>
+<table><tr><td><div class="element">Initial activity node <b></b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><div class="sub">
+<table><tr><td><div class="element">Flow  <b>&lt;flow&gt;</div></td></tr></table><p>From <a href="index.html#refinitial activity node128002"><b>initial activity node</b></a> To <a href="index.html#refdecision activity node141186"><b>decision activity node</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refopaque activity action134530"></a>
+<table><tr><td><div class="element">Opaque activity action <b>Aguardar uma época</b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><p>Pre Condition :</p><ul></ul><p>Post Condition :</p><ul></ul><p>Behavior :</p><ul></ul><div class="sub">
+<table><tr><td><div class="element">Flow  <b>&lt;flow&gt;</div></td></tr></table><p>From <a href="index.html#refopaque activity action134530"><b>Aguardar uma época</b></a> To <a href="index.html#refcall operation activity action141186"><b>Reenviar última mensagem de dados</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refdecision activity node141186"></a>
+<a name="refdecision activity node141186"></a>
+<table><tr><td><div class="element">Decision activity node <b></b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><div class="sub">
+<table><tr><td><div class="element">Flow  <b>Conexão está ativa</div></td></tr></table><p>From <a href="index.html#refdecision activity node141186"><b>decision activity node</b></a> To <a href="index.html#refopaque activity action134530"><b>Aguardar uma época</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul><table><tr><td><div class="element">Flow  <b>Conexão inativa</div></td></tr></table><p>From <a href="index.html#refdecision activity node141186"><b>decision activity node</b></a> To <a href="index.html#refactivity final154498"><b>activity final</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refcall operation activity action141186"></a>
+<table><tr><td><div class="element">Call operation activity action <b>Reenviar última mensagem de dados</b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><p>Pre Condition :</p><ul></ul><p>Post Condition :</p><ul></ul><p>Is synchronous</p><p>Operation : <a href="class128514.html#refoperation132226"><b>dgramSendData</b></a></p><div class="sub">
+<a name="refactivity action pin141058"></a>
+<table><tr><td><div class="element">Activity action pin <b>sock.dgramSendData()</b></div></td></tr></table>
+<p>Direction : output</p><p>Type : <a href="class128514.html#refclass128514"><b>LspSocket</b></a></p><p>Selection :</p><ul></ul><table><tr><td><div class="element">Flow  <b>&lt;flow&gt;</div></td></tr></table><p>From <a href="index.html#refcall operation activity action141186"><b>Reenviar última mensagem de dados</b></a> To <a href="index.html#refopaque activity action147714"><b>Obter último número de sequência recebido</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul><a name="refactivity action pin154242"></a>
+<table><tr><td><div class="element">Activity action pin <b>conn.sent()</b></div></td></tr></table>
+<p>Direction : input</p><p>Type : </p><p>Selection :</p><ul></ul></div>
+<a name="refopaque activity action147714"></a>
+<table><tr><td><div class="element">Opaque activity action <b>Obter último número de sequência recebido</b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><p>Pre Condition :</p><ul></ul><p>Post Condition :</p><ul></ul><p>Behavior :</p><ul></ul><div class="sub">
+<a name="refactivity action pin147586"></a>
+<table><tr><td><div class="element">Activity action pin <b>conn.receivedSeqNum()</b></div></td></tr></table>
+<p>Direction : input</p><p>Type : </p><p>Selection :</p><ul></ul><table><tr><td><div class="element">Flow  <b>A conexão já recebeu alguma mensagem?</div></td></tr></table><p>From <a href="index.html#refopaque activity action147714"><b>Obter último número de sequência recebido</b></a> To <a href="index.html#refdecision activity node147714"><b>decision activity node</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refdecision activity node147714"></a>
+<a name="refdecision activity node147714"></a>
+<table><tr><td><div class="element">Decision activity node <b></b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><div class="sub">
+<table><tr><td><div class="element">Flow  <b>Sim</div></td></tr></table><p>From <a href="index.html#refdecision activity node147714"><b>decision activity node</b></a> To <a href="index.html#refopaque activity action154242"><b>Reenviar ACK da última mensagem</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul><table><tr><td><div class="element">Flow  <b>Não</div></td></tr></table><p>From <a href="index.html#refdecision activity node147714"><b>decision activity node</b></a> To <a href="index.html#refopaque activity action160770"><b>Reenviar ACK inicial</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refopaque activity action154242"></a>
+<table><tr><td><div class="element">Opaque activity action <b>Reenviar ACK da última mensagem</b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><p>Pre Condition :</p><ul></ul><p>Post Condition :</p><ul></ul><p>Behavior :</p><ul></ul><div class="sub">
+<a name="refactivity action pin147714"></a>
+<table><tr><td><div class="element">Activity action pin <b>sock.dgramSendAck(id, sn)</b></div></td></tr></table>
+<p>Direction : output</p><p>Type : void</p><p>Selection :</p><ul></ul><table><tr><td><div class="element">Flow  <b></div></td></tr></table><p>From <a href="index.html#refopaque activity action154242"><b>Reenviar ACK da última mensagem</b></a> To <a href="index.html#refmerge activity node154242"><b>merge activity node</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refopaque activity action160770"></a>
+<table><tr><td><div class="element">Opaque activity action <b>Reenviar ACK inicial</b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><p>Pre Condition :</p><ul></ul><p>Post Condition :</p><ul></ul><p>Behavior :</p><ul></ul><div class="sub">
+<a name="refactivity action pin154370"></a>
+<table><tr><td><div class="element">Activity action pin <b>sock.dgramSendAck(id, 0)</b></div></td></tr></table>
+<p>Direction : input</p><p>Type : </p><p>Selection :</p><ul></ul><table><tr><td><div class="element">Flow  <b>&lt;flow&gt;</div></td></tr></table><p>From <a href="index.html#refopaque activity action160770"><b>Reenviar ACK inicial</b></a> To <a href="index.html#refmerge activity node154242"><b>merge activity node</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refmerge activity node154242"></a>
+<a name="refmerge activity node154242"></a>
+<table><tr><td><div class="element">Merge activity node <b></b></div></td></tr></table>
+<p>Properties:<ul>
+<li>:<br /><div class="sub"></div></p></li>
+<li>:<br /><div class="sub"></div></p></li>
+</ul></p>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><div class="sub">
+<table><tr><td><div class="element">Flow  <b>Recebeu alguma mensagem desde a última época?</div></td></tr></table><p>From <a href="index.html#refmerge activity node154242"><b>merge activity node</b></a> To <a href="index.html#refdecision activity node154370"><b>decision activity node</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refdecision activity node154370"></a>
+<a name="refdecision activity node154370"></a>
+<table><tr><td><div class="element">Decision activity node <b></b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><div class="sub">
+<table><tr><td><div class="element">Flow  <b>Sim</div></td></tr></table><p>From <a href="index.html#refdecision activity node154370"><b>decision activity node</b></a> To <a href="index.html#refopaque activity action160898"><b>Zerar o contador de épocas</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul><table><tr><td><div class="element">Flow  <b>Não</div></td></tr></table><p>From <a href="index.html#refdecision activity node154370"><b>decision activity node</b></a> To <a href="index.html#refopaque activity action161154"><b>Conta uma época</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refopaque activity action160898"></a>
+<table><tr><td><div class="element">Opaque activity action <b>Zerar o contador de épocas</b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><p>Pre Condition :</p><ul></ul><p>Post Condition :</p><ul></ul><p>Behavior :</p><ul></ul><div class="sub">
+<table><tr><td><div class="element">Flow  <b>&lt;flow&gt;</div></td></tr></table><p>From <a href="index.html#refopaque activity action160898"><b>Zerar o contador de épocas</b></a> To <a href="index.html#refdecision activity node141186"><b>decision activity node</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refopaque activity action161026"></a>
+<table><tr><td><div class="element">Opaque activity action <b>Fechar a conexão</b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><p>Pre Condition :</p><ul></ul><p>Post Condition :</p><ul></ul><p>Behavior :</p><ul></ul><div class="sub">
+<a name="refactivity action pin154498"></a>
+<table><tr><td><div class="element">Activity action pin <b>conn.close()</b></div></td></tr></table>
+<p>Direction : input</p><p>Type : </p><p>Selection :</p><ul></ul><a name="refactivity action pin154626"></a>
+<table><tr><td><div class="element">Activity action pin <b>sock.close()</b></div></td></tr></table>
+<p>Direction : input</p><p>Type : </p><p>Selection :</p><ul></ul><table><tr><td><div class="element">Flow  <b>&lt;flow&gt;</div></td></tr></table><p>From <a href="index.html#refopaque activity action161026"><b>Fechar a conexão</b></a> To <a href="index.html#refactivity final154498"><b>activity final</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refactivity final154498"></a>
+<a name="refactivity final154498"></a>
+<table><tr><td><div class="element">Activity final <b></b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><a name="refopaque activity action161154"></a>
+<table><tr><td><div class="element">Opaque activity action <b>Conta uma época</b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><p>Pre Condition :</p><ul></ul><p>Post Condition :</p><ul></ul><p>Behavior :</p><ul></ul><div class="sub">
+<table><tr><td><div class="element">Flow  <b>&lt;flow&gt;</div></td></tr></table><p>From <a href="index.html#refopaque activity action161154"><b>Conta uma época</b></a> To <a href="index.html#refdecision activity node154626"><b>decision activity node</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
+<a name="refdecision activity node154626"></a>
+<a name="refdecision activity node154626"></a>
+<table><tr><td><div class="element">Decision activity node <b></b></div></td></tr></table>
+<p>Defined in <a href="index.html#refactivity134530"><b>Activities</b></a></p><div class="sub">
+<table><tr><td><div class="element">Flow  <b>Chegou ao limite de épocas</div></td></tr></table><p>From <a href="index.html#refdecision activity node154626"><b>decision activity node</b></a> To <a href="index.html#refopaque activity action161026"><b>Fechar a conexão</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul><table><tr><td><div class="element">Flow  <b>Ainda não chegou ao limite de épocas</div></td></tr></table><p>From <a href="index.html#refdecision activity node154626"><b>decision activity node</b></a> To <a href="index.html#refdecision activity node141186"><b>decision activity node</b></a></p><p>Weight :</p><ul></ul><p>Guard :</p><ul></ul><p>Selection :</p><ul></ul><p>Transformation :</p><ul></ul></div>
 </div>
 </div>
 <a name="refclass view128002"></a>

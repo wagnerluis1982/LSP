@@ -347,7 +347,7 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            <span class="comment">// Marca dados como recebidos, se o número de sequência é igual ao atual</span></div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">if</span> (this.seqNum == seqNum) {</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                this.dataMessage = null;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                this.sentMessage = null;</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            }</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            <span class="comment">// Diminuição da quantidade de mensagens faltando entregar.</span></div>
@@ -813,7 +813,7 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 
 <p>Definição na linha <a class="el" href="LspConnection_8java_source.html#l00120">120</a> do arquivo <a class="el" href="LspConnection_8java_source.html">LspConnection.java</a>.</p>
 <div class="fragment"><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                        {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keywordflow">return</span> this.dataMessage;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keywordflow">return</span> this.sentMessage;</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
@@ -847,8 +847,8 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 <div class="fragment"><div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                                 {</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        <span class="keyword">synchronized</span> (lock) {</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            InternalPack p = <span class="keyword">new</span> InternalPack(<span class="keyword">this</span>, ++seqNum, pack.getPayload());</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="keywordflow">if</span> (this.dataMessage == null) {</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                this.dataMessage = p;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="keywordflow">if</span> (this.sentMessage == null) {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                this.sentMessage = p;</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                <span class="keywordflow">return</span> p;</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            }</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        }</div>
