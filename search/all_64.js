@@ -1,6 +1,7 @@
 var searchData=
 [
   ['data',['DATA',['../classlsp_1_1LspSocket.html#a757a8fd41f322be3849f863ccef4dd3d',1,'lsp::LspSocket']]],
+  ['defaultparams',['defaultParams',['../classlsp_1_1LspParams.html#a9f5f65be45f706f28f71cdd81660ac2f',1,'lsp::LspParams']]],
   ['dgramreceiveack',['dgramReceiveAck',['../classlsp_1_1LspSocket.html#a6ee6baa18e1a06d112e8e8b0129eb7ec',1,'lsp::LspSocket']]],
   ['dgramreceiveconnect',['dgramReceiveConnect',['../classlsp_1_1LspSocket.html#a640c18c7bd57458a8d6288988828aab1',1,'lsp::LspSocket']]],
   ['dgramreceivedata',['dgramReceiveData',['../classlsp_1_1LspSocket.html#af797fcfd98236b6c793c86168d834f95',1,'lsp::LspSocket']]],

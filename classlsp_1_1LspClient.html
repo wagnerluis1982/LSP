@@ -150,17 +150,29 @@ Métodos Públicos</h2></td></tr>
 <p>Definição na linha <a class="el" href="LspClient_8java_source.html#l00016">16</a> do arquivo <a class="el" href="LspClient_8java_source.html">LspClient.java</a>.</p>
 <div class="fragment"><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                                                                                                   {</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        SocketAddress sockAddr = <span class="keyword">new</span> InetSocketAddress(host, port);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        lspSocket = <span class="keyword">new</span> LspSocketImpl(0);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;            conn = lspSocket.connect(sockAddr, params, <span class="keyword">new</span> ClientTriggers());</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            this.params = params;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        } <span class="keywordflow">catch</span> (TimeoutException e) {</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;            lspSocket.close();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;            <span class="keywordflow">throw</span> e;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        }</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    }</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        params = (params == null) ? LspParams.<a class="code" href="classlsp_1_1LspParams.html#a9f5f65be45f706f28f71cdd81660ac2f">defaultParams</a>() : params;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        lspSocket = <span class="keyword">new</span> LspSocketImpl(0);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;            conn = lspSocket.connect(sockAddr, params, <span class="keyword">new</span> ClientTriggers());</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;            this.params = params;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        } <span class="keywordflow">catch</span> (TimeoutException e) {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            lspSocket.close();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;            <span class="keywordflow">throw</span> e;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        }</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    }</div>
+<div class="ttc" id="classlsp_1_1LspParams_html_a9f5f65be45f706f28f71cdd81660ac2f"><div class="ttname"><a href="classlsp_1_1LspParams.html#a9f5f65be45f706f28f71cdd81660ac2f">lsp.LspParams.defaultParams</a></div><div class="ttdeci">static final LspParams defaultParams()</div><div class="ttdef"><b>Definition:</b> <a href="LspParams_8java_source.html#l00022">LspParams.java:22</a></div></div>
 </div><!-- fragment -->
+<p><div class="dynheader">
+Este é o diagrama das funções utilizadas por esta função:</div>
+<div class="dyncontent">
+<div class="center"><img src="classlsp_1_1LspClient_a81ec7c6b5a572f36a4e855ece7f123e2_cgraph.png" border="0" usemap="#classlsp_1_1LspClient_a81ec7c6b5a572f36a4e855ece7f123e2_cgraph" alt=""/></div>
+<map name="classlsp_1_1LspClient_a81ec7c6b5a572f36a4e855ece7f123e2_cgraph" id="classlsp_1_1LspClient_a81ec7c6b5a572f36a4e855ece7f123e2_cgraph">
+<area shape="rect" id="node3" href="classlsp_1_1LspParams.html#a9f5f65be45f706f28f71cdd81660ac2f" title="lsp.LspParams.defaultParams" alt="" coords="211,5,408,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <h2 class="groupheader">Métodos</h2>
@@ -179,28 +191,28 @@ Métodos Públicos</h2></td></tr>
 
 <p>Encerra a conexão. </p>
 
-<p>Definição na linha <a class="el" href="LspClient_8java_source.html#l00064">64</a> do arquivo <a class="el" href="LspClient_8java_source.html">LspClient.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                        {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        checkActive();</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">// Marca a conexão como fechada e se não há mensagens para serem</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="comment">// enviadas, encerra realmente a conexão.</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        conn.close(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        markClosed = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordflow">if</span> (conn.<a class="code" href="classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35">getSendMissing</a>() == 0) {</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            realClose();</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordflow">while</span> (!conn.<a class="code" href="classlsp_1_1LspConnection.html#a3396395dd294328384db2e9c726117e2">isInterrupted</a>()) {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                Thread.sleep(params.getEpoch());</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            } <span class="keywordflow">catch</span> (InterruptedException e) {</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                realClose();</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        }</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspClient_8java_source.html#l00066">66</a> do arquivo <a class="el" href="LspClient_8java_source.html">LspClient.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                        {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        checkActive();</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="comment">// Marca a conexão como fechada e se não há mensagens para serem</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">// enviadas, encerra realmente a conexão.</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        conn.close(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        markClosed = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">if</span> (conn.<a class="code" href="classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35">getSendMissing</a>() == 0) {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            realClose();</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        }</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">while</span> (!conn.<a class="code" href="classlsp_1_1LspConnection.html#a3396395dd294328384db2e9c726117e2">isInterrupted</a>()) {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                Thread.sleep(params.getEpoch());</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            } <span class="keywordflow">catch</span> (InterruptedException e) {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                realClose();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        }</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    }</div>
 <div class="ttc" id="classlsp_1_1LspConnection_html_ae87a1bdd8b1ac33741bc7d968b6e0a35"><div class="ttname"><a href="classlsp_1_1LspConnection.html#ae87a1bdd8b1ac33741bc7d968b6e0a35">lsp.LspConnection.getSendMissing</a></div><div class="ttdeci">int getSendMissing()</div><div class="ttdoc">Número de mensagens na fila, mas faltam enviar. </div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00115">LspConnection.java:115</a></div></div>
 <div class="ttc" id="classlsp_1_1LspConnection_html_a3396395dd294328384db2e9c726117e2"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a3396395dd294328384db2e9c726117e2">lsp.LspConnection.isInterrupted</a></div><div class="ttdeci">boolean isInterrupted()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00187">LspConnection.java:187</a></div></div>
 </div><!-- fragment -->
@@ -230,10 +242,10 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 
 <p>Devolve o Id da conexão. </p>
 
-<p>Definição na linha <a class="el" href="LspClient_8java_source.html#l00032">32</a> do arquivo <a class="el" href="LspClient_8java_source.html">LspClient.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                             {</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordflow">return</span> conn.getId();</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspClient_8java_source.html#l00034">34</a> do arquivo <a class="el" href="LspClient_8java_source.html">LspClient.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                             {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">return</span> conn.getId();</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -253,15 +265,15 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 <p>Devolve um vetor de bytes de uma mensagem enviada pelo lado servidor. </p>
 <p>Devolve null se a conexão for perdida. </p>
 
-<p>Definição na linha <a class="el" href="LspClient_8java_source.html#l00040">40</a> do arquivo <a class="el" href="LspClient_8java_source.html">LspClient.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                         {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            checkActive();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="keywordflow">return</span> lspSocket.receive().getPayload();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        } <span class="keywordflow">catch</span> (ClosedConnectionException | NullPointerException e) {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            <span class="keywordflow">return</span> null;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        }</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspClient_8java_source.html#l00042">42</a> do arquivo <a class="el" href="LspClient_8java_source.html">LspClient.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                         {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            checkActive();</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            <span class="keywordflow">return</span> lspSocket.receive().getPayload();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        } <span class="keywordflow">catch</span> (ClosedConnectionException | NullPointerException e) {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <span class="keywordflow">return</span> null;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        }</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -282,14 +294,14 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 <p>Envia uma mensagen para o lado servidor como um vetor de bytes. </p>
 <p>Devolve exceção se a conexão for perdida. </p>
 
-<p>Definição na linha <a class="el" href="LspClient_8java_source.html#l00053">53</a> do arquivo <a class="el" href="LspClient_8java_source.html">LspClient.java</a>.</p>
-<div class="fragment"><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                                      {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        checkActive();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        Pack p = <span class="keyword">new</span> Pack(conn.<a class="code" href="classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236">getId</a>(), payload);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        lspSocket.send(p);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        conn.incSendMissing();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    }</div>
+<p>Definição na linha <a class="el" href="LspClient_8java_source.html#l00055">55</a> do arquivo <a class="el" href="LspClient_8java_source.html">LspClient.java</a>.</p>
+<div class="fragment"><div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                                      {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        checkActive();</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        Pack p = <span class="keyword">new</span> Pack(conn.<a class="code" href="classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236">getId</a>(), payload);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        lspSocket.send(p);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        conn.incSendMissing();</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
 <div class="ttc" id="classlsp_1_1LspConnection_html_a25375fd27202bff226292fd15524a236"><div class="ttname"><a href="classlsp_1_1LspConnection.html#a25375fd27202bff226292fd15524a236">lsp.LspConnection.getId</a></div><div class="ttdeci">short getId()</div><div class="ttdef"><b>Definition:</b> <a href="LspConnection_8java_source.html#l00074">LspConnection.java:74</a></div></div>
 </div><!-- fragment -->
 <p><div class="dynheader">
