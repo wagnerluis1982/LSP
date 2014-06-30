@@ -1,6 +1,6 @@
 format 74
 "lsp" // lsp
-  revision 24
+  revision 25
   modified_by 2 "wagner"
   // class settings
   //class diagram settings
@@ -265,17 +265,17 @@ format 74
 
       activityaction 161154 "Conta uma época"
 	opaque_action
-	flow 169986 "<flow>"
+	flow 169986 "Chegou ao limite de épocas?"
 	  on activitynode_ref 154626 // decision
 	end
       end
 
       activitynode 154626 decision ""
-	flow 170114 "Chegou ao limite de épocas"
+	flow 170114 "Sim"
 	  on activityaction_ref 161026 // activity action Fechar a conexão
 	end
 
-	flow 170370 "Ainda não chegou ao limite de épocas"
+	flow 170370 "Não"
 	  on activitynode_ref 141186 // decision
 	end
       end
