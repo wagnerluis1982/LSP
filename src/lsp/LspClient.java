@@ -68,8 +68,8 @@ public class LspClient {
 
 		// Marca a conexão como fechada e se não há mensagens para serem
 		// enviadas, encerra realmente a conexão.
-		conn.close(false);
 		markClosed = true;
+		conn.close(false);
 		if (conn.getSendMissing() == 0) {
 			realClose();
 			return;

@@ -67,7 +67,7 @@ public class LspServer {
 		checkActive();
 
 		final LspConnection conn = connectionPool.get(pack.getConnId());
-		if (conn == null) {
+		if (conn == null || conn.isClosed()) {
 			throw new ClosedConnectionException(pack.getConnId());
 		}
 
