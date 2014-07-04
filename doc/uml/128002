@@ -1,6 +1,6 @@
 format 74
 "lsp" // lsp
-  revision 25
+  revision 35
   modified_by 2 "wagner"
   // class settings
   //class diagram settings
@@ -111,21 +111,9 @@ format 74
       end
     end
 
-    activity 134530 "Activities"
-      activitydiagram 154626 "Receiving message"
+    activity 134530 "Monitoring connection"
+      activitydiagram 154882 "Thread monitoring connection"
 	package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
-	show_infonote default drawing_language default show_stereotype_properties default
-	size A3
-      end
-
-      activitydiagram 154754 "Sending message"
-	package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
-	show_infonote default drawing_language default show_stereotype_properties default
-	size A3
-      end
-
-      activitydiagram 154882 "Monitoring connection"
-	package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations no shadow default
 	show_infonote default drawing_language default show_stereotype_properties default
 	size A3
       end
@@ -156,7 +144,7 @@ format 74
       activityaction 141186 "Reenviar última mensagem de dados"
 	call_operation_action
 	synchronous operation_ref 132226 // dgramSendData
-	pin 141058 "sock.dgramSendData()" type class_ref 128514 // LspSocket
+	pin 141058 "sock.dgramSendData(pack)" type class_ref 128514 // LspSocket
 	  unordered 
 	  out
 	end
@@ -165,7 +153,7 @@ format 74
 	  on activityaction_ref 147714 // activity action Obter último número de sequência recebido
 	end
 
-	pin 154242 "conn.sent()" explicit_type ""
+	pin 154242 "pack = conn.sent()" explicit_type ""
 	  unordered 
 	  in
 	end
@@ -173,7 +161,7 @@ format 74
 
       activityaction 147714 "Obter último número de sequência recebido"
 	opaque_action
-	pin 147586 "conn.receivedSeqNum()" explicit_type ""
+	pin 147586 "sn = conn.receivedSeqNum()" explicit_type ""
 	  unordered 
 	  in
 	end
@@ -277,6 +265,223 @@ format 74
 
 	flow 170370 "Não"
 	  on activitynode_ref 141186 // decision
+	end
+      end
+    end
+
+    activity 147586 "Sending messages"
+      activitydiagram 174466 "Thread sending messages"
+	package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
+	show_infonote default drawing_language default show_stereotype_properties default
+	size A3
+      end
+
+      activitynode 181378 initial_node ""
+	flow 198658 "Conexão está ativa?"
+	  on activitynode_ref 181506 // decision
+	end
+      end
+
+      activitynode 181506 decision ""
+	flow 198786 "Sim"
+	  on activityaction_ref 187778 // activity action Obtém o próximo pacote da fila de saída
+	end
+      end
+
+      activityaction 187778 "Obtém o próximo pacote da fila de saída"
+	opaque_action
+	pin 174978 "pack" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	flow 198914 "Pacote anterior foi confirmado?"
+	  on activitynode_ref 181634 // decision
+	end
+      end
+
+      activitynode 181634 decision ""
+	flow 199042 "Sim"
+	  on activityaction_ref 187906 // activity action Envia o pacote para o destino
+	end
+
+	flow 199170 "Não"
+	  on activityaction_ref 188034 // activity action Devolve pacote para a fila
+	end
+      end
+
+      activityaction 187906 "Envia o pacote para o destino"
+	opaque_action
+	pin 175106 "conn.sent(pack)" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	pin 175234 "sock.dgramSendData(pack)" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	flow 199298 "<flow>"
+	  on activitynode_ref 181762 // merge
+	end
+      end
+
+      activityaction 188034 "Devolve pacote para a fila"
+	opaque_action
+	flow 199426 "<flow>"
+	  on activitynode_ref 181762 // merge
+	end
+      end
+
+      activitynode 181762 merge ""
+	flow 199554 "<flow>"
+	  on activitynode_ref 181506 // decision
+	end
+      end
+    end
+
+    activity 141058 "Receiving messages"
+      activitydiagram 161410 "Thread receiving messages (Client)"
+	package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
+	show_infonote default drawing_language default show_stereotype_properties default
+	size A3
+      end
+
+      activitydiagram 167938 "Thread receiving messages (Server)"
+	package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
+	show_infonote default drawing_language default show_stereotype_properties default
+	size A3
+      end
+
+      activitynode 161154 initial_node ""
+	flow 176898 "Conexão está ativa?"
+	  on activitynode_ref 161282 // decision
+	end
+      end
+
+      activitynode 161282 decision ""
+	flow 177026 "Sim"
+	  on activityaction_ref 167682 // activity action Espera por um pacote UDP
+	end
+
+	flow 184706 "Não"
+	  on activitynode_ref 168194 // activity_final
+	end
+      end
+
+      activityaction 167682 "Espera por um pacote UDP"
+	opaque_action
+	pin 161154 "sock.dgramReceive()" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	flow 177154 "<flow>"
+	  on activityaction_ref 167810 // activity action Identifica o cabeçalho LSP
+	end
+      end
+
+      activityaction 167810 "Identifica o cabeçalho LSP"
+	opaque_action
+	flow 177282 "Qual o tipo da mensagem?"
+	  on activitynode_ref 161410 // decision
+	end
+
+	pin 167682 "msgType" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	pin 167810 "connId" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	pin 167938 "seqNum" explicit_type ""
+	  unordered 
+	  in
+	end
+      end
+
+      activitynode 161410 decision ""
+	flow 183810 "DATA"
+	  on activityaction_ref 174466 // activity action Insere pacote LSP na fila de entrada
+	end
+
+	flow 184194 "ACK"
+	  on activityaction_ref 174594 // activity action Reconhece o número de sequência
+	end
+
+	flow 191362 "CONNECT"
+	  on activityaction_ref 181122 // activity action Identifica socket de origem
+	end
+      end
+
+      activityaction 174466 "Insere pacote LSP na fila de entrada"
+	opaque_action
+	pin 168066 "sock.dgramSendAck(pack)" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	pin 168194 "conn.received(seqNum)" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	flow 184450 "<flow>"
+	  on activitynode_ref 168066 // merge
+	end
+      end
+
+      activityaction 174594 "Reconhece o número de sequência"
+	opaque_action
+	pin 168322 "conn.ack(seqNum)" explicit_type ""
+	  unordered 
+	  in
+	end
+
+	flow 184578 "<flow>"
+	  on activitynode_ref 168066 // merge
+	end
+      end
+
+      activitynode 168066 merge ""
+	flow 184322 "<flow>"
+	  on activitynode_ref 161282 // decision
+	end
+      end
+
+      activitynode 168194 activity_final ""
+      end
+
+      activityaction 181122 "Identifica socket de origem"
+	opaque_action
+	flow 191490 "Socket de origem já tem conexão aberta?"
+	  on activitynode_ref 174850 // decision
+	end
+
+	pin 174850 "sockId" explicit_type ""
+	  unordered 
+	  in
+	end
+      end
+
+      activitynode 174850 decision ""
+	flow 191618 "Sim"
+	  on activitynode_ref 168066 // merge
+	end
+
+	flow 192002 "Não"
+	  on activityaction_ref 181250 // activity action Adiciona nova conexão ao pool
+	end
+      end
+
+      activityaction 181250 "Adiciona nova conexão ao pool"
+	opaque_action
+	flow 192130 "<flow>"
+	  on activitynode_ref 168066 // merge
 	end
       end
     end

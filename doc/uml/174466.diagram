@@ -1,0 +1,96 @@
+format 74
+
+activitynodecanvas 133634 activitynode_ref 181378 // initial_node
+  xyz 335 21 2000
+end
+activitynodecanvas 133762 activitynode_ref 181506 // decision
+  xyz 333 91 2000
+end
+activityactioncanvas 134018 activityaction_ref 187778 // activity action Obtém o próximo pacote da fila de saída
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 293 178 2000 108 72
+  pins
+    pincanvas 134146 pin_ref 174978 // pack
+      xyzwh 283 184 2002 11 11 label_xy 251 173
+    end
+  end
+end
+activitynodecanvas 134402 activitynode_ref 181634 // decision
+  xyz 334 320 2000
+end
+activityactioncanvas 134658 activityaction_ref 187906 // activity action Envia o pacote para o destino
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 154 407 2000 106 64
+  pins
+    pincanvas 134786 pin_ref 175106 // conn.sent(pack)
+      xyzwh 255 414 2002 11 11 label_xy 270 403
+    end
+    pincanvas 134914 pin_ref 175234 // sock.dgramSendData(pack)
+      xyzwh 255 435 2002 11 11 label_xy 270 424
+    end
+  end
+end
+activityactioncanvas 135042 activityaction_ref 188034 // activity action Devolve pacote para a fila
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 459 402 2000 96 69
+end
+activitynodecanvas 135810 activitynode_ref 181762 // merge
+  xyz 351 547 2000
+end
+flowcanvas 133890 flow_ref 198658 // Conexão está ativa?
+  
+  from ref 133634 z 2001 label "Conexão está ativa?" xyz 293.5 56 3000 to ref 133762
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 134274 flow_ref 198786 // Sim
+  
+  from ref 133762 z 2001 label "Sim" xyz 321 144 3000 to ref 134018
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 134530 flow_ref 198914 // Pacote anterior foi confirmado?
+  
+  from ref 134018 z 2001 label "Pacote anterior foi confirmado?" xyz 262 276 3000 to ref 134402
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 135170 flow_ref 199042 // Sim
+  geometry VHr
+  
+  from ref 134402 z 2001 label "Sim" xyz 177 371 3000 to point 203 336
+  line 135426 z 2001 to ref 134658
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 135298 flow_ref 199170 // Não
+  geometry HV
+  
+  from ref 134402 z 2001 label "Não" xyz 512.5 371 3000 to point 504 336
+  line 135682 z 2001 to ref 135042
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 135938 flow_ref 199298 // <flow>
+  geometry VHV
+  
+  from ref 134658 z 2001 to point 204 506
+  line 136578 z 2001 to point 361 506
+  line 136706 z 2001 to ref 135810
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 136066 flow_ref 199426 // <flow>
+  geometry VHV
+  
+  from ref 135042 z 2001 to point 504 506
+  line 136834 z 2001 to point 361 506
+  line 136962 z 2001 to ref 135810
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 137090 flow_ref 199554 // <flow>
+  geometry HVH unfixed
+  
+  from ref 135810 z 2001 to point 86 563
+  line 137474 z 2001 to point 86 107
+  line 137602 z 2001 to ref 133762
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+end

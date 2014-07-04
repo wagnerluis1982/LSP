@@ -11,11 +11,11 @@ classcanvas 136834 class_ref 130306 // LspServer
     operation_ref 138498 // checkActive
     operation_ref 138626 // getPort
     operation_ref 138754 // newConnId
-  xyz 22.8944 50.6155 2000
+  xyz 22.8052 50.9441 2000
 end
 classcanvas 136962 class_ref 129154 // LspParams
   draw_all_relations default hide_attributes default hide_operations yes hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
-  xyz 391.633 8.4529 3005
+  xyz 391.147 8.20699 3005
 end
 classcanvas 137602 class_ref 128514 // LspSocket
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
@@ -47,7 +47,7 @@ classcanvas 137602 class_ref 128514 // LspSocket
     operation_ref 132738 // usedConnection
     operation_ref 132866 // usedConnection
     operation_ref 133250 // getPort
-  xyz 391.905 108.44 3005
+  xyz 391.572 108.82 3005
 end
 classcanvas 137858 class_ref 128642 // LspConnection
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
@@ -67,11 +67,11 @@ classcanvas 137858 class_ref 128642 // LspConnection
     operation_ref 135426 // getSockAddr
     operation_ref 136578 // isInterrupted
     operation_ref 136962 // close
-  xyz 23.2836 329.836 3010
+  xyz 23.3555 329.322 3010
 end
 classcanvas 138114 class_ref 128258 // ConnectionTriggers
   draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
-  xyz 270.077 690.142 3016
+  xyz 270.997 690.477 3016
 end
 relationcanvas 137090 relation_ref 130562 // <unidirectional association>
   from ref 136834 z 3006 to ref 136962
@@ -93,5 +93,4 @@ relationcanvas 138242 relation_ref 129794 // <unidirectional association>
   role_a_pos 364 668 3000 no_role_b
   no_multiplicity_a no_multiplicity_b
 end
-preferred_whz 1040 514 1
 end

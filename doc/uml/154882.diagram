@@ -1,0 +1,209 @@
+format 74
+
+activitynodecanvas 128002 activitynode_ref 128002 // initial_node
+  xyz 337.2 17.2 2005
+end
+activityactioncanvas 128898 activityaction_ref 134530 // activity action Aguardar uma época
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 297.3 176.4 2000 101 61
+end
+activitynodecanvas 129794 activitynode_ref 141186 // decision
+  xyz 335.3 89.5 2000
+end
+activityactioncanvas 130434 activityaction_ref 141186 // activity action Reenviar última mensagem de dados
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 294.4 280.2 2000 109 69
+  pins
+    pincanvas 133890 pin_ref 141058 // sock.dgramSendData(pack)
+      xyzwh 398.3 313.9 2002 11 11 label_xy 416 307
+    end
+    pincanvas 137858 pin_ref 154242 // pack = conn.sent()
+      xyzwh 398.3 292.5 2002 11 11 label_xy 416 285
+    end
+  end
+end
+activityactioncanvas 134786 activityaction_ref 147714 // activity action Obter último número de sequência recebido
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 295.4 393.5 2000 108 84
+  pins
+    pincanvas 134914 pin_ref 147586 // sn = conn.receivedSeqNum()
+      xyzwh 398.8 416.9 2002 11 11 label_xy 419 407
+    end
+  end
+end
+activitynodecanvas 136322 activitynode_ref 147714 // decision
+  xyz 335.3 533.7 2000
+end
+activityactioncanvas 136706 activityaction_ref 154242 // activity action Reenviar ACK da última mensagem
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 129.9 609.5 2000 105 65
+  pins
+    pincanvas 137218 pin_ref 147714 // sock.dgramSendAck(id, sn)
+      xyzwh 229.6 620 2002 11 11 label_xy 246 612
+    end
+  end
+end
+activityactioncanvas 138370 activityaction_ref 160770 // activity action Reenviar ACK inicial
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 420.1 611.5 2000 101 61
+  pins
+    pincanvas 138498 pin_ref 154370 // sock.dgramSendAck(id, 0)
+      xyzwh 516.6 621 2002 11 11 label_xy 533 613
+    end
+  end
+end
+textcanvas 139010 "conn = LspConnection
+sock = LspSocket"
+  xyzwh 817 40 2000 124 33
+fragment 139138 "Comentários"
+  color lightyellow xyzwh 809.6 10.6 0 141 73
+end
+activitynodecanvas 139394 activitynode_ref 154242 // merge
+  xyz 313.5 690.6 2000
+end
+activitynodecanvas 141954 activitynode_ref 154370 // decision
+  xyz 314.6 812.7 2000
+end
+activityactioncanvas 143234 activityaction_ref 160898 // activity action Zerar o contador de épocas
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 91.4 799.1 2000 107 66
+end
+activityactioncanvas 144386 activityaction_ref 161026 // activity action Fechar a conexão
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 700 754.6 2000 87 55
+  pins
+    pincanvas 144642 pin_ref 154498 // conn.close()
+      xyzwh 782.8 762.2 2002 11 11 label_xy 797 752
+    end
+    pincanvas 144770 pin_ref 154626 // sock.close()
+      xyzwh 782.8 780.7 2002 11 11 label_xy 797 770
+    end
+  end
+end
+activitynodecanvas 144898 activitynode_ref 154498 // activity_final
+  xyz 732 652.9 2000
+end
+activityactioncanvas 147330 activityaction_ref 161154 // activity action Conta uma época
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 508.9 801.8 2000 101 61
+end
+activitynodecanvas 147714 activitynode_ref 154626 // decision
+  xyz 547.8 929.1 2008
+end
+flowcanvas 129922 flow_ref 147714 // Sim
+  
+  from ref 129794 z 2001 label "Sim" xyz 322 142 2001 to ref 128898
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 130050 flow_ref 147842 // Conexão está ativa?
+  
+  from ref 128002 z 2006 label "Conexão está ativa?" xyz 295 53 2006 to ref 129794
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 136194 flow_ref 161282 // <flow>
+  
+  from ref 130434 z 2001 to ref 134786
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 136450 flow_ref 161410 // A conexão já recebeu alguma mensagem?
+  
+  from ref 134786 z 2001 label "A conexão já recebeu alguma mensagem?" xyz 226 500 2001 to ref 136322
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 137730 flow_ref 161538 // Sim
+  geometry HV
+  
+  from ref 136322 z 2001 label "Sim" xyz 156 575 2001 to point 179 548
+  line 138242 z 2001 to ref 136706
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 137986 flow_ref 168066 // <flow>
+  
+  from ref 128898 z 2001 to ref 130434
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 138626 flow_ref 168194 // Não
+  geometry HV
+  
+  from ref 136322 z 2001 label "Não" xyz 475.5 574 2001 to point 468 548
+  line 138882 z 2001 to ref 138370
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 139522 flow_ref 168322 // 
+  geometry VH
+  
+  from ref 136706 z 2001 to point 179 706
+  line 142338 z 2001 to ref 139394
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 139650 flow_ref 168450 // <flow>
+  geometry HVr
+  
+  from ref 138370 z 2001 to point 468 706
+  line 142210 z 2001 to ref 139394
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 142082 flow_ref 168706 // Recebeu alguma mensagem desde a última época?
+  
+  from ref 139394 z 2001 label "Recebeu alguma mensagem desde a última época?" xyz 166 750 2001 to ref 141954
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 143362 flow_ref 168962 // Sim
+  
+  from ref 141954 z 2001 label "Sim" xyz 256 833 2001 to ref 143234
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 143490 flow_ref 169090 // <flow>
+  geometry HVH unfixed
+  
+  from ref 143234 z 2001 to point 20 828
+  line 153218 z 2001 to point 20 105
+  line 153346 z 2001 to ref 129794
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 145154 flow_ref 169474 // Não
+  geometry HV
+  
+  from ref 129794 z 2001 label "Não" xyz 409 90 2001 to point 741 105
+  line 145410 z 2001 to ref 144898
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 145538 flow_ref 169602 // <flow>
+  
+  from ref 144386 z 2001 to ref 144898
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 147458 flow_ref 169858 // Não
+  
+  from ref 141954 z 2001 label "Não" xyz 376 832 2001 to ref 147330
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 147842 flow_ref 169986 // Chegou ao limite de épocas?
+  
+  from ref 147330 z 2009 label "Chegou ao limite de épocas?" xyz 464 886 2009 to ref 147714
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 147970 flow_ref 170114 // Sim
+  geometry HV
+  
+  from ref 147714 z 2009 label "Sim" xyz 602 949 2009 to point 741 944
+  line 148098 z 2009 to ref 144386
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 154242 flow_ref 170370 // Não
+  geometry HVH unfixed
+  
+  from ref 147714 z 2009 label "Não" xyz 498 949 2009 to point 20 944
+  line 154370 z 2009 to point 20 105
+  line 154498 z 2009 to ref 129794
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+end

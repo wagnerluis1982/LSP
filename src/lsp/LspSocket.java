@@ -425,7 +425,7 @@ abstract class LspSocket {
 				return;
 			}
 
-			// Se o id de conexão é diferente da conexão em uso, encerra
+			// Se o id de conexão do pacote é inválido, encerra
 			LspConnection conn = usedConnection(p.getConnId());
 			if (conn == null) {
 				return;

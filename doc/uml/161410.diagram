@@ -1,0 +1,138 @@
+format 74
+
+activitynodecanvas 128002 activitynode_ref 161154 // initial_node
+  xyz 336.019 20.5494 2000
+end
+activitynodecanvas 128130 activitynode_ref 161282 // decision
+  xyz 333.019 90.6668 2000
+end
+activityactioncanvas 128514 activityaction_ref 167682 // activity action Espera por um pacote UDP
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 293.21 180.568 2000 107 65
+  pins
+    pincanvas 129282 pin_ref 161154 // sock.dgramReceive()
+      xyzwh 395.544 190.315 2002 11 11 label_xy 411 179
+    end
+  end
+end
+fragment 128898 "Comentários"
+  color lightyellow xyzwh 800.582 20.8161 0 141 73
+end
+textcanvas 129026 "conn = LspConnection
+sock = LspSocket"
+  xyzwh 807 49 2000 124 33
+activityactioncanvas 129154 activityaction_ref 167810 // activity action Identifica o cabeçalho LSP
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 293.019 292 2000 105 65
+  pins
+    pincanvas 130562 pin_ref 167682 // msgType
+      xyzwh 283.303 299.173 2002 11 11 label_xy 228 288
+    end
+    pincanvas 130690 pin_ref 167810 // connId
+      xyzwh 283.303 318.809 2002 11 11 label_xy 241 307
+    end
+    pincanvas 130818 pin_ref 167938 // seqNum
+      xyzwh 283.303 336.253 2002 11 11 label_xy 232 325
+    end
+  end
+end
+activitynodecanvas 129538 activitynode_ref 161410 // decision
+  xyz 334.21 414.667 2000
+end
+activityactioncanvas 130946 activityaction_ref 174466 // activity action Insere pacote LSP na fila de entrada
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 135.801 547.988 2005 99 67
+  pins
+    pincanvas 131202 pin_ref 168066 // sock.dgramSendAck(pack)
+      xyzwh 229.369 556.352 2007 11 11 label_xy 245 545
+    end
+    pincanvas 131330 pin_ref 168194 // conn.received(seqNum)
+      xyzwh 229.369 578.971 2007 11 11 label_xy 245 566
+    end
+  end
+end
+activityactioncanvas 131714 activityaction_ref 174594 // activity action Reconhece o número de sequência
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 475.612 545.797 2000 101 69
+  pins
+    pincanvas 132098 pin_ref 168322 // conn.ack(seqNum)
+      xyzwh 571.371 554.97 2002 11 11 label_xy 585 543
+    end
+  end
+end
+activitynodecanvas 134274 activitynode_ref 168066 // merge
+  xyz 337.258 687.864 2000
+end
+activitynodecanvas 136450 activitynode_ref 168194 // activity_final
+  xyz 561 97 2000
+end
+flowcanvas 128258 flow_ref 176898 // Conexão está ativa?
+  
+  from ref 128002 z 2001 label "Conexão está ativa?" xyz 294 55 2001 to ref 128130
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 128642 flow_ref 177026 // Sim
+  
+  from ref 128130 z 2001 label "Sim" xyz 320 144 2001 to ref 128514
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129410 flow_ref 177154 // <flow>
+  
+  from ref 128514 z 2001 to ref 129154
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129666 flow_ref 177282 // Qual o tipo da mensagem?
+  
+  from ref 129154 z 2001 label "Qual o tipo da mensagem?" xyz 268 376 2001 to ref 129538
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 131074 flow_ref 183810 // DATA
+  geometry VHV unfixed
+  
+  from ref 129538 z 2006 label "DATA" xyz 190 513 2006 to point 344 495
+  line 136962 z 2006 to point 182 495
+  line 137090 z 2006 to ref 130946
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 131970 flow_ref 184194 // ACK
+  geometry VHV
+  
+  from ref 129538 z 2001 label "ACK" xyz 494 513 2001 to point 344 495
+  line 133506 z 2001 to point 523 495
+  line 133634 z 2001 to ref 131714
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 134402 flow_ref 184322 // <flow>
+  geometry HVH unfixed
+  
+  from ref 134274 z 2001 to point 74 702
+  line 134658 z 2001 to point 74 105
+  line 134786 z 2001 to ref 128130
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 135170 flow_ref 184450 // <flow>
+  geometry VHV
+  
+  from ref 130946 z 2006 to point 182 648
+  line 135426 z 2006 to point 347 648
+  line 135554 z 2006 to ref 134274
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 135298 flow_ref 184578 // <flow>
+  geometry VHV
+  
+  from ref 131714 z 2001 to point 523 648
+  line 135938 z 2001 to point 347 648
+  line 136066 z 2001 to ref 134274
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 136578 flow_ref 184706 // Não
+  
+  from ref 128130 z 2001 label "Não" xyz 409 89 2001 to ref 136450
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+end

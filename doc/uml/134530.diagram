@@ -89,5 +89,4 @@ relationcanvas 138754 relation_ref 128642 // <unidirectional association>
   role_a_pos 382 26 3000 no_role_b
   no_multiplicity_a no_multiplicity_b
 end
-preferred_whz 1040 514 1
 end
