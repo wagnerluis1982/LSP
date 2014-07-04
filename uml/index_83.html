@@ -18,29 +18,36 @@
 <table>
 <tr bgcolor=#f0f0f0><td align=center><b>Name</b></td><td align=center><b>Kind</b></td><td align=center><b>Description</b></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation133122" target = "projectFrame"><b>send</b></a></td><td>operation</td><td> Insere um pacote na fila de saída </td></tr>
-<tr bgcolor=#f0f0f0><td><a href="index.html#refactivity diagram154754" target = "projectFrame"><b>Sending message</b></a></td><td>activity diagram</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute129666" target = "projectFrame"><b>sendLock</b></a></td><td>attribute</td><td> Lock para garantir que apenas uma thread envie pacotes </td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute131586" target = "projectFrame"><b>sendMissing</b></a></td><td>attribute</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation134018" target = "projectFrame"><b>sendNextData</b></a></td><td>operation</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation135810" target = "projectFrame"><b>sent</b></a></td><td>operation</td><td> Obtém a última mensagem de dados enviada (aguardando ACK) </td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation135938" target = "projectFrame"><b>sent</b></a></td><td>operation</td><td>Informa o payload da última mensagem enviada<br /><br />@return Pacote com um novo número de sequência ou null se já há um pacote<br />        aguardando ACK</td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refrelation129922" target = "projectFrame"><b>sentMessage</b></a></td><td>relation</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin167938" target = "projectFrame"><b>seqNum</b></a></td><td>activity action pin</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute128258" target = "projectFrame"><b>seqNum</b></a></td><td>attribute</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute131202" target = "projectFrame"><b>seqNum</b></a></td><td>attribute</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refuse case view141186" target = "projectFrame"><b>Sequence diagrams</b></a></td><td>use case view</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refactivity diagram167938" target = "projectFrame"><b>Server receiving messages</b></a></td><td>activity diagram</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="class130562.html#refclass130562" target = "projectFrame"><b>ServerTriggers</b></a></td><td>class</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation129154" target = "projectFrame"><b>setConnId</b></a></td><td>operation</td><td></td></tr>
-<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition147714" target = "projectFrame"><b>Sim</b></a></td><td>transition</td><td></td></tr>
-<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition170114" target = "projectFrame"><b>Sim</b></a></td><td>transition</td><td></td></tr>
-<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition168962" target = "projectFrame"><b>Sim</b></a></td><td>transition</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition191618" target = "projectFrame"><b>Sim</b></a></td><td>transition</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#reftransition161538" target = "projectFrame"><b>Sim</b></a></td><td>transition</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition170114" target = "projectFrame"><b>Sim</b></a></td><td>transition</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition147714" target = "projectFrame"><b>Sim</b></a></td><td>transition</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition168962" target = "projectFrame"><b>Sim</b></a></td><td>transition</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition177026" target = "projectFrame"><b>Sim</b></a></td><td>transition</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin147586" target = "projectFrame"><b>sn = conn.receivedSeqNum()</b></a></td><td>activity action pin</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin154626" target = "projectFrame"><b>sock.close()</b></a></td><td>activity action pin</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin161154" target = "projectFrame"><b>sock.dgramReceive()</b></a></td><td>activity action pin</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin154370" target = "projectFrame"><b>sock.dgramSendAck(id, 0)</b></a></td><td>activity action pin</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin147714" target = "projectFrame"><b>sock.dgramSendAck(id, sn)</b></a></td><td>activity action pin</td><td></td></tr>
-<tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin141058" target = "projectFrame"><b>sock.dgramSendData()</b></a></td><td>activity action pin</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin168066" target = "projectFrame"><b>sock.dgramSendAck(pack)</b></a></td><td>activity action pin</td><td></td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#refactivity action pin141058" target = "projectFrame"><b>sock.dgramSendData(pack)</b></a></td><td>activity action pin</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute130434" target = "projectFrame"><b>sockAddr</b></a></td><td>attribute</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute131842" target = "projectFrame"><b>sockAddr</b></a></td><td>attribute</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute129922" target = "projectFrame"><b>socket</b></a></td><td>attribute</td><td> Socket de comunicação em uso </td></tr>
+<tr bgcolor=#f0f0f0><td><a href="index.html#reftransition191490" target = "projectFrame"><b>Socket de origem j� tem conex�o aberta?</b></a></td><td>transition</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refattribute130818" target = "projectFrame"><b>sockId</b></a></td><td>attribute</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="class130178.html#refclass130178" target = "projectFrame"><b>StatusChecker</b></a></td><td>class</td><td></td></tr>
 <tr bgcolor=#f0f0f0><td><a href="index.html#refoperation137090" target = "projectFrame"><b>StatusChecker</b></a></td><td>operation</td><td></td></tr>

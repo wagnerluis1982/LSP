@@ -1,3 +1,4 @@
 <map id="lsp.LspServer.write" name="lsp.LspServer.write">
-<area shape="rect" id="node3" href="$classlsp_1_1Pack.html#acf7842abafd8718cd1345097a500bd21" title="lsp.Pack.getConnId" alt="" coords="191,5,327,35"/>
+<area shape="rect" id="node3" href="$classlsp_1_1LspConnection.html#af5f74e6664ed98e5738cfc57ba733647" title="lsp.LspConnection.isClosed" alt="" coords="191,5,375,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1Pack.html#acf7842abafd8718cd1345097a500bd21" title="lsp.Pack.getConnId" alt="" coords="215,59,351,88"/>
 </map>

@@ -347,7 +347,7 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        checkActive();</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keyword">final</span> LspConnection conn = connectionPool.get(pack.getConnId());</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">if</span> (conn == null) {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">if</span> (conn == null || conn.isClosed()) {</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keywordflow">throw</span> <span class="keyword">new</span> ClosedConnectionException(pack.getConnId());</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        }</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
@@ -360,7 +360,7 @@ Este é o diagrama das funções utilizadas por esta função:</div>
 <div class="dyncontent">
 <div class="center"><img src="classlsp_1_1LspServer_a34e57e92093b9cc450c3b58a186ef9e5_cgraph.png" border="0" usemap="#classlsp_1_1LspServer_a34e57e92093b9cc450c3b58a186ef9e5_cgraph" alt=""/></div>
 <map name="classlsp_1_1LspServer_a34e57e92093b9cc450c3b58a186ef9e5_cgraph" id="classlsp_1_1LspServer_a34e57e92093b9cc450c3b58a186ef9e5_cgraph">
-<area shape="rect" id="node3" href="classlsp_1_1Pack.html#acf7842abafd8718cd1345097a500bd21" title="lsp.Pack.getConnId" alt="" coords="191,5,327,35"/></map>
+<area shape="rect" id="node3" href="classlsp_1_1LspConnection.html#af5f74e6664ed98e5738cfc57ba733647" title="lsp.LspConnection.isClosed" alt="" coords="191,5,375,35"/><area shape="rect" id="node5" href="classlsp_1_1Pack.html#acf7842abafd8718cd1345097a500bd21" title="lsp.Pack.getConnId" alt="" coords="215,59,351,88"/></map>
 </div>
 </p>
 

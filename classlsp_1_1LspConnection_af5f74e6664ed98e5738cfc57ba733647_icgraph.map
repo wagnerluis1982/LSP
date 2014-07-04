@@ -1,3 +1,4 @@
 <map id="lsp.LspConnection.isClosed" name="lsp.LspConnection.isClosed">
-<area shape="rect" id="node3" href="$classlsp_1_1LspSocket.html#af797fcfd98236b6c793c86168d834f95" title="Tratamento de um pacote do tipo DATA recebido. " alt="" coords="240,5,461,35"/>
+<area shape="rect" id="node3" href="$classlsp_1_1LspServer.html#a34e57e92093b9cc450c3b58a186ef9e5" title="Envia dados para um determinado cliente. " alt="" coords="284,5,417,35"/>
+<area shape="rect" id="node5" href="$classlsp_1_1LspSocket.html#af797fcfd98236b6c793c86168d834f95" title="Tratamento de um pacote do tipo DATA recebido. " alt="" coords="240,59,461,88"/>
 </map>
