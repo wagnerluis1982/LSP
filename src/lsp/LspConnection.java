@@ -129,8 +129,8 @@ class LspConnection {
 	 */
 	InternalPack sent(Pack pack) {
 		synchronized (lock) {
-			InternalPack p = new InternalPack(this, ++seqNum, pack.getPayload());
 			if (this.sentMessage == null) {
+				InternalPack p = new InternalPack(this, ++seqNum, pack.getPayload());
 				this.sentMessage = p;
 				return p;
 			}

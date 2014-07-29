@@ -30,9 +30,9 @@ abstract class LspSocket {
 
 	private static final byte[] PAYLOAD_NIL = new byte[0];
 
-	private static final short LEN_PACKAGE = 1024;
-	private static final byte LEN_HEADER = 6;
-	private static final short LEN_PAYLOAD = LEN_PACKAGE - LEN_HEADER;
+	static final short LEN_PACKAGE = 1024;
+	static final byte LEN_HEADER = 6;
+	static final short LEN_PAYLOAD = LEN_PACKAGE - LEN_HEADER;
 
 	/** Capacidade das filas de entrada e saída em termos de pacotes de 1KB */
 	private static final byte QUEUE_ZISE = 50;
@@ -448,5 +448,6 @@ abstract class LspSocket {
 				}
 			}
 		}
+
 	}
 }

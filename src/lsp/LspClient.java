@@ -13,10 +13,11 @@ public class LspClient {
 	private volatile boolean active = true;
 	private volatile boolean markClosed = false;
 
+	public static final short LEN_PAYLOAD = LspSocket.LEN_PAYLOAD;
+
 	public LspClient(String host, int port, LspParams params) throws IOException, TimeoutException {
 		SocketAddress sockAddr = new InetSocketAddress(host, port);
 		params = (params == null) ? LspParams.defaultParams() : params;
-
 
 		lspSocket = new LspSocketImpl(0);
 		try {

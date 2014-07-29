@@ -36,6 +36,8 @@ public class LspServer {
 	private final LspSocket lspSocket;
 	private final int port;
 
+	public static final short LEN_PAYLOAD = LspSocket.LEN_PAYLOAD;
+
 	public LspServer(int port, LspParams params) throws IOException {
 		this.lspSocket = new LspSocketImpl(port);
 		this.port = this.lspSocket.getPort();
